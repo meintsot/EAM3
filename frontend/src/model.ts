@@ -22,6 +22,7 @@ export interface InputProps {
   errorText?: string;
   required?: boolean;
   size?: "medium" | "small";
+  size?: "medium" | "small";
   onChange: (arg0: string, arg1: any) => void;
 }
 
