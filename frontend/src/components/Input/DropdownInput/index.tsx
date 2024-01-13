@@ -18,7 +18,7 @@ export default function DropdownInput({
   error = false,
   errorText = "",
   required = false,
-
+  size = "medium",
   onChange,
 }: DropdownInputProps) {
   const [selected, setSelected] = React.useState("");
@@ -30,7 +30,12 @@ export default function DropdownInput({
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
-        <InputLabel id={id} required={required} error={error}>
+        <InputLabel
+          id={id}
+          required={required}
+          error={error}
+          size={size === "medium" ? "normal" : "small"}
+        >
           {placeholder}
         </InputLabel>
         <Select
@@ -43,6 +48,7 @@ export default function DropdownInput({
             handleChange(e);
           }}
           error={error}
+          size={size}
         >
           {items.map((item, index) => (
             <MenuItem key={item} value={item}>

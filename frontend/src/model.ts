@@ -1,7 +1,10 @@
 import React, { ReactNode } from "react";
 import { Route, RouteProps } from "react-router-dom";
-import {UserProfile} from "../../backend/models/types/userProfile";
-import {LoginUserRequestDTO, RegisterUserDTO} from "../../backend/models/types/user";
+import { UserProfile } from "../../backend/models/types/userProfile";
+import {
+  LoginUserRequestDTO,
+  RegisterUserDTO,
+} from "../../backend/models/types/user";
 
 export interface Route {
   name: string;
@@ -18,6 +21,7 @@ export interface InputProps {
   error?: boolean;
   errorText?: string;
   required?: boolean;
+  size?: "medium" | "small";
   onChange: (arg0: string, arg1: any) => void;
 }
 
@@ -52,6 +56,58 @@ export type ProtectedRouteProps = RouteProps & {
   componentProps?: any;
 };
 
+export interface Column {
+  key: string;
+  label: string;
+  searchInputType: string;
+  options: Array<string>;
+}
+
+export interface CoursesRow {
+  courseId: string;
+  courseName: string;
+  semester: number;
+  category: string;
+  actions?: Array<{
+    component: React.FC<ActionButtonProps | CheckBoxProps | any>;
+    props: ActionButtonProps | CheckBoxProps;
+  }>;
+}
+
+export interface CoursesRowStudent extends CoursesRow {
+  professor: string;
+  ects: number;
+}
+
+export interface CoursesRowProfessor extends CoursesRow {
+  gradeBookExists: "Ναι" | "Όχι" | string;
+}
+
+export interface SearchTableProps {
+  columns: Array<Column>;
+  rows: Array<CoursesRowStudent | CoursesRowProfessor | any>;
+  setRows: (arg: any) => void;
+}
+
+export interface ActionButtonProps {
+  type: "view" | "add" | "edit" | "delete" | string;
+  onClick: () => void;
+  tooltip?: string;
+}
+
+export interface CheckBoxProps {
+  tooltip?: string;
+}
+
+export interface GradesRow {
+  courseId: string;
+  courseName: string;
+  semester: number;
+  professor: string;
+  ects: number;
+  grade: number;
+}
+
 export enum UserTypes {
   GUEST = "guest",
   STUDENT = "student",
@@ -59,39 +115,39 @@ export enum UserTypes {
 }
 
 export interface UserData {
-  userName: string
-  userType: string
-  userProfile: UserProfile
-  myCourses?: string[]
-  authToken?: string
+  userName: string;
+  userType: string;
+  userProfile: UserProfile;
+  myCourses?: string[];
+  authToken?: string;
 }
 
 export interface RegisterForm {
-  userName: string
-  password: string
-  confirmPassword: string
-  userType: string
-  firstName: string
-  lastName: string
-  department: string
-  phoneNumber: string
-  profilePicture: string
-  fathersName: string
-  mothersName: string
-  dateOfBirth: string
-  maritalStatus: string
-  placeOfBirth: string
-  idNumber: string
-  issuingAuthority: string
-  dateOfPublish: string
-  socialSecurityNumber: string
-  address: string
-  city: string
-  telephone: string
-  postalCode: string
-  temporaryAddress: string
-  temporaryCity: string
-  temporaryTelephone: string
-  temporaryPostalCode: string
-  myCourses: string[]
+  userName: string;
+  password: string;
+  confirmPassword: string;
+  userType: string;
+  firstName: string;
+  lastName: string;
+  department: string;
+  phoneNumber: string;
+  profilePicture: string;
+  fathersName: string;
+  mothersName: string;
+  dateOfBirth: string;
+  maritalStatus: string;
+  placeOfBirth: string;
+  idNumber: string;
+  issuingAuthority: string;
+  dateOfPublish: string;
+  socialSecurityNumber: string;
+  address: string;
+  city: string;
+  telephone: string;
+  postalCode: string;
+  temporaryAddress: string;
+  temporaryCity: string;
+  temporaryTelephone: string;
+  temporaryPostalCode: string;
+  myCourses: string[];
 }

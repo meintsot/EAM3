@@ -9,6 +9,7 @@ export default function BasicInput({
   errorText = "",
   required = false,
   onChange,
+  size = "medium",
 }: BasicInputProps) {
   return (
     <TextField
@@ -20,6 +21,7 @@ export default function BasicInput({
       error={error}
       helperText={error ? errorText : ""}
       onChange={(e) => onChange(id, e.target.value)}
+      size={size}
     />
   );
 }
