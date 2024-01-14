@@ -30,6 +30,7 @@ export interface DropdownInputProps extends InputProps {
 export interface DateInputProps extends InputProps {}
 
 export interface AutocompleteInputProps extends DropdownInputProps {}
+export interface MultipleAutocompleteInputProps extends DropdownInputProps {}
 
 export interface ImageUploaderProps extends InputProps {}
 

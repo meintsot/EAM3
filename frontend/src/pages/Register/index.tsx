@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Paper, Box, Button, Typography } from "@mui/material";
 import BasicInput from "../../components/Input/BasicInput";
 import PasswordInput from "../../components/Input/PasswordInput";
 import DropdownInput from "../../components/Input/DropdownInput";
 import AutocompleteInput from "../../components/Input/AutocompleteInput";
+import MultipleAutocompleteInput from "../../components/Input/MultipleAutocompleteInput";
 import ImageUploader from "../../components/Input/ImageUploader";
 
 import "./Register.css";
 
-function Register() {
+const Register: React.FC = () => {
   const [formValues, setFormValues] = useState({
     userName: "",
     password: "",
@@ -38,10 +39,23 @@ function Register() {
     temporaryPostalCode: "",
     myCourses: [],
   });
-  const [errorFields, setErrorFields] = useState([] as Array<string>);
+  const [user, setUser] = useState<string>("student");
+  const [errorFields, setErrorFields] = useState<Array<string>>([]);
   const userTypes = ["Φοιτητής/τρια", "Καθηγητής/τρια"];
   const departments = ["Τμήμα Πληροφορικής και Τηλεπικοινωνιών"];
   const maritalStatuses = ["Παντρεμένος/η", "Άγαμος/η"];
+  const courses = [
+    "Μαθηματικά",
+    "Γλώσσα",
+    "Ιστορία",
+    "Αρχαία",
+    "Βιολογία",
+    "Γυμναστική",
+  ];
+
+  useEffect(() => {
+    setUser(formValues.userType);
+  }, [formValues.userType]);
 
   const handleChange = (id: string, value: any) => {
     setFormValues({ ...formValues, [id]: value });
@@ -284,6 +298,24 @@ function Register() {
               </Box>
             </Box>
           </Box>
+          {user === "Καθηγητής/τρια" ? (
+            <Box className="registerFormSection">
+              <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                Μαθήματα
+              </Typography>
+              <MultipleAutocompleteInput
+                id="myCourses"
+                items={courses}
+                placeholder="Μάθημα"
+                onChange={handleChange}
+                error={errorFields.includes("myCourses")}
+                errorText="Το μάθημα είναι υποχρεωτικό"
+                required
+              />
+            </Box>
+          ) : (
+            <></>
+          )}
         </Box>
         <Button
           variant="contained"
@@ -296,6 +328,6 @@ function Register() {
       </Paper>
     </div>
   );
-}
+};
 
 export default Register;
