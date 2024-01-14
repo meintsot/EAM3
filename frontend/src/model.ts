@@ -57,6 +57,16 @@ export type ProtectedRouteProps = RouteProps & {
   componentProps?: any;
 };
 
+interface Accordion {
+  title: string;
+  type: "info" | "history" | string;
+  rows: Array<{ col1: string; col2: string }>;
+}
+
+export interface AccordionsProps {
+  sections: Array<Accordion>;
+}
+
 export interface Column {
   key: string;
   label: string;
