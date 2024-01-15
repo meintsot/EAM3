@@ -1,5 +1,7 @@
 import React, { ReactNode } from "react";
 import { Route, RouteProps } from "react-router-dom";
+import {UserProfile} from "../../backend/models/types/userProfile";
+import {LoginUserRequestDTO, RegisterUserDTO} from "../../backend/models/types/user";
 
 export interface Route {
   name: string;
@@ -39,9 +41,9 @@ export interface AuthProviderProps {
 }
 
 export interface AuthContextType {
-  userType: string;
-  login: () => void;
-  register: () => void;
+  userData: UserData;
+  login: (loginForm: LoginUserRequestDTO) => void;
+  register: (registerForm: RegisterUserDTO) => void;
   logout: () => void;
 }
 
@@ -49,3 +51,47 @@ export type ProtectedRouteProps = RouteProps & {
   component: React.ComponentType;
   componentProps?: any;
 };
+
+export enum UserTypes {
+  GUEST = "guest",
+  STUDENT = "student",
+  TEACHER = "teacher",
+}
+
+export interface UserData {
+  userName: string
+  userType: string
+  userProfile: UserProfile
+  myCourses?: string[]
+  authToken?: string
+}
+
+export interface RegisterForm {
+  userName: string
+  password: string
+  confirmPassword: string
+  userType: string
+  firstName: string
+  lastName: string
+  department: string
+  phoneNumber: string
+  profilePicture: string
+  fathersName: string
+  mothersName: string
+  dateOfBirth: string
+  maritalStatus: string
+  placeOfBirth: string
+  idNumber: string
+  issuingAuthority: string
+  dateOfPublish: string
+  socialSecurityNumber: string
+  address: string
+  city: string
+  telephone: string
+  postalCode: string
+  temporaryAddress: string
+  temporaryCity: string
+  temporaryTelephone: string
+  temporaryPostalCode: string
+  myCourses: string[]
+}

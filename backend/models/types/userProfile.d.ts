@@ -20,11 +20,11 @@ interface GeneralInformation {
 interface PersonalInformation {
   fathersName: string
   mothersName: string
-  dateOfBirth: Date
-  maritalStatus: string
+  dateOfBirth: string
+  maritalStatus?: string
   placeOfBirth: string
   idNumber: string
-  issuingAuthority: string
+  issuingAuthority?: string
   dateOfPublish: string
   socialSecurityNumber: string
 }
@@ -32,12 +32,12 @@ interface PersonalInformation {
 interface CommunicationDetails {
   address: string
   city: string
-  telephone: string
+  telephone?: string
   postalCode: string
-  temporaryAddress: string
-  temporaryCity: string
-  temporaryTelephone: string
-  temporaryPostalCode: string
+  temporaryAddress?: string
+  temporaryCity?: string
+  temporaryTelephone?: string
+  temporaryPostalCode?: string
 }
 
 interface UserProfileDTO {

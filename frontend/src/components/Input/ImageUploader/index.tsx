@@ -2,6 +2,7 @@ import { useState } from "react";
 import cloudUpload from "../../../assets/img/CloudUpload.png";
 import Typography from "@mui/material/Typography";
 import { ImageUploaderProps } from "../../../model";
+import API from "../../../api"
 
 import "./ImageUploader.css";
 
@@ -20,15 +21,8 @@ export default function ImageUploader({
     let image: any;
     if (target.files) image = target.files[0];
     setFile(URL.createObjectURL(image));
+    onChange("image", image);
     setShowRemove(true);
-
-    const reader = new FileReader();
-
-    reader.onload = (e: any) => {
-      onChange(id, { ...image, binary: e?.target?.result });
-    };
-
-    reader.readAsText(image);
   };
 
   const handleRemove = (e: any) => {

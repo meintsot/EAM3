@@ -6,11 +6,11 @@ import { Navigate } from "react-router-dom";
 const ProtectedRoute: React.FC<ProtectedRouteProps> = (props) => {
   const { component: Component, componentProps } = props;
 
-  const { userType } = useAuth();
+  const { userData } = useAuth();
 
   return (
     <React.Fragment>
-      {userType !== "guest" ? (
+      {userData.userType !== "guest" ? (
         <Component {...componentProps} />
       ) : (
         <Navigate to="/" />

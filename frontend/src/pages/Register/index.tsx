@@ -6,8 +6,12 @@ import DropdownInput from "../../components/Input/DropdownInput";
 import AutocompleteInput from "../../components/Input/AutocompleteInput";
 import MultipleAutocompleteInput from "../../components/Input/MultipleAutocompleteInput";
 import ImageUploader from "../../components/Input/ImageUploader";
+import { useAuth } from "../../providers/AuthProvider"
+import { buildRegisterPayload } from "../../mappers"
 
 import "./Register.css";
+import API from "../../api";
+import {CourseDTO} from "../../../../backend/models/types/course";
 
 const Register: React.FC = () => {
   const [formValues, setFormValues] = useState({
@@ -19,7 +23,7 @@ const Register: React.FC = () => {
     lastName: "",
     department: "",
     phoneNumber: "",
-    profilePicture: {},
+    profilePicture: "",
     fathersName: "",
     mothersName: "",
     dateOfBirth: "",
@@ -39,27 +43,38 @@ const Register: React.FC = () => {
     temporaryPostalCode: "",
     myCourses: [],
   });
+  const [file, setFile] = useState<File | null>(null);
   const [user, setUser] = useState<string>("student");
   const [errorFields, setErrorFields] = useState<Array<string>>([]);
   const userTypes = ["Φοιτητής/τρια", "Καθηγητής/τρια"];
   const departments = ["Τμήμα Πληροφορικής και Τηλεπικοινωνιών"];
   const maritalStatuses = ["Παντρεμένος/η", "Άγαμος/η"];
-  const courses = [
-    "Μαθηματικά",
-    "Γλώσσα",
-    "Ιστορία",
-    "Αρχαία",
-    "Βιολογία",
-    "Γυμναστική",
-  ];
+  const [availableCourses, setAvailableCourses] = useState([] as CourseDTO[]);
 
   useEffect(() => {
     setUser(formValues.userType);
   }, [formValues.userType]);
 
+  useEffect(() => {
+    API.getAvailableCourses().then((courses) => setAvailableCourses(courses));
+  }, []);
+
   const handleChange = (id: string, value: any) => {
     setFormValues({ ...formValues, [id]: value });
   };
+
+  const handleCoursesChange = (id: string, courseNames: string[]) => {
+    const courses = availableCourses
+        .filter(course => courseNames.includes(course.courseName))
+        .map(course => course.courseId);
+    setFormValues({ ...formValues, [id]: courses });
+  }
+
+  const handleFileUpload = (id: string, value: any) => {
+    setFile(value);
+  }
+
+  const { register } = useAuth()
 
   const handleSubmit = () => {
     console.log(formValues);
@@ -68,6 +83,20 @@ const Register: React.FC = () => {
         (key: string) => formValues[key as keyof typeof formValues] === ""
       )
     );
+    if (1) {
+      const payload = buildRegisterPayload(formValues);
+      if (file !== null) {
+        // Upload the file
+        const formData = new FormData();
+        formData.append('image', file, file.name);
+        API.uploadProfileImage(formData).then((fileURL: string) => {
+          formValues.profilePicture = fileURL;
+          register(payload);
+        });
+      } else {
+        register(payload);
+      }
+    }
   };
 
   return (
@@ -77,7 +106,7 @@ const Register: React.FC = () => {
           <Box className="profilePicUploader">
             <ImageUploader
               id="profilePicture"
-              onChange={handleChange}
+              onChange={handleFileUpload}
               error={errorFields.includes("profilePicture")}
             />
           </Box>
@@ -305,9 +334,9 @@ const Register: React.FC = () => {
               </Typography>
               <MultipleAutocompleteInput
                 id="myCourses"
-                items={courses}
+                items={availableCourses.map(course => course.courseName)}
                 placeholder="Μάθημα"
-                onChange={handleChange}
+                onChange={handleCoursesChange}
                 error={errorFields.includes("myCourses")}
                 errorText="Το μάθημα είναι υποχρεωτικό"
                 required

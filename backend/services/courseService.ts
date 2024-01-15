@@ -15,11 +15,11 @@ class CourseService {
     const courses = await CourseRepository.findByCriteria({ teacherId })
     return courses.map(course => course.courseId)
   }
-  
-  static async getAvailableCourses(): Promise<Course[]> {
-    return CourseRepository.findByCriteria({
-      teacher: { $exists: false } 
-    });
+
+  static async getAvailableCourses (): Promise<Course[]> {
+    return await CourseRepository.findByCriteria({
+      teacher: { $exists: false }
+    })
   }
 }
 

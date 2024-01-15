@@ -7,6 +7,6 @@ const router = express.Router()
 
 router.get('/courses', AuthMiddleware.queryParamsMiddleware<RetrieveCoursesRequest>, CourseController.retrieveCourses)
 router.get('/courses/:courseId', CourseController.retrieveCourse)
-router.get('/availableCourses', CourseController.getAvailableCourses);
+router.get('/availableCourses', CourseController.getAvailableCourses)
 
 export default router
