@@ -25,10 +25,7 @@ function App() {
           </Route>
           <Route path="/" element={<Shell />}>
             <Route index element={<Home />} />
-            <Route
-              path="profile"
-              element={<ProtectedRoute component={Profile} />}
-            />
+            <Route path="profile" element={<Profile />} />
             <Route
               path="courses"
               element={<ProtectedRoute component={Courses} />}

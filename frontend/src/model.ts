@@ -22,7 +22,6 @@ export interface InputProps {
   errorText?: string;
   required?: boolean;
   size?: "medium" | "small";
-  size?: "medium" | "small";
   onChange: (arg0: string, arg1: any) => void;
 }
 
@@ -99,8 +98,15 @@ export interface TableProps {}
 export interface SimpleTableProps extends TableProps {
   titleRows: any;
   valueRows: any;
-  pagination?: boolean;
-  type?: "info" | "history" | string;
+}
+
+export interface HistoryItem {
+  key: string;
+  action: string;
+  date: string;
+}
+export interface HistoryTableProps extends TableProps {
+  rows: Array<HistoryItem>;
 }
 
 export interface SearchTableProps extends TableProps {

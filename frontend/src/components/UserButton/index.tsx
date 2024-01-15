@@ -13,7 +13,8 @@ import "./UserButton.css";
 
 const UserButton: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { userType } = useAuth();
+  const { userData } = useAuth();
+  const { userType } = userData;
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

@@ -115,7 +115,8 @@ const titles: Array<Column> = [
 ];
 
 const Courses = () => {
-  const { userType } = useAuth();
+  const { userData } = useAuth();
+  const { userType } = userData;
   const [courses, setCourses] =
     useState<Array<CoursesRowStudent | CoursesRowProfessor>>(defaultData);
   console.log(courses);

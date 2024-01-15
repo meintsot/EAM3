@@ -65,7 +65,8 @@ const titles: Array<Column> = [
 ];
 
 const GradeBooks = () => {
-  const { userType } = useAuth();
+  const { userData } = useAuth();
+  const { userType } = userData;
   const [grades, setGrades] = useState<Array<GradesRow>>(defaultData);
 
   return <SearchTable columns={titles} rows={grades} setRows={setGrades} />;

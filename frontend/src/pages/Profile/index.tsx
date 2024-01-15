@@ -1,18 +1,12 @@
 import Accordions from "../../components/Accordions";
 import SimpleTable from "../../components/Table/SimpleTable";
+import HistoryTable from "../../components/Table/HistoryTable";
+import { useAuth } from "../../providers/AuthProvider";
 
 const Profile = () => {
-  const personalInfo = {
-    fathersName: "Αθανάσιος",
-    mothersName: "Αλίκη",
-    dateOfBirth: "09-09-2001",
-    maritalStatus: "Διαζευγμένος",
-    placeOfBirth: "Μαρούσι",
-    idNumber: "AK829682",
-    issuingAuthority: "Τ.Α. Ιλίου",
-    dateOfPublish: "19-02-2014",
-    socialSecurityNumber: "09090100992",
-  };
+  const { userData } = useAuth();
+  const { userProfile } = userData;
+
   const personalInfoTitles = {
     fathersName: "Όνομα πατέρα",
     mothersName: "Όνομα μητέρας",
@@ -24,18 +18,7 @@ const Profile = () => {
     dateOfPublish: "Ημερομηνία έκδοσης",
     socialSecurityNumber: "ΑΜΚΑ",
   };
-  const communicationDetals = {
-    address: "Πίνδου 50 Ίλιον",
-    city: "Αθήνα",
-    telephone: "2105018562",
-    postalCode: "13123",
-    temporaryAddress: "Νικομηδίας 64 Περιστέρι",
-    temporaryCity: "Αθήνα",
-    temporaryTelephone: "2105762943",
-    temporaryPostalCode: "12134",
-    email: "sdi1900234@di.uoa.gr",
-  };
-  const communicationDetalsTitles = {
+  const communicationDetailsTitles = {
     address: "Μόνιμη Διεύθυνση Κατοικίας",
     city: "Μόνιμη Πόλη Κατοικίας",
     telephone: "Τηλέφωνο Μόνιμης Κατοικίας",
@@ -46,22 +29,38 @@ const Profile = () => {
     temporaryPostalCode: "ΤΚ Προσωρινής Κατοικίας",
     email: "Διεύθυνση Ηλεκτρονικού Ταχυδρομείου",
   };
-  const historyActions = {
-    action0: "Σύνδεση στο λογαριασμό μου",
-    action1: "Υποβολή δήλωσης",
-    action2: "Αίτηση πιστοποιητικού",
-    action3: "Σύνδεση στο λογαριασμό μου",
-    action4: "Υποβολή δήλωσης",
-    action5: "Αίτηση πιστοποιητικού",
-  };
-  const historyDates = {
-    action0: "Κυριακή 03/12/2023 (16:00)",
-    action1: "Κυριακή 03/12/2023 (16:00)",
-    action2: "Κυριακή 03/12/2023 (16:00)",
-    action3: "Κυριακή 03/12/2023 (16:00)",
-    action4: "Κυριακή 03/12/2023 (16:00)",
-    action5: "Κυριακή 03/12/2023 (16:00)",
-  };
+
+  // Ο τύπος του Object εδώ (στο historyRows) είναι ενδεικτικός, μπορείς να το αλλάξεις ανάλογα με το τι έρχεται από
+  // το backend.
+  // Αν αλλάξεις τα properties, πας και τα αλλάζεις και μέσα στο HistoryTable component. Και άλλαξε τον τύπο στο
+  // model (HistoryItem). Αλλά γενικά τα rows του HistoryTable πρέπει να είναι πίνακας από Objects.
+  // Σε αντίθεση με το SimpleTable όπου εκεί έχουμε αντιστοίχιση πινάκων με βάση τα keys. Αλλά το SimpleTable δεν
+  // σε ενδιαφέρει γιατ΄ί παίρνω τα data από το useAuth. Επίσης το Simple table πιθανώς να δεχτεί reconstruction
+  // σε επόμενο στάδιο όταν θα δω τη σελίδα μαθήματος.
+
+  const historyRows = [
+    {
+      key: "action0",
+      action: "Σύνδεση στο λογαριασμό μου",
+      date: "Κυριακή 03/12/2023 (16:00)",
+    },
+    {
+      key: "action1",
+      action: "Υποβολή δήλωσης",
+      date: "Κυριακή 03/12/2023 (16:00)",
+    },
+    {
+      key: "action2",
+      action: "Αίτηση πιστοποιητικού",
+      date: "Κυριακή 03/12/2023 (16:00)",
+    },
+    {
+      key: "action1",
+      action: "Υποβολή δήλωσης",
+      date: "Κυριακή 03/12/2023 (16:00)",
+    },
+  ];
+
   const sections = [
     {
       title: "Προσωπικά στοιχεία",
@@ -88,28 +87,20 @@ const Profile = () => {
       ],
     },
   ];
+
   return (
     <Accordions
       sections={sections}
       children={[
         <SimpleTable
           titleRows={personalInfoTitles}
-          valueRows={personalInfo}
-          pagination={false}
-          type="info"
+          valueRows={userProfile.personalInformation}
         />,
         <SimpleTable
-          titleRows={communicationDetalsTitles}
-          valueRows={communicationDetals}
-          pagination={false}
-          type="info"
+          titleRows={communicationDetailsTitles}
+          valueRows={userProfile.communicationDetails}
         />,
-        <SimpleTable
-          titleRows={historyActions}
-          valueRows={historyDates}
-          pagination={true}
-          type="history"
-        />,
+        <HistoryTable rows={historyRows} />,
       ]}
     />
   );
