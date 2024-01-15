@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import SearchTable from "../../components/SearchTable";
+import SearchTable from "../../components/Table/SearchTable";
 import ActionButton from "../../components/ActionButton";
 import CheckBox from "../../components/CheckBox";
 

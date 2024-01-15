@@ -6,6 +6,7 @@ import Shell from "./pages/Shell";
 import LoginShell from "./pages/Shell/login";
 import Courses from "./pages/Courses";
 import Grades from "./pages/Grades";
+import Profile from "./pages/Profile";
 
 import "./App.css";
 import { AuthProvider } from "./providers/AuthProvider";
@@ -24,6 +25,10 @@ function App() {
           </Route>
           <Route path="/" element={<Shell />}>
             <Route index element={<Home />} />
+            <Route
+              path="profile"
+              element={<ProtectedRoute component={Profile} />}
+            />
             <Route
               path="courses"
               element={<ProtectedRoute component={Courses} />}

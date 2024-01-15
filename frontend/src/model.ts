@@ -22,6 +22,7 @@ export interface InputProps {
   errorText?: string;
   required?: boolean;
   size?: "medium" | "small";
+  size?: "medium" | "small";
   onChange: (arg0: string, arg1: any) => void;
 }
 
@@ -56,6 +57,16 @@ export type ProtectedRouteProps = RouteProps & {
   componentProps?: any;
 };
 
+interface Accordion {
+  title: string;
+  rows: Array<{ col1: string; col2: string }>;
+}
+
+export interface AccordionsProps {
+  sections: Array<Accordion>;
+  children: Array<ReactNode>;
+}
+
 export interface Column {
   key: string;
   label: string;
@@ -83,10 +94,19 @@ export interface CoursesRowProfessor extends CoursesRow {
   gradeBookExists: "Ναι" | "Όχι" | string;
 }
 
-export interface SearchTableProps {
-  columns: Array<Column>;
+export interface TableProps {}
+
+export interface SimpleTableProps extends TableProps {
+  titleRows: any;
+  valueRows: any;
+  pagination?: boolean;
+  type?: "info" | "history" | string;
+}
+
+export interface SearchTableProps extends TableProps {
   rows: Array<CoursesRowStudent | CoursesRowProfessor | any>;
   setRows: (arg: any) => void;
+  columns: Array<Column>;
 }
 
 export interface ActionButtonProps {
