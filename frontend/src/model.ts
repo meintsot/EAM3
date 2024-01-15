@@ -59,12 +59,12 @@ export type ProtectedRouteProps = RouteProps & {
 
 interface Accordion {
   title: string;
-  type: "info" | "history" | string;
   rows: Array<{ col1: string; col2: string }>;
 }
 
 export interface AccordionsProps {
   sections: Array<Accordion>;
+  children: Array<ReactNode>;
 }
 
 export interface Column {
@@ -94,10 +94,19 @@ export interface CoursesRowProfessor extends CoursesRow {
   gradeBookExists: "Ναι" | "Όχι" | string;
 }
 
-export interface SearchTableProps {
-  columns: Array<Column>;
+export interface TableProps {}
+
+export interface SimpleTableProps extends TableProps {
+  titleRows: any;
+  valueRows: any;
+  pagination?: boolean;
+  type?: "info" | "history" | string;
+}
+
+export interface SearchTableProps extends TableProps {
   rows: Array<CoursesRowStudent | CoursesRowProfessor | any>;
   setRows: (arg: any) => void;
+  columns: Array<Column>;
 }
 
 export interface ActionButtonProps {

@@ -11,7 +11,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { AccordionsProps } from "../../model";
 
-const Accordions: React.FC<AccordionsProps> = ({ sections }) => {
+const Accordions: React.FC<AccordionsProps> = ({ sections, children }) => {
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
   const handleChange =
@@ -21,11 +21,11 @@ const Accordions: React.FC<AccordionsProps> = ({ sections }) => {
 
   return (
     <Box sx={{ m: "24px" }}>
-      {sections.map((section) => (
+      {sections.map((section, index) => (
         <Accordion
           key={section.title}
-          expanded={expanded === "panel1"}
-          onChange={handleChange("panel1")}
+          expanded={expanded === section.title}
+          onChange={handleChange(section.title)}
           sx={{ width: "100%" }}
         >
           <AccordionSummary
@@ -35,12 +35,7 @@ const Accordions: React.FC<AccordionsProps> = ({ sections }) => {
           >
             <Typography>{section.title}</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Nulla facilisi. Phasellus sollicitudin nulla et quam mattis
-              feugiat. Aliquam eget maximus est, id dignissim quam.
-            </Typography>
-          </AccordionDetails>
+          <AccordionDetails sx={{ p: 0 }}>{children[index]}</AccordionDetails>
         </Accordion>
       ))}
     </Box>

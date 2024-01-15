@@ -11,9 +11,9 @@ import {
   TableContainer,
   TableFooter,
 } from "@mui/material";
-import { SearchTableProps } from "../../model";
-import BasicInput from "../Input/BasicInput";
-import DropdownInput from "../Input/DropdownInput";
+import { SearchTableProps } from "../../../model";
+import BasicInput from "../../Input/BasicInput";
+import DropdownInput from "../../Input/DropdownInput";
 
 const SearchTable: React.FC<SearchTableProps> = ({
   columns,
