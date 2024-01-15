@@ -1,0 +1,31 @@
+.userButtonContainer {
+}
+
+.userButton {
+}
+
+.userButton:hover {
+  opacity: 0.7;
+}
+
+.userImage {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.menuItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.fullName {
+  pointer-events: none;
+  cursor: auto;
+}
+
+.fullName:hover {
+  background-color: transparent;
+}
