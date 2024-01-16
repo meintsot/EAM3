@@ -10,3 +10,8 @@ interface UserHistory {
 type UserHistoryDTO = Omit<UserHistory, '_id' | 'userId' | 'date'> & {
   date: string
 }
+
+interface RetrieveUserHistoryResponse {
+  userHistory: UserHistoryDTO[]
+  total: number
+}

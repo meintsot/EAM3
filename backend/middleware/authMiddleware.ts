@@ -21,12 +21,11 @@ class AuthMiddleware {
         }
 
         req.user = foundUser
-        next()
       } catch (err) {
         return res.sendStatus(401)
       }
     } else {
-      res.sendStatus(401)
+      return res.sendStatus(401)
     }
     next()
   }

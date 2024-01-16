@@ -1,6 +1,6 @@
 import { type User, type RegisterUserDTO, type LoginUserResponseDTO } from '../models/types/user'
 import { type UserProfileDTO } from '../models/types/userProfile'
-import { type UserHistory, type UserHistoryDTO } from '../models/types/userHistory'
+import { type RetrieveUserHistoryResponse, type UserHistory, type UserHistoryDTO } from '../models/types/userHistory'
 
 class UserTransformer {
   static toRegisterUserDTO (user: User, token: string, courseIds?: string[]): RegisterUserDTO {
@@ -20,6 +20,13 @@ class UserTransformer {
       userProfile: (user.userProfile as UserProfileDTO),
       myCourses: courseIds,
       authToken: token
+    }
+  }
+
+  static toRetrieveUserHistoryResponse (history: UserHistory[], total: number): RetrieveUserHistoryResponse {
+    return {
+      userHistory: UserTransformer.toUserHistoryDTO(history),
+      total
     }
   }
 

@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from "react";
+import React, {useState, createContext, useContext, useEffect} from "react";
 import { AuthProviderProps, AuthContextType, UserData } from "../../model";
 import { UserTypes } from "../../model";
 import API from "../../api";
@@ -52,21 +52,35 @@ const defaultUserData: UserData = {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [userData, setUserData] = useState(defaultUserData);
 
+  useEffect(() => {
+    const authToken = localStorage.getItem('JWT');
+    if (authToken) {
+        API.autoLogin(authToken).then((userData) => {
+          setUserData(userData);
+        })
+    }
+  }, []);
+
   const login = (loginForm: LoginUserRequestDTO) => {
     API.login(loginForm).then((userData) => {
+      localStorage.setItem('JWT', userData.authToken!);
       setUserData(userData);
     });
   };
 
   const register = (registerForm: RegisterUserDTO) => {
     API.register(registerForm)
-      .then((userData) => setUserData(userData))
+      .then((userData) => {
+        localStorage.setItem('JWT', userData.authToken!);
+        setUserData(userData);
+      })
       .catch((err) => {
         throw err;
       });
   };
 
   const logout = () => {
+    localStorage.removeItem('JWT');
     setUserData(defaultUserData);
   };
 

@@ -2,10 +2,32 @@ import Accordions from "../../components/Accordions";
 import SimpleTable from "../../components/Table/SimpleTable";
 import HistoryTable from "../../components/Table/HistoryTable";
 import { useAuth } from "../../providers/AuthProvider";
+import API from "../../api/index";
+import {useEffect, useState} from "react";
+import {RetrieveUserHistoryResponse} from "../../../../backend/models/types/userHistory";
 
 const Profile = () => {
   const { userData } = useAuth();
   const { userProfile } = userData;
+  const [historyData, setHistoryData] = useState<RetrieveUserHistoryResponse>({userHistory: [], total: 0});
+
+  useEffect(() => {
+      const authToken = userData.authToken;
+      if (authToken) {
+          API.retrieveUserHistory({ page: 1, pageSize: 5 }).then((res) => {
+              setHistoryData(res);
+          });
+      }
+  }, [userData.authToken]);
+
+  const handleHistoryPageChange = (page: number, pageSize: number) => {
+      const authToken = userData.authToken;
+      if (authToken) {
+          API.retrieveUserHistory({ page, pageSize }).then((res) => {
+              setHistoryData(res);
+          });
+      }
+  }
 
   const personalInfoTitles = {
     fathersName: "Όνομα πατέρα",
@@ -37,29 +59,6 @@ const Profile = () => {
   // Σε αντίθεση με το SimpleTable όπου εκεί έχουμε αντιστοίχιση πινάκων με βάση τα keys. Αλλά το SimpleTable δεν
   // σε ενδιαφέρει γιατ΄ί παίρνω τα data από το useAuth. Επίσης το Simple table πιθανώς να δεχτεί reconstruction
   // σε επόμενο στάδιο όταν θα δω τη σελίδα μαθήματος.
-
-  const historyRows = [
-    {
-      key: "action0",
-      action: "Σύνδεση στο λογαριασμό μου",
-      date: "Κυριακή 03/12/2023 (16:00)",
-    },
-    {
-      key: "action1",
-      action: "Υποβολή δήλωσης",
-      date: "Κυριακή 03/12/2023 (16:00)",
-    },
-    {
-      key: "action2",
-      action: "Αίτηση πιστοποιητικού",
-      date: "Κυριακή 03/12/2023 (16:00)",
-    },
-    {
-      key: "action1",
-      action: "Υποβολή δήλωσης",
-      date: "Κυριακή 03/12/2023 (16:00)",
-    },
-  ];
 
   const sections = [
     {
@@ -100,7 +99,7 @@ const Profile = () => {
           titleRows={communicationDetailsTitles}
           valueRows={userProfile.communicationDetails}
         />,
-        <HistoryTable rows={historyRows} />,
+        <HistoryTable totalResults={historyData.total} rows={historyData.userHistory} onPageChange={handleHistoryPageChange} />,
       ]}
     />
   );
