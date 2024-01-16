@@ -1,0 +1,51 @@
+.imageUploader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.imageContainer {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+}
+
+.image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  object-position: 50% 50%;
+  padding: 0;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+input[type="file"].hidden {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  height: 100%;
+  font-size: 50px;
+  opacity: 0;
+  -moz-opacity: 0;
+  filter: Alpha(Opacity=0);
+}
+
+.removeImageButton {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.removeImageButton:focus {
+  color: #4292e1;
+}

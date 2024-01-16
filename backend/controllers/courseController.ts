@@ -18,12 +18,10 @@ class CourseController {
     res.status(200).json(CourseTransformer.toCourseDetailsDTO(course))
   }
 
-  static async getAvailableCourses(req: Request, res: Response) {
-
-    const courses = await CourseService.getAvailableCourses();
-    return res.status(200).json(CourseTransformer.toCoursesDTO(courses));
+  static async getAvailableCourses (req: Request, res: Response) {
+    const courses = await CourseService.getAvailableCourses()
+    return res.status(200).json(CourseTransformer.toCoursesDTO(courses))
   }
-
 }
 
 export default CourseController
