@@ -64,7 +64,7 @@ const titles: Array<Column> = [
   },
 ];
 
-const Grades = () => {
+const GradeBooks = () => {
   const { userData } = useAuth();
   const { userType } = userData;
   const [grades, setGrades] = useState<Array<GradesRow>>(defaultData);
@@ -72,4 +72,4 @@ const Grades = () => {
   return <SearchTable columns={titles} rows={grades} setRows={setGrades} />;
 };
 
-export default Grades;
+export default GradeBooks;
