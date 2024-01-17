@@ -7,7 +7,7 @@ import CheckBox from "../../components/CheckBox";
 import { CoursesRowStudent, CoursesRowProfessor, Column } from "../../model";
 import { useAuth } from "../../providers/AuthProvider";
 
-const defaultData: Array<CoursesRowStudent | CoursesRowProfessor> = [
+const defaultData: Array<CoursesRowStudent> = [
   {
     courseId: "15100122",
     courseName:
@@ -16,20 +16,6 @@ const defaultData: Array<CoursesRowStudent | CoursesRowProfessor> = [
     category: "Προαιρετικό",
     professor: "Γρηγοριάδου",
     ects: 6,
-    actions: [
-      {
-        component: ActionButton,
-        props: {
-          type: "view",
-          onClick: () => {},
-          tooltip: "Λεπτομέρειες μαθήματος",
-        },
-      },
-      {
-        component: CheckBox,
-        props: { tooltip: "Δήλωση μαθήματος" },
-      },
-    ],
   },
   {
     courseId: "15100123",
@@ -39,20 +25,6 @@ const defaultData: Array<CoursesRowStudent | CoursesRowProfessor> = [
     category: "Προαιρετικό",
     professor: "Γρηγοριάδου",
     ects: 6,
-    actions: [
-      {
-        component: ActionButton,
-        props: {
-          type: "view",
-          onClick: () => {},
-          tooltip: "Λεπτομέρειες μαθήματος",
-        },
-      },
-      {
-        component: CheckBox,
-        props: { tooltip: "Δήλωση μαθήματος" },
-      },
-    ],
   },
   {
     courseId: "15100124",
@@ -62,24 +34,10 @@ const defaultData: Array<CoursesRowStudent | CoursesRowProfessor> = [
     category: "Προαιρετικό",
     professor: "Γρηγοριάδου",
     ects: 6,
-    actions: [
-      {
-        component: ActionButton,
-        props: {
-          type: "view",
-          onClick: () => {},
-          tooltip: "Λεπτομέρειες μαθήματος",
-        },
-      },
-      {
-        component: CheckBox,
-        props: { tooltip: "Δήλωση μαθήματος" },
-      },
-    ],
   },
 ];
 
-const titles: Array<Column> = [
+const titlesStudent: Array<Column> = [
   { key: "courseId", label: "Κωδικός", searchInputType: "text", options: [] },
   {
     key: "courseName",
@@ -95,7 +53,7 @@ const titles: Array<Column> = [
   },
   {
     key: "category",
-    label: "Τύπος",
+    label: "Κατηγορία",
     searchInputType: "dropdown",
     options: ["Υποχρεωτικό", "Βασικό"],
   },
@@ -114,38 +72,55 @@ const titles: Array<Column> = [
   },
 ];
 
+const titlesProfessor: Array<Column> = [
+  { key: "courseId", label: "Κωδικός", searchInputType: "text", options: [] },
+  {
+    key: "courseName",
+    label: "Μάθημα",
+    searchInputType: "text",
+    options: [],
+  },
+  {
+    key: "semester",
+    label: "Εξάμηνο",
+    searchInputType: "dropdown",
+    options: ["1", "2", "3", "4", "5"],
+  },
+  {
+    key: "category",
+    label: "Κατηγορία",
+    searchInputType: "dropdown",
+    options: ["Υποχρεωτικό", "Βασικό"],
+  },
+  {
+    key: "actions",
+    label: "",
+    searchInputType: "none",
+    options: [],
+  },
+];
+
 const Courses = () => {
   const { userData } = useAuth();
   const { userType } = userData;
   const [courses, setCourses] =
     useState<Array<CoursesRowStudent | CoursesRowProfessor>>(defaultData);
-  console.log(courses);
 
-  const transFormCourses = () => {
-    courses.forEach(
-      (course) =>
-        (course = {
-          ...course,
-          actions: [
-            {
-              component: ActionButton,
-              props: {
-                type: "view",
-                onClick: () => {},
-                tooltip: "Λεπτομέρειες μαθήματος",
-              },
-            },
-            {
-              component: CheckBox,
-              props: { tooltip: "Δήλωση μαθήματος" },
-            },
-          ],
-        })
-    );
-  };
-  transFormCourses();
-
-  return <SearchTable columns={titles} rows={courses} setRows={setCourses} />;
+  return userType === "student" ? (
+    <SearchTable
+      columns={titlesStudent}
+      rows={courses}
+      setRows={setCourses}
+      actions={["view", "checkbox"]}
+    />
+  ) : (
+    <SearchTable
+      columns={titlesProfessor}
+      rows={courses}
+      setRows={setCourses}
+      actions={["add"]}
+    />
+  );
 };
 
 export default Courses;
