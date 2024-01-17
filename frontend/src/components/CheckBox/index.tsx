@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Checkbox, Tooltip } from "@mui/material";
+import { Checkbox } from "@mui/material";
 import { CheckBoxProps } from "../../model";
 
-const CheckBox: React.FC<CheckBoxProps> = ({ tooltip = "" }) => {
+const CheckBox: React.FC<CheckBoxProps> = ({}) => {
   const [checked, setChecked] = React.useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -10,13 +10,11 @@ const CheckBox: React.FC<CheckBoxProps> = ({ tooltip = "" }) => {
   };
 
   return (
-    <Tooltip title={tooltip}>
-      <Checkbox
-        checked={checked}
-        onChange={handleChange}
-        inputProps={{ "aria-label": "controlled" }}
-      />
-    </Tooltip>
+    <Checkbox
+      checked={checked}
+      onChange={handleChange}
+      inputProps={{ "aria-label": "controlled" }}
+    />
   );
 };
 

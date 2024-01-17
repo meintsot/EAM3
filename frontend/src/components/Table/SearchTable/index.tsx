@@ -10,15 +10,19 @@ import {
   TableCell,
   TableContainer,
   TableFooter,
+  Tooltip,
 } from "@mui/material";
 import { SearchTableProps } from "../../../model";
 import BasicInput from "../../Input/BasicInput";
 import DropdownInput from "../../Input/DropdownInput";
+import ActionButton from "../../ActionButton";
+import CheckBox from "../../CheckBox";
 
 const SearchTable: React.FC<SearchTableProps> = ({
   columns,
   rows,
   setRows,
+  actions,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -37,6 +41,20 @@ const SearchTable: React.FC<SearchTableProps> = ({
     setPage(0);
   };
 
+  const returnAction = (action: string) => {
+    switch (action) {
+      case "view":
+      case "add":
+      case "edit":
+      case "delete":
+        return <ActionButton type={action} onClick={() => {}} />;
+      case "checkbox":
+        return <CheckBox />;
+      default:
+        return <></>;
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -50,13 +68,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
             <TableRow>
               {columns.map((column) =>
                 column.key === "actions" ? (
-                  rows[0][column.key].map(() => (
-                    <TableCell
-                      key={column.key}
-                      align="left"
-                      sx={{ fontWeight: "bold" }}
-                    ></TableCell>
-                  ))
+                  actions.map(() => <TableCell key={column.key}></TableCell>)
                 ) : (
                   <TableCell
                     key={column.key}
@@ -94,15 +106,10 @@ const SearchTable: React.FC<SearchTableProps> = ({
               <TableRow key={row[columns[0].key]}>
                 {columns.map((column) =>
                   column.key === "actions" ? (
-                    row[column.key].map((action: any) => {
-                      const { component: Component, props } = action;
+                    actions.map((action: any) => {
                       return (
-                        <TableCell
-                          key={row[column.key]}
-                          component="th"
-                          scope="row"
-                        >
-                          <Component {...props} />
+                        <TableCell key={action} component="th" scope="row">
+                          {returnAction(action)}
                         </TableCell>
                       );
                     })

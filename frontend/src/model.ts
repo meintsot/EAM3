@@ -78,10 +78,6 @@ export interface CoursesRow {
   courseName: string;
   semester: number;
   category: string;
-  actions?: Array<{
-    component: React.FC<ActionButtonProps | CheckBoxProps | any>;
-    props: ActionButtonProps | CheckBoxProps;
-  }>;
 }
 
 export interface CoursesRowStudent extends CoursesRow {
@@ -113,17 +109,15 @@ export interface SearchTableProps extends TableProps {
   rows: Array<CoursesRowStudent | CoursesRowProfessor | any>;
   setRows: (arg: any) => void;
   columns: Array<Column>;
+  actions: Array<string>;
 }
 
 export interface ActionButtonProps {
   type: "view" | "add" | "edit" | "delete" | string;
   onClick: () => void;
-  tooltip?: string;
 }
 
-export interface CheckBoxProps {
-  tooltip?: string;
-}
+export interface CheckBoxProps {}
 
 export interface GradesRow {
   courseId: string;
