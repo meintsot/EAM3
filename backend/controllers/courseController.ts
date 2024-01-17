@@ -1,15 +1,15 @@
 import { type Request, type Response } from 'express'
-import { type RetrieveCoursesRequest } from '../models/types/course'
+import { type RetrieveCoursesRequest, type RetrieveMyCoursesRequest } from '../models/types/course'
 import CourseService from '../services/courseService'
 import CourseTransformer from '../transformers/courseTransformer'
-import { type RequestWithQueryParams } from '../middleware/middleware'
+import { type AuthenticatedRequestWithQueryParams, type RequestWithQueryParams } from '../middleware/middleware'
 
 class CourseController {
   static async retrieveCourses (req: RequestWithQueryParams<RetrieveCoursesRequest>, res: Response) {
     const request = req.queryParams!
-    console.log(request)
     const courses = await CourseService.retrieveCourses(request)
-    res.status(200).json(CourseTransformer.toCoursesDTO(courses))
+    const total = await CourseService.countCourses(request)
+    res.status(200).json(CourseTransformer.toRetrieveCoursesResponse(courses, total))
   }
 
   static async retrieveCourse (req: Request, res: Response) {
@@ -21,6 +21,13 @@ class CourseController {
   static async getAvailableCourses (req: Request, res: Response) {
     const courses = await CourseService.getAvailableCourses()
     return res.status(200).json(CourseTransformer.toCoursesDTO(courses))
+  }
+
+  static async retrieveMyCourses (req: AuthenticatedRequestWithQueryParams<RetrieveMyCoursesRequest>, res: Response) {
+    const request = req.queryParams!
+    const courses = await CourseService.retrieveMyCourses(req.user!, request)
+    const total = await CourseService.countMyCourses(req.user!, request)
+    res.status(200).json(CourseTransformer.toRetrieveMyCoursesResponse(courses, total))
   }
 }
 

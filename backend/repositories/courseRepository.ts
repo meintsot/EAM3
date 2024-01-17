@@ -29,6 +29,10 @@ class CourseRepository {
     return await CourseModel.find(adjustedCriteria).skip(skip).limit(paginationRequest.pageSize)
   }
 
+  static async countByCriteria (criteria: FilterQuery<Course>): Promise<number> {
+    return await CourseModel.countDocuments(criteria).exec()
+  }
+
   static async findOneByCriteria (criteria: FilterQuery<Course>): Promise<Course> {
     const course = await CourseModel.findOne(criteria).lean()
     if (course == null) {

@@ -1,4 +1,10 @@
-import { type Course, type CourseDTO, type CourseDetailsDTO } from '../models/types/course'
+import {
+  type Course,
+  type CourseDTO,
+  type CourseDetailsDTO,
+  type RetrieveMyCoursesResponse,
+  type RetrieveCoursesResponse
+} from '../models/types/course'
 
 class CourseTransformer {
   static toCoursesDTO (courses: Course[]): CourseDTO[] {
@@ -31,6 +37,20 @@ class CourseTransformer {
       relevantCourses: course.relevantCourses,
       description: course.description,
       additionalInformation: course.additionalInformation
+    }
+  }
+
+  static toRetrieveCoursesResponse (courses: Course[], total: number): RetrieveCoursesResponse {
+    return {
+      courses: this.toCoursesDTO(courses),
+      total
+    }
+  }
+
+  static toRetrieveMyCoursesResponse (courses: Course[], total: number): RetrieveMyCoursesResponse {
+    return {
+      courses: this.toCoursesDTO(courses),
+      total: total
     }
   }
 }
