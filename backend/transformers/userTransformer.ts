@@ -36,7 +36,7 @@ class UserTransformer {
 
   static toHistoryDTO (history: UserHistory): UserHistoryDTO {
     return {
-      date: history.date.toDateString(),
+      date: history.date.toTimeString(),
       action: history.action
     }
   }
