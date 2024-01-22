@@ -1,20 +1,23 @@
-import * as React from "react";
-import { Checkbox } from "@mui/material";
+import React, { useState } from "react";
+import { Checkbox, Tooltip } from "@mui/material";
 import { CheckBoxProps } from "../../model";
 
-const CheckBox: React.FC<CheckBoxProps> = ({}) => {
-  const [checked, setChecked] = React.useState(false);
+const CheckBox: React.FC<CheckBoxProps> = ({ tooltip = "", onChange }) => {
+  const [checked, setChecked] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
+    onChange(!checked);
+    setChecked(!checked);
   };
 
   return (
-    <Checkbox
-      checked={checked}
-      onChange={handleChange}
-      inputProps={{ "aria-label": "controlled" }}
-    />
+    <Tooltip title={tooltip} placement="top">
+      <Checkbox
+        checked={checked}
+        onChange={handleChange}
+        inputProps={{ "aria-label": "controlled" }}
+      />
+    </Tooltip>
   );
 };
 

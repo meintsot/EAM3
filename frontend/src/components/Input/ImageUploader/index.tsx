@@ -1,19 +1,21 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import cloudUpload from "../../../assets/img/CloudUpload.png";
+import cloudUploadWhite from "../../../assets/img/CloudUploadWhite.png";
 import Typography from "@mui/material/Typography";
 import { ImageUploaderProps } from "../../../model";
-import API from "../../../api"
+import API from "../../../api";
 
 import "./ImageUploader.css";
 
 // TODO: event types !!!!!!!
 
-export default function ImageUploader({
-  id,
-  onChange,
-  placeholder = "",
-}: ImageUploaderProps) {
-  const [file, setFile] = useState(cloudUpload);
+export default function ImageUploader({ id, onChange }: ImageUploaderProps) {
+  const location = useLocation();
+  const { pathname } = location;
+  const defaultPicture =
+    pathname === "/register" ? cloudUpload : cloudUploadWhite;
+  const [file, setFile] = useState(defaultPicture);
   const [showRemove, setShowRemove] = useState(false);
 
   const handleChange = (e: any) => {

@@ -5,10 +5,11 @@ import {
   LoginUserRequestDTO,
   RegisterUserDTO,
 } from "../../backend/models/types/user";
-import {UserHistoryDTO} from "../../backend/models/types/userHistory";
+import { UserHistoryDTO } from "../../backend/models/types/userHistory";
+import { AlertColor } from "@mui/material";
 
 export interface Route {
-  name: string;
+  label: string;
   pathname: string;
 }
 
@@ -55,6 +56,7 @@ export interface AuthContextType {
 export type ProtectedRouteProps = RouteProps & {
   component: React.ComponentType;
   componentProps?: any;
+  rolesAllowed: Array<string>;
 };
 
 interface Accordion {
@@ -108,14 +110,19 @@ export interface SearchTableProps extends TableProps {
   setRows: (arg: any) => void;
   columns: Array<Column>;
   actions: Array<string>;
+  onCheckedCourses?: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 export interface ActionButtonProps {
   type: "view" | "add" | "edit" | "delete" | string;
   onClick: () => void;
+  tooltip?: string;
 }
 
-export interface CheckBoxProps {}
+export interface CheckBoxProps {
+  tooltip?: string;
+  onChange: (arg: any) => void;
+}
 
 export interface GradesRow {
   courseId: string;
@@ -168,4 +175,22 @@ export interface RegisterForm {
   temporaryTelephone: string;
   temporaryPostalCode: string;
   myCourses: string[];
+}
+
+export interface AlertPopUpEventDetails {
+  alertTitle: string;
+  alertMessage: string;
+  alertType: AlertColor | undefined;
+  alertTimeout: number;
+}
+
+export interface AlertPopUpEvent extends Event {
+  detail: AlertPopUpEventDetails;
+}
+
+export interface ConfirmationModalProps {
+  text: string;
+  open: boolean;
+  onOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onConfirm: () => void;
 }

@@ -9,25 +9,27 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
 interface Props {
   crumbs: Array<{
-    name: string;
-    link: string;
+    label: string;
+    pathname: string;
   }>;
 }
 
-export default function BreadcrumbTrail({ crumbs }: Props) {
+const BreadcrumbTrail = ({ crumbs }: Props) => {
   return (
     <div role="presentation" onClick={handleClick}>
       <Breadcrumbs aria-label="breadcrumb" sx={{ pt: "120px", pl: "250px" }}>
         {crumbs.map((crumb, index) =>
           index === crumbs.length - 1 ? (
-            <Typography color="text.primary">{crumb.name}</Typography>
+            <Typography color="text.primary">{crumb.label}</Typography>
           ) : (
-            <Link underline="hover" color="inherit" href={crumb.link}>
-              {crumb.name}
+            <Link underline="hover" color="inherit" href={crumb.pathname}>
+              {crumb.label}
             </Link>
           )
         )}
       </Breadcrumbs>
     </div>
   );
-}
+};
+
+export default BreadcrumbTrail;

@@ -50,6 +50,7 @@ export default function PasswordInput({
         }
         label="Password"
         onChange={(e) => onChange(id, e.target.value)}
+        sx={{ backgroundColor: "white" }}
       />
       <FormHelperText id="password-helper-text" sx={{ color: "error.main" }}>
         {error ? errorText : ""}

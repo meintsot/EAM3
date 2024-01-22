@@ -36,7 +36,7 @@ export default function Sidebar({ sidebarItems }: SidebarProps) {
       <Divider />
       <List sx={{ p: 0 }}>
         {sidebarItems.map((item, index) => (
-          <ListItem key={item.name} disablePadding>
+          <ListItem key={item.label} disablePadding>
             <ListItemButton
               sx={{
                 pt: "16px",
@@ -50,7 +50,7 @@ export default function Sidebar({ sidebarItems }: SidebarProps) {
                 navigate(item.pathname);
               }}
             >
-              <ListItemText primary={item.name} />
+              <ListItemText primary={item.label} />
             </ListItemButton>
           </ListItem>
         ))}

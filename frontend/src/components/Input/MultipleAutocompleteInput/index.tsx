@@ -34,6 +34,7 @@ const MultipleAutocompleteInput: React.FC<MultipleAutocompleteInputProps> = ({
             error={error}
             helperText={error ? errorText : ""}
             required={required}
+            sx={{ backgroundColor: "white" }}
           />
         )}
       />

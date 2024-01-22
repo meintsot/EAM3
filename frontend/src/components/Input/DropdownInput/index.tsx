@@ -28,7 +28,7 @@ export default function DropdownInput({
   };
 
   return (
-    <Box sx={{ minWidth: 120 }}>
+    <Box sx={{ width: "100%" }}>
       <FormControl fullWidth>
         <InputLabel
           id={id}
@@ -49,6 +49,7 @@ export default function DropdownInput({
           }}
           error={error}
           size={size}
+          sx={{ backgroundColor: "white" }}
         >
           {items.map((item, index) => (
             <MenuItem key={item} value={item}>

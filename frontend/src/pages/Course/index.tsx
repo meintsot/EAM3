@@ -1,36 +1,13 @@
+import { useAuth } from "../../providers/AuthProvider";
+import { useParams } from "react-router-dom";
 import Accordions from "../../components/Accordions";
 import SimpleTable from "../../components/Table/SimpleTable";
 import HistoryTable from "../../components/Table/HistoryTable";
-import { useAuth } from "../../providers/AuthProvider";
-import API from "../../api/index";
-import { useEffect, useState } from "react";
-import { RetrieveUserHistoryResponse } from "../../../../backend/models/types/userHistory";
 
-const Profile = () => {
+const Course = () => {
   const { userData } = useAuth();
   const { userProfile } = userData;
-  const [historyData, setHistoryData] = useState<RetrieveUserHistoryResponse>({
-    userHistory: [],
-    total: 0,
-  });
-
-  useEffect(() => {
-    const authToken = userData.authToken;
-    if (authToken) {
-      API.retrieveUserHistory({ page: 1, pageSize: 5 }).then((res) => {
-        setHistoryData(res);
-      });
-    }
-  }, [userData.authToken]);
-
-  const handleHistoryPageChange = (page: number, pageSize: number) => {
-    const authToken = userData.authToken;
-    if (authToken) {
-      API.retrieveUserHistory({ page, pageSize }).then((res) => {
-        setHistoryData(res);
-      });
-    }
-  };
+  const { courseId } = useParams();
 
   const personalInfoTitles = {
     fathersName: "Όνομα πατέρα",
@@ -117,14 +94,10 @@ const Profile = () => {
           titleRows={communicationDetailsTitles}
           valueRows={userProfile.communicationDetails}
         />,
-        <HistoryTable
-          totalResults={historyData.total}
-          rows={historyData.userHistory}
-          onPageChange={handleHistoryPageChange}
-        />,
+        <HistoryTable rows={historyRows} />,
       ]}
     />
   );
 };
 
-export default Profile;
+export default Course;
