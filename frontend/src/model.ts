@@ -5,6 +5,7 @@ import {
   LoginUserRequestDTO,
   RegisterUserDTO,
 } from "../../backend/models/types/user";
+import {UserHistoryDTO} from "../../backend/models/types/userHistory";
 
 export interface Route {
   name: string;
@@ -96,13 +97,10 @@ export interface SimpleTableProps extends TableProps {
   valueRows: any;
 }
 
-export interface HistoryItem {
-  key: string;
-  action: string;
-  date: string;
-}
 export interface HistoryTableProps extends TableProps {
-  rows: Array<HistoryItem>;
+  totalResults: number;
+  rows: Array<UserHistoryDTO>;
+  onPageChange?: (page: number, pageSize: number) => void;
 }
 
 export interface SearchTableProps extends TableProps {

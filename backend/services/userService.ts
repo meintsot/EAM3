@@ -76,6 +76,10 @@ class UserService {
   static async retrieveUserHistory (request: PaginationRequest, user: User): Promise<UserHistory[]> {
     return await HistoryRepository.findByCriteria({ userId: user._id }, request)
   }
+
+  static async countUserHistory (user: User): Promise<number> {
+    return await HistoryRepository.countByCriteria({ userId: user._id })
+  }
 }
 
 export default UserService

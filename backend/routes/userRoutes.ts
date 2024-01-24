@@ -6,6 +6,6 @@ const router = express.Router()
 
 router.post('/auth/register', UserController.registerUser)
 router.post('/auth/login', AuthMiddleware.loginJWTRequest, UserController.loginUser)
-router.get('/user/history', AuthMiddleware.loginJWTRequest, UserController.RetrieveUserHistory)
+router.get('/user/history', AuthMiddleware.authenticateJWT, AuthMiddleware.queryParamsMiddleware<PaginationRequest>, UserController.RetrieveUserHistory)
 
 export default router

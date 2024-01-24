@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { HistoryTableProps } from "../../../model";
 
-const HistoryTable: React.FC<HistoryTableProps> = ({ rows }) => {
+const HistoryTable: React.FC<HistoryTableProps> = ({ rows, onPageChange, totalResults }) => {
   const [page, setPage] = useState(0);
   const rowsPerPage = 5;
 
@@ -19,6 +19,9 @@ const HistoryTable: React.FC<HistoryTableProps> = ({ rows }) => {
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
+    if (onPageChange) {
+      onPageChange(newPage + 1, rowsPerPage);
+    }
     setPage(newPage);
   };
 
@@ -33,7 +36,7 @@ const HistoryTable: React.FC<HistoryTableProps> = ({ rows }) => {
         <Table aria-label="custom pagination table">
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.key}>
+              <TableRow key={row.date}>
                 <TableCell
                   component="th"
                   scope="row"
@@ -53,7 +56,7 @@ const HistoryTable: React.FC<HistoryTableProps> = ({ rows }) => {
               <TablePagination
                 rowsPerPageOptions={[]}
                 colSpan={3}
-                count={rows.length}
+                count={totalResults}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

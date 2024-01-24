@@ -1,6 +1,6 @@
 import axios from "axios";
 import {LoginUserRequestDTO, LoginUserResponseDTO, RegisterUserDTO} from "../../../backend/models/types/user";
-import {UserHistoryDTO} from "../../../backend/models/types/userHistory";
+import {RetrieveUserHistoryResponse, UserHistoryDTO} from "../../../backend/models/types/userHistory";
 import {UserData} from "../model";
 import {CourseDTO} from "../../../backend/models/types/course";
 
@@ -36,8 +36,21 @@ const login = async (payload: LoginUserRequestDTO): Promise<UserData> => {
     } as UserData
 };
 
-const retrieveUserHistory = async (payload: PaginationRequest): Promise<UserHistoryDTO> => {
-  const res = await api.get<UserHistoryDTO>("/user/history", {params: payload})
+const autoLogin = async (authToken: string): Promise<UserData> => {
+    const res = await api.post<LoginUserResponseDTO>("/auth/login", {}, { headers: { Authorization: `Bearer ${authToken}` }})
+    const data = res.data
+    return {
+        userName: data.userName,
+        userType: data.userType,
+        userProfile: data.userProfile,
+        myCourses: data.myCourses,
+        authToken: data.authToken
+    } as UserData
+}
+
+const retrieveUserHistory = async (payload: PaginationRequest): Promise<RetrieveUserHistoryResponse> => {
+  const res = await api.get<RetrieveUserHistoryResponse>("/user/history",
+      { params: payload, headers: { Authorization: `Bearer ${localStorage.getItem("JWT")}` }})
   return res.data
 };
 
@@ -58,6 +71,7 @@ const uploadProfileImage = async (formData: FormData): Promise<string> => {
 const API = {
     register,
     login,
+    autoLogin,
     uploadProfileImage,
     getAvailableCourses,
     retrieveUserHistory
