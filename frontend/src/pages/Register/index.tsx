@@ -6,12 +6,13 @@ import DropdownInput from "../../components/Input/DropdownInput";
 import AutocompleteInput from "../../components/Input/AutocompleteInput";
 import MultipleAutocompleteInput from "../../components/Input/MultipleAutocompleteInput";
 import ImageUploader from "../../components/Input/ImageUploader";
-import { useAuth } from "../../providers/AuthProvider"
-import { buildRegisterPayload } from "../../mappers"
+import { useAuth } from "../../providers/AuthProvider";
+import { buildRegisterPayload } from "../../mappers";
+import AlertBox from "../../components/AlertBox";
 
 import "./Register.css";
 import API from "../../api";
-import {CourseDTO} from "../../../../backend/models/types/course";
+import { CourseDTO } from "../../../../backend/models/types/course";
 
 const Register: React.FC = () => {
   const [formValues, setFormValues] = useState({
@@ -65,16 +66,16 @@ const Register: React.FC = () => {
 
   const handleCoursesChange = (id: string, courseNames: string[]) => {
     const courses = availableCourses
-        .filter(course => courseNames.includes(course.courseName))
-        .map(course => course.courseId);
+      .filter((course) => courseNames.includes(course.courseName))
+      .map((course) => course.courseId);
     setFormValues({ ...formValues, [id]: courses });
-  }
+  };
 
   const handleFileUpload = (id: string, value: any) => {
     setFile(value);
-  }
+  };
 
-  const { register } = useAuth()
+  const { register } = useAuth();
 
   const handleSubmit = () => {
     console.log(formValues);
@@ -88,7 +89,7 @@ const Register: React.FC = () => {
       if (file !== null) {
         // Upload the file
         const formData = new FormData();
-        formData.append('image', file, file.name);
+        formData.append("image", file, file.name);
         API.uploadProfileImage(formData).then((fileURL: string) => {
           formValues.profilePicture = fileURL;
           register(payload);
@@ -101,6 +102,7 @@ const Register: React.FC = () => {
 
   return (
     <div className="container">
+      <AlertBox />
       <Paper className="registerFormContainer">
         <Box className="registerForm">
           <Box className="profilePicUploader">
@@ -334,7 +336,7 @@ const Register: React.FC = () => {
               </Typography>
               <MultipleAutocompleteInput
                 id="myCourses"
-                items={availableCourses.map(course => course.courseName)}
+                items={availableCourses.map((course) => course.courseName)}
                 placeholder="Μάθημα"
                 onChange={handleCoursesChange}
                 error={errorFields.includes("myCourses")}
@@ -351,6 +353,7 @@ const Register: React.FC = () => {
           fullWidth
           className="registerButton"
           onClick={handleSubmit}
+          sx={{ fontWeight: "bold" }}
         >
           ΣΥΝΔΕΣΗ
         </Button>

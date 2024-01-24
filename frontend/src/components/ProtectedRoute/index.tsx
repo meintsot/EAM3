@@ -4,13 +4,13 @@ import { ProtectedRouteProps } from "../../model";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = (props) => {
-  const { component: Component, componentProps } = props;
+  const { component: Component, componentProps, rolesAllowed } = props;
 
   const { userData } = useAuth();
 
   return (
     <React.Fragment>
-      {userData.userType !== "guest" ? (
+      {rolesAllowed.includes(userData.userType) ? (
         <Component {...componentProps} />
       ) : (
         <Navigate to="/" />

@@ -27,6 +27,7 @@ export default function DateInput({
           InputLabelProps={{ error: error }}
           helperText={error ? errorText : ""}
           onChange={(newValue) => onChange(id, newValue)}
+          sx={{ backgroundColor: "white" }}
         />
       </DemoContainer>
     </LocalizationProvider>

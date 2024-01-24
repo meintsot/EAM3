@@ -42,7 +42,7 @@ input[type="file"].hidden {
 }
 
 .removeImageButton {
-  text-decoration: underline;
+  color: #4292e1;
   cursor: pointer;
 }
 

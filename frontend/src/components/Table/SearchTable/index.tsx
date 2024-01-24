@@ -10,7 +10,6 @@ import {
   TableCell,
   TableContainer,
   TableFooter,
-  Tooltip,
 } from "@mui/material";
 import { SearchTableProps } from "../../../model";
 import BasicInput from "../../Input/BasicInput";
@@ -23,9 +22,11 @@ const SearchTable: React.FC<SearchTableProps> = ({
   rows,
   setRows,
   actions,
+  onCheckedCourses,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [checkedCourses, setCheckedCourses] = useState<Array<string>>([]);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -41,15 +42,55 @@ const SearchTable: React.FC<SearchTableProps> = ({
     setPage(0);
   };
 
-  const returnAction = (action: string) => {
+  const handleCheck = (event: boolean, courseId: string) => {
+    let newCheckedCourses = [];
+    if (event) newCheckedCourses = [...checkedCourses, courseId];
+    else newCheckedCourses = checkedCourses.filter((id) => id !== courseId);
+    if (onCheckedCourses) onCheckedCourses(newCheckedCourses);
+    setCheckedCourses(newCheckedCourses);
+  };
+
+  const returnAction = (action: string, courseId: string) => {
     switch (action) {
       case "view":
+        return (
+          <ActionButton
+            type={action}
+            onClick={() => {}}
+            tooltip="Λεπτομέρειες"
+          />
+        );
       case "add":
+        return (
+          <ActionButton
+            type={action}
+            onClick={() => {}}
+            tooltip="Δημιουργία βαθμολογίου"
+          />
+        );
       case "edit":
+        return (
+          <ActionButton
+            type={action}
+            onClick={() => {}}
+            tooltip="Συνέχεια επεξεργασίας"
+          />
+        );
       case "delete":
-        return <ActionButton type={action} onClick={() => {}} />;
+        return (
+          <ActionButton
+            type={action}
+            onClick={() => {}}
+            tooltip="Αφαίρεση μαθήματος"
+          />
+        );
       case "checkbox":
-        return <CheckBox />;
+        return (
+          <CheckBox
+            onChange={(e) => handleCheck(e, courseId)}
+            tooltip="Δήλωση μαθήματος"
+          />
+        );
       default:
         return <></>;
     }
@@ -62,7 +103,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
         justifyContent: "right",
       }}
     >
-      <TableContainer component={Paper} sx={{ width: "100%", m: "24px" }}>
+      <TableContainer component={Paper} sx={{ width: "100%" }}>
         <Table aria-label="custom pagination table">
           <TableHead>
             <TableRow>
@@ -102,23 +143,52 @@ const SearchTable: React.FC<SearchTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row[columns[0].key]}>
-                {columns.map((column) =>
-                  column.key === "actions" ? (
-                    actions.map((action: any) => {
-                      return (
-                        <TableCell key={action} component="th" scope="row">
-                          {returnAction(action)}
-                        </TableCell>
-                      );
-                    })
-                  ) : (
-                    <TableCell key={row[column.key]} component="th" scope="row">
-                      {row[column.key]}
-                    </TableCell>
-                  )
-                )}
+            {rows.map((row, index) => (
+              <TableRow
+                key={row[columns[0].key]}
+                sx={
+                  row["state"] === "Προσωρινή αποθήκευση"
+                    ? { backgroundColor: "draft" }
+                    : undefined
+                }
+              >
+                {columns.map((column) => {
+                  if (column.key === "actions")
+                    return actions.map((action: any) => {
+                      if (row["state"] === "Προσωρινή αποθήκευση") {
+                        return (
+                          <TableCell
+                            key={"edit"}
+                            component="th"
+                            scope="row"
+                            sx={{ p: 0 }}
+                          >
+                            {returnAction("edit", row.courseId)}
+                          </TableCell>
+                        );
+                      } else
+                        return (
+                          <TableCell
+                            key={action}
+                            component="th"
+                            scope="row"
+                            sx={{ p: 0 }}
+                          >
+                            {returnAction(action, row.courseId)}
+                          </TableCell>
+                        );
+                    });
+                  else
+                    return (
+                      <TableCell
+                        key={row[column.key]}
+                        component="th"
+                        scope="row"
+                      >
+                        {row[column.key]}
+                      </TableCell>
+                    );
+                })}
               </TableRow>
             ))}
           </TableBody>

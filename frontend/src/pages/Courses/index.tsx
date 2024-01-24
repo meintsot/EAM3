@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { Box, Button, Typography } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 import SearchTable from "../../components/Table/SearchTable";
-import ActionButton from "../../components/ActionButton";
-import CheckBox from "../../components/CheckBox";
+import SendIcon from "@mui/icons-material/Send";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import { CoursesRowStudent, CoursesRowProfessor, Column } from "../../model";
 import { useAuth } from "../../providers/AuthProvider";
@@ -105,21 +107,76 @@ const Courses = () => {
   const { userType } = userData;
   const [courses, setCourses] =
     useState<Array<CoursesRowStudent | CoursesRowProfessor>>(defaultData);
+  const [coursesToBeDeclared, setCoursesToBeDeclared] = useState<Array<string>>(
+    []
+  );
 
-  return userType === "student" ? (
-    <SearchTable
-      columns={titlesStudent}
-      rows={courses}
-      setRows={setCourses}
-      actions={["view", "checkbox"]}
-    />
-  ) : (
-    <SearchTable
-      columns={titlesProfessor}
-      rows={courses}
-      setRows={setCourses}
-      actions={["add"]}
-    />
+  return (
+    <Box className="wrapper">
+      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+        Μαθήματα
+      </Typography>
+
+      {userType === "guest" ? (
+        <>
+          <SearchTable
+            columns={titlesStudent}
+            rows={courses}
+            setRows={setCourses}
+            actions={["view"]}
+          />
+        </>
+      ) : userType === "student" ? (
+        <>
+          <Box className="header">
+            <Typography variant="body1">
+              Για να ξεκινήσετε μία δήλωση επιλέξτε ένα μάθημα κάνοντας κλικ στο
+              αντίστοιχο κουτάκι.
+            </Typography>
+            <Button
+              variant="contained"
+              className="main-action-button"
+              onClick={() => {}}
+              disabled={coursesToBeDeclared.length <= 0}
+              sx={{ fontWeight: "bold" }}
+            >
+              νεα δηλωση
+              <SendIcon fontSize="small" />
+            </Button>
+          </Box>
+          <SearchTable
+            columns={titlesStudent}
+            rows={courses}
+            setRows={setCourses}
+            actions={["view", "checkbox"]}
+            onCheckedCourses={setCoursesToBeDeclared}
+          />
+        </>
+      ) : (
+        <>
+          <Box className="header">
+            <Typography
+              variant="body1"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+              }}
+            >
+              Για να δημιουργήσετε ένα νέο βαθμολόγιο επίλεξτε το
+              <AddCircleOutlineIcon />
+              στο αντίστοιχο μάθημα.
+            </Typography>
+          </Box>
+          <SearchTable
+            columns={titlesProfessor}
+            rows={courses}
+            setRows={setCourses}
+            actions={["add"]}
+          />
+        </>
+      )}
+    </Box>
   );
 };
 

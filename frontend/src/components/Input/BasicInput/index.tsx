@@ -22,6 +22,7 @@ export default function BasicInput({
       helperText={error ? errorText : ""}
       onChange={(e) => onChange(id, e.target.value)}
       size={size}
+      sx={{ backgroundColor: "white" }}
     />
   );
 }

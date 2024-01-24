@@ -1,45 +1,45 @@
 import { useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import SearchTable from "../../components/Table/SearchTable";
-import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
+import NoteAddOutlinedIcon from "@mui/icons-material/NoteAddOutlined";
 
 import { Column } from "../../model";
 import { useAuth } from "../../providers/AuthProvider";
 
 const titles: Array<Column> = [
   {
-    key: "courseId",
-    label: "Κωδικός",
+    key: "type",
+    label: "Τύπος πιστοποιητικού",
+    searchInputType: "dropdown",
+    options: [],
+  },
+  {
+    key: "dateRequested",
+    label: "Ημερομηνία Αίτησης",
     searchInputType: "text",
     options: [],
   },
   {
-    key: "courseName",
-    label: "Μάθημα",
-    searchInputType: "text",
-    options: [],
-  },
-  {
-    key: "semester",
-    label: "Εξάμηνο",
+    key: "state",
+    label: "Κατάσταση",
     searchInputType: "dropdown",
     options: ["Υποχρεωτικό", "Βασικό"],
   },
   {
-    key: "ects",
-    label: "ECTS",
+    key: "dateRegistered",
+    label: "Ημερομηνία Έγκρισης",
     searchInputType: "text",
     options: ["Ιανουάριος 23-24", "Ιούνιος 22-23", "Σεπτεμβριος 23-24"],
   },
   {
-    key: "grade",
-    label: "Βαθμός",
-    searchInputType: "text",
+    key: "actions",
+    label: "",
+    searchInputType: "none",
     options: [],
   },
 ];
 
-const Grades = () => {
+const Certificates = () => {
   const { userData } = useAuth();
   const { userType } = userData;
   const [gradebooks, setGradebooks] = useState([]);
@@ -47,17 +47,19 @@ const Grades = () => {
   return (
     <Box className="wrapper">
       <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-        Βαθμολογίες
+        Πιστοποιητικά
       </Typography>
       <Box className="header">
-        <Typography variant="body1">ECTS: 180 M.O.: 5.7 </Typography>
+        <Typography variant="body1">
+          Πατήστε το κουμπί “Αίτηση” για να αιτηθείτε ένα νέο πιστοποιητικό.
+        </Typography>
         <Button
           variant="contained"
           className="main-action-button"
           onClick={() => {}}
           sx={{ fontWeight: "bold" }}
         >
-          εξαγωγη/εκτυπωση <FileDownloadOutlinedIcon fontSize="small" />
+          αιτηση <NoteAddOutlinedIcon fontSize="small" />
         </Button>
       </Box>
       <SearchTable
@@ -70,4 +72,4 @@ const Grades = () => {
   );
 };
 
-export default Grades;
+export default Certificates;
