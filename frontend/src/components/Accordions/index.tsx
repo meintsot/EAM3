@@ -20,7 +20,7 @@ const Accordions: React.FC<AccordionsProps> = ({ sections, children }) => {
     };
 
   return (
-    <Box sx={{ m: "24px" }}>
+    <Box>
       {sections.map((section, index) => (
         <Accordion
           key={section.title}

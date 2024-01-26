@@ -1,0 +1,30 @@
+.sliderModalContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 24;
+  padding: 16px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slider-list {
+  width: 100%;
+  padding: 0;
+}
+
+.slider-list li:last-child {
+  border: none;
+}

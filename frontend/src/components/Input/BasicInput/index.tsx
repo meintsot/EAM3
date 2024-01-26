@@ -10,12 +10,15 @@ export default function BasicInput({
   required = false,
   onChange,
   size = "medium",
+  disabled = false,
+  value = "",
 }: BasicInputProps) {
   return (
     <TextField
       id={id}
       label={placeholder}
       variant="outlined"
+      value={value}
       fullWidth
       required={required}
       error={error}
@@ -23,6 +26,7 @@ export default function BasicInput({
       onChange={(e) => onChange(id, e.target.value)}
       size={size}
       sx={{ backgroundColor: "white" }}
+      disabled={disabled}
     />
   );
 }

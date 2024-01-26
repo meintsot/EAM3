@@ -91,6 +91,18 @@ const SearchTable: React.FC<SearchTableProps> = ({
             tooltip="Δήλωση μαθήματος"
           />
         );
+      case "input":
+        return (
+          <Box sx={{ width: "96px", pl: 2 }}>
+            <BasicInput
+              id="grade"
+              onChange={() => {}}
+              size="small"
+              disabled
+              value="4"
+            />
+          </Box>
+        );
       default:
         return <></>;
     }
@@ -109,7 +121,16 @@ const SearchTable: React.FC<SearchTableProps> = ({
             <TableRow>
               {columns.map((column) =>
                 column.key === "actions" ? (
-                  actions.map(() => <TableCell key={column.key}></TableCell>)
+                  actions.map(() => (
+                    <TableCell
+                      key={column.key}
+                      align="left"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {column.label}
+                      <Box sx={{ height: "56px" }}></Box>
+                    </TableCell>
+                  ))
                 ) : (
                   <TableCell
                     key={column.key}

@@ -72,7 +72,7 @@ const Declaration = () => {
       />
       <Box className="wrapper">
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          Δήλωση
+          Δήλωση:
         </Typography>
         <Box className="header">
           <Typography variant="body1">
