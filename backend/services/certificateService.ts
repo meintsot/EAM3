@@ -18,7 +18,7 @@ class CertificateService {
   }
 
   static async submitCertificateRequest (request: SubmitCertificateRequest, user: User): Promise<Certificate> {
-    const res = await CertificateRepository.saveCertificate({ ...request, studentId: user._id!, state: 'pending' })
+    const res = await CertificateRepository.saveCertificate({ ...request, studentId: user._id!, state: 'pending', dateRequested: new Date().toDateString() })
     await HistoryRepository.saveHistory({ userId: user._id!, action: HistoryActions.REQUEST_CERTIFICATE, date: new Date() })
     return res
   }
@@ -26,6 +26,7 @@ class CertificateService {
   static async confirmCertificate (certificateId: string, user: User): Promise<Certificate> {
     const certificate = await CertificateRepository.findOneByCriteria({ _id: certificateId, studentId: user._id })
     certificate.state = 'confirmed'
+    certificate.dateRegistered = new Date().toDateString()
     const res = await CertificateRepository.updateCertificate(certificateId, certificate)
     await HistoryRepository.saveHistory({ userId: user._id!, action: HistoryActions.APPROVE_CERTIFICATE, date: new Date() })
     return res

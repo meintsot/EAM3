@@ -8,6 +8,7 @@ import {
 import { UserHistoryDTO } from "../../backend/models/types/userHistory";
 import { AlertColor } from "@mui/material";
 import {CoursesForDeclaration} from "../../backend/models/types/declaration";
+import {SubmitCertificateRequest} from "../../backend/models/types/certificate";
 
 export interface Route {
   label: string;
@@ -116,8 +117,13 @@ export interface SearchTableProps extends TableProps {
   rows: Array<CoursesRow | any>;
   columns: Array<Column>;
   actions: Array<string>;
+  totalResults: number
   onCheckedCourses?: React.Dispatch<React.SetStateAction<CoursesForDeclaration[]>>;
   onFilterChange?: React.Dispatch<React.SetStateAction<Filters>>;
+}
+
+export interface StepperFormProps {
+  onSubmit: React.Dispatch<SubmitCertificateRequest>;
 }
 
 export interface ActionButtonProps {

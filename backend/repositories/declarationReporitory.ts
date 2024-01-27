@@ -21,8 +21,6 @@ class DeclarationRepository {
       }
     }
 
-    console.log(adjustedCriteria)
-
     const skip = (paginationRequest.page - 1) * paginationRequest.pageSize
     return await DeclarationModel.find(adjustedCriteria).skip(skip).limit(paginationRequest.pageSize)
   }

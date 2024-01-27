@@ -1,10 +1,12 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Box, Typography, Button } from "@mui/material";
 import SearchTable from "../../components/Table/SearchTable";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 
-import { Column } from "../../model";
+import {Column, Filters} from "../../model";
 import { useAuth } from "../../providers/AuthProvider";
+import API from "../../api";
+import {RetrieveStudentGrades, RetrieveStudentGradesRequest} from "../../../../backend/models/types/studentGrade";
 
 const titles: Array<Column> = [
   {
@@ -40,9 +42,18 @@ const titles: Array<Column> = [
 ];
 
 const Grades = () => {
+  const [gradingResults, setGradingResults] = useState<RetrieveStudentGrades>({ studentGrades: [], total: 0 });
+
   const { userData } = useAuth();
-  const { userType } = userData;
-  const [gradebooks, setGradebooks] = useState([]);
+
+  useEffect(() => {
+    API.retrieveStudentGrades({ page: 1, pageSize: 10 }).then(res => setGradingResults(res));
+  }, [userData.authToken]);
+
+  const handleFilterChange = (filters: Filters) => {
+    const request = filters as RetrieveStudentGradesRequest;
+    API.retrieveStudentGrades(request).then(res => setGradingResults(res));
+  }
 
   return (
     <Box className="wrapper">
@@ -62,8 +73,9 @@ const Grades = () => {
       </Box>
       <SearchTable
         columns={titles}
-        rows={gradebooks}
-        setRows={setGradebooks}
+        rows={gradingResults.studentGrades}
+        totalResults={gradingResults.total}
+        onFilterChange={handleFilterChange}
         actions={["view", "checkbox"]}
       />
     </Box>

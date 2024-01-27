@@ -1,39 +1,12 @@
 import { Column } from "../../model";
 import SearchTable from "../../components/Table/SearchTable";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Box, Typography, Button } from "@mui/material";
-import { CoursesRowStudent } from "../../model";
 import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-
-const defaultData: Array<CoursesRowStudent> = [
-  {
-    courseId: "15100122",
-    courseName:
-      "ΤΕΧΝΟΛΟΓΙΕΣ ΤΗΣ ΠΛΗΡΟΦΟΡΙΑΣ ΚΑΙ ΤΩΝ ΕΠΙΚΟΙΝΩΝΙΩΝ (ΤΠΕ) ΣΤΗ ΜΑΘΗΣΗ",
-    semester: 5,
-    category: "Προαιρετικό",
-    professor: "Γρηγοριάδου",
-    ects: 6,
-  },
-  {
-    courseId: "15100123",
-    courseName:
-      "ΤΕΧΝΟΛΟΓΙΕΣ ΤΗΣ ΠΛΗΡΟΦΟΡΙΑΣ ΚΑΙ ΤΩΝ ΕΠΙΚΟΙΝΩΝΙΩΝ (ΤΠΕ) ΣΤΗ ΜΑΘΗΣΗ",
-    semester: 5,
-    category: "Προαιρετικό",
-    professor: "Γρηγοριάδου",
-    ects: 6,
-  },
-  {
-    courseId: "15100124",
-    courseName:
-      "ΤΕΧΝΟΛΟΓΙΕΣ ΤΗΣ ΠΛΗΡΟΦΟΡΙΑΣ ΚΑΙ ΤΩΝ ΕΠΙΚΟΙΝΩΝΙΩΝ (ΤΠΕ) ΣΤΗ ΜΑΘΗΣΗ",
-    semester: 5,
-    category: "Προαιρετικό",
-    professor: "Γρηγοριάδου",
-    ects: 6,
-  },
-];
+import {DeclarationDetailsDTO} from "../../../../backend/models/types/declaration";
+import API from "../../api";
+import {useAuth} from "../../providers/AuthProvider";
+import {useParams} from "react-router-dom";
 
 const titles: Array<Column> = [
   {
@@ -51,7 +24,17 @@ const titles: Array<Column> = [
 ];
 
 const Declaration = () => {
-  const [courses, setCourses] = useState(defaultData);
+  const { userData } = useAuth();
+  const [declarationDetails, setDeclarationDetails] = useState<DeclarationDetailsDTO | null>(null);
+  const { declarationId } = useParams();
+  const [disabled, setDisabled] = useState(false);
+  useEffect(() => {
+    API.retrieveDeclaration(declarationId!).then(res => {
+      setDeclarationDetails(res);
+      setDisabled(res.state !== 'pending');
+    });
+  }, [declarationId, userData.authToken]);
+
   const [openModal, setOpenModal] = useState(false);
 
   const handleSubmit = () => {
@@ -59,7 +42,7 @@ const Declaration = () => {
   };
 
   const handleConfirm = () => {
-    // ...
+    API.confirmDeclaration(declarationId!).catch(err => console.log(err));
   };
 
   return (
@@ -81,8 +64,8 @@ const Declaration = () => {
         </Box>
         <SearchTable
           columns={titles}
-          rows={courses}
-          setRows={setCourses}
+          rows={declarationDetails?.courses ?? []}
+          totalResults={declarationDetails?.courses.length ?? 0}
           actions={["delete"]}
         />
         <Button
@@ -90,6 +73,7 @@ const Declaration = () => {
           className="main-action-button"
           onClick={handleSubmit}
           sx={{ fontWeight: "bold", mt: "16px", alignSelf: "end" }}
+          disabled={disabled}
         >
           οριστικη υποβολη
         </Button>

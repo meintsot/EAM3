@@ -6,9 +6,9 @@ import SearchTable from "../../components/Table/SearchTable";
 import SendIcon from "@mui/icons-material/Send";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useAuth } from "../../providers/AuthProvider";
-import {Column, CoursesResults, CoursesRow, Filters} from "../../model";
+import {Column, CoursesResults, Filters} from "../../model";
 import API from "../../api";
-import {RetrieveCoursesRequest} from "../../../../backend/models/types/course";
+import {MyCoursesRequest, RetrieveCoursesRequest} from "../../../../backend/models/types/course";
 import {CoursesForDeclaration, SubmitDeclarationRequest} from "../../../../backend/models/types/declaration";
 
 const titlesStudent: Array<Column> = [
@@ -94,12 +94,19 @@ const Courses = () => {
   );
 
   const handleFilterChange = (filters: Filters) => {
-    const request = filters as RetrieveCoursesRequest;
-    API.retrieveStudentCourses(request).then((res) => {
-      setCoursesResults(res);
-    });
+    if (userType === 'student') {
+      const request = filters as RetrieveCoursesRequest;
+      API.retrieveStudentCourses(request).then((res) => {
+        setCoursesResults(res);
+      });
+    } else {
+      const request = filters as MyCoursesRequest;
+      API.myCourses(request).then((res) => {
+        setCoursesResults(res);
+      });
+    }
   }
- 
+
   const submitDeclaration = () => {
     API.submitDeclaration({
       examPeriod: '',
@@ -117,8 +124,9 @@ const Courses = () => {
         <>
           <SearchTable
             columns={titlesStudent}
-            rows={coursesResults?.courses!}
+            rows={coursesResults?.courses ?? []}
             onFilterChange={handleFilterChange}
+            totalResults={coursesResults?.total ?? 0}
             actions={["view"]}
           />
         </>
@@ -142,9 +150,10 @@ const Courses = () => {
           </Box>
           <SearchTable
             columns={titlesStudent}
-            rows={coursesResults?.courses!}
+            rows={coursesResults?.courses ?? []}
             actions={["view", "checkbox"]}
             onFilterChange={handleFilterChange}
+            totalResults={coursesResults?.total ?? 0}
             onCheckedCourses={setCoursesToBeDeclared}
           />
         </>
@@ -166,7 +175,8 @@ const Courses = () => {
           </Box>
           <SearchTable
             columns={titlesProfessor}
-            rows={coursesResults?.courses!}
+            rows={coursesResults?.courses ?? []}
+            totalResults={userData.myCourses?.length ?? 0}
             onFilterChange={handleFilterChange}
             actions={["add"]}
           />

@@ -45,11 +45,13 @@ interface Course {
 interface CourseGeneralInformation {
   courseId: string
   courseName: string
-  semester: number[]
+  semester: string
   category: string
   fieldOfStudies: string
   ects: number
   teachingHours: TeachingHours
+  majors: Major[]
+  relevantCourses: RelevantCourses
 }
 
 interface CourseDTO {
@@ -61,10 +63,15 @@ interface CourseDTO {
   ects: number
 }
 
+interface MyCourseDTO {
+  courseId: string
+  courseName: string
+  semester: number[]
+  category: string
+}
+
 interface CourseDetailsDTO {
   generalInformation: CourseGeneralInformation
-  majors: Major[]
-  relevantCourses: RelevantCourses
   description: string
   additionalInformation: AdditionalInformationCourse
 }
@@ -78,9 +85,19 @@ interface RetrieveCoursesRequest extends PaginationRequest {
   ects?: number
 }
 
+interface MyCoursesRequest extends PaginationRequest {
+  courseId?: string
+  courseName?: string
+  semester?: number[]
+  category?: string
+}
+
+interface MyCoursesResponse {
+  myCourses: MyCourseDTO[]
+  total: number
+}
+
 interface RetrieveCoursesResponse {
   courses: CourseDTO[]
   total: number
 }
-
-type RetrieveMyCoursesRequest = Omit<RetrieveCoursesRequest, 'teacher'>

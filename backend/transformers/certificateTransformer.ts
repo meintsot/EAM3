@@ -26,7 +26,8 @@ class CertificateTransformer {
       type: certificate.type,
       state: certificate.state,
       dateRequested: certificate.dateRequested,
-      dateRegistered: certificate.dateRegistered
+      dateRegistered: certificate.dateRegistered,
+      numberOfReplicas: certificate.numberOfReplicas
     }
   }
 

@@ -9,6 +9,14 @@ interface UserProfile {
   communicationDetails: CommunicationDetails
 }
 
+interface UpdateUserProfileRequest {
+  phoneNumber: string
+  profilePicture: string
+  personalInformation: PersonalInformation
+  communicationDetails: CommunicationDetails
+  myCourses?: []
+}
+
 interface GeneralInformation {
   firstName: string
   lastName: string

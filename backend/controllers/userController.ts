@@ -5,6 +5,7 @@ import UserTransformer from '../transformers/userTransformer'
 import { type AuthenticatedRequest, type AuthenticatedRequestWithQueryParams } from '../middleware/middleware'
 import AuthUtils from '../middleware/authUtils'
 import CourseService from '../services/courseService'
+import { type UpdateUserProfileRequest } from '../models/types/userProfile'
 
 class UserController {
   static async registerUser (req: Request, res: Response) {
@@ -37,11 +38,21 @@ class UserController {
     }
   }
 
-  static async RetrieveUserHistory (req: AuthenticatedRequestWithQueryParams<PaginationRequest>, res: Response) {
+  static async retrieveUserHistory (req: AuthenticatedRequestWithQueryParams<PaginationRequest>, res: Response) {
     try {
       const history = await UserService.retrieveUserHistory(req.queryParams!, req.user!)
       const total = await UserService.countUserHistory(req.user!)
       return res.status(200).json(UserTransformer.toRetrieveUserHistoryResponse(history, total))
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message })
+    }
+  }
+
+  static async updateUserProfile (req: AuthenticatedRequest, res: Response) {
+    try {
+      const request = req.body as UpdateUserProfileRequest
+      const { user, courseIds } = await UserService.updateUserProfile(request, req.user!)
+      return res.status(201).json(UserTransformer.toUpdateUserProfileResponse(user, courseIds))
     } catch (error: any) {
       return res.status(500).json({ message: error.message })
     }

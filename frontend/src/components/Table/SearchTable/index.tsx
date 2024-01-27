@@ -16,13 +16,13 @@ import BasicInput from "../../Input/BasicInput";
 import DropdownInput from "../../Input/DropdownInput";
 import ActionButton from "../../ActionButton";
 import CheckBox from "../../CheckBox";
-import {RetrieveCoursesRequest} from "../../../../../backend/models/types/course";
 import {CoursesForDeclaration} from "../../../../../backend/models/types/declaration";
 
 const SearchTable: React.FC<SearchTableProps> = ({
   columns,
   rows,
   actions,
+  totalResults,
   onCheckedCourses,
   onFilterChange,
 }) => {
@@ -232,7 +232,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
               <TablePagination
                 rowsPerPageOptions={[10, 20, { label: "All", value: -1 }]}
                 colSpan={3}
-                count={rows.length}
+                count={totalResults}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

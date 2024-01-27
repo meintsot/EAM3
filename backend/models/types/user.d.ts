@@ -32,3 +32,10 @@ interface LoginUserResponseDTO {
   myCourses?: string[]
   authToken?: string
 }
+
+interface UpdateUserProfileResponse {
+  userName: string
+  userType: string
+  userProfile: UserProfileDTO
+  myCourses?: string[]
+}

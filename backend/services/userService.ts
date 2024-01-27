@@ -6,6 +6,7 @@ import CourseRepository from '../repositories/courseRepository'
 import { type UserHistory } from '../models/types/userHistory'
 import HistoryRepository from '../repositories/historyRepository'
 import { HistoryActions } from '../models/historyActions'
+import { type UpdateUserProfileRequest } from '../models/types/userProfile'
 
 dotenv.config()
 
@@ -79,6 +80,22 @@ class UserService {
 
   static async countUserHistory (user: User): Promise<number> {
     return await HistoryRepository.countByCriteria({ userId: user._id })
+  }
+
+  static async updateUserProfile (request: UpdateUserProfileRequest, user: User): Promise<{ user: User, courseIds?: string[] }> {
+    user.userProfile.generalInformation.phoneNumber = request.phoneNumber
+    user.userProfile.generalInformation.profilePicture = request.profilePicture
+    user.userProfile.personalInformation = request.personalInformation
+    user.userProfile.communicationDetails = request.communicationDetails
+    const newUser = await UserRepository.updateUser(user._id as string, user)
+    if (user.userType === 'teacher') {
+      const courseIds = request.myCourses ?? []
+      await HistoryRepository.saveHistory({ userId: user._id!, action: HistoryActions.UPDATE_PROFILE, date: new Date() })
+      await CourseRepository.updateManyByCriteria({ courseId: { $in: courseIds } }, { teacherId: user._id as string, teacherName: user.userName })
+      return { user: newUser, courseIds }
+    }
+    await HistoryRepository.saveHistory({ userId: user._id!, action: HistoryActions.UPDATE_PROFILE, date: new Date() })
+    return { user: newUser }
   }
 }
 

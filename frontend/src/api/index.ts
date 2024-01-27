@@ -1,14 +1,19 @@
 import axios from "axios";
-import {LoginUserRequestDTO, LoginUserResponseDTO, RegisterUserDTO} from "../../../backend/models/types/user";
+import {
+    LoginUserRequestDTO,
+    LoginUserResponseDTO,
+    RegisterUserDTO,
+    UpdateUserProfileResponse
+} from "../../../backend/models/types/user";
 import {RetrieveUserHistoryResponse} from "../../../backend/models/types/userHistory";
 import {CoursesResults, UserData} from "../model";
 import {
     CourseDetailsDTO,
-    CourseDTO,
+    CourseDTO, MyCoursesRequest, MyCoursesResponse,
     RetrieveCoursesRequest,
     RetrieveCoursesResponse
 } from "../../../backend/models/types/course";
-import {buildCoursesResults} from "../mappers";
+import {buildCoursesResults, buildMyCoursesResults} from "../mappers";
 import {
     type DeclarationDetailsDTO,
     type RetrieveDeclarationsRequest, RetrieveDeclarationsResponse,
@@ -25,6 +30,7 @@ import {
     RetrieveCertificatesRequest,
     RetrieveCertificatesResponse, SubmitCertificateRequest
 } from "../../../backend/models/types/certificate";
+import {UpdateUserProfileRequest} from "../../../backend/models/types/userProfile";
 
 const api = axios.create({
     baseURL: 'http://localhost:8888/api',
@@ -70,6 +76,11 @@ const autoLogin = async (authToken: string): Promise<UserData> => {
     } as UserData
 }
 
+const updateUserProfile = async (payload: UpdateUserProfileRequest): Promise<UpdateUserProfileResponse> => {
+    const res = await api.post<UpdateUserProfileResponse>('/user/profile', payload)
+    return res.data
+}
+
 const getJWTHeader = () => {
     return `Bearer ${localStorage.getItem("JWT")}`
 }
@@ -102,6 +113,11 @@ const retrieveStudentCourses = async (payload: RetrieveCoursesRequest): Promise<
 const retrieveCourse = async (courseId: string): Promise<CourseDetailsDTO> => {
     const res = await api.get<CourseDetailsDTO>(`/courses/${courseId}`)
     return res.data
+}
+
+const myCourses = async (payload: MyCoursesRequest): Promise<CoursesResults> => {
+    const res = await api.get<MyCoursesResponse>("/myCourses", {headers: { Authorization: getJWTHeader() }, params: payload });
+    return buildMyCoursesResults(res.data)
 }
 
 const submitDeclaration = async (payload: SubmitDeclarationRequest): Promise<void> => {
@@ -163,10 +179,12 @@ const API = {
     register,
     login,
     autoLogin,
+    updateUserProfile,
     uploadProfileImage,
     getAvailableCourses,
     retrieveUserHistory,
     retrieveStudentCourses,
+    myCourses,
     submitDeclaration,
     retrieveCourse,
     retrieveDeclaration,

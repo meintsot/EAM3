@@ -1,6 +1,6 @@
 import { type User } from '../models/types/user'
 import UserModel from '../models/userSchema'
-import { type FilterQuery } from 'mongoose'
+import { type FilterQuery, type UpdateQuery } from 'mongoose'
 
 class UserRepository {
   static async saveUser (user: User): Promise<User> {
@@ -13,6 +13,14 @@ class UserRepository {
       throw new Error('User not found')
     }
     return foundUser
+  }
+
+  static async updateUser (userId: string, user: UpdateQuery<User>): Promise<User> {
+    const newUser = await UserModel.findOneAndUpdate({ _id: userId }, user, { new: true }).lean()
+    if (newUser == null) {
+      throw new Error('user not found')
+    }
+    return newUser
   }
 }
 

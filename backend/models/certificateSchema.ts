@@ -10,13 +10,18 @@ const certificateSchema: mongoose.Schema<Certificate> = new mongoose.Schema({
     type: String,
     required: true
   },
+  numberOfReplicas: {
+    type: Number,
+    required: true,
+    default: 0
+  },
   dateRequested: {
     type: String,
     required: true
   },
   dateRegistered: {
     type: String,
-    required: true
+    required: false
   },
   studentId: {
     type: Schema.Types.ObjectId,
