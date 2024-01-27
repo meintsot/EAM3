@@ -11,14 +11,14 @@ export default function BasicInput({
   onChange,
   size = "medium",
   disabled = false,
-  value = "",
+  defaultValue = "",
 }: BasicInputProps) {
   return (
     <TextField
       id={id}
       label={placeholder}
       variant="outlined"
-      value={value}
+      defaultValue={defaultValue}
       fullWidth
       required={required}
       error={error}

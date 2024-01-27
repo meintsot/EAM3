@@ -144,6 +144,7 @@ const EditProfile: React.FC = () => {
                     error={errorFields.includes("fathersName")}
                     errorText="Το όνομα πατέρα είναι υποχρεωτικό"
                     required
+                    defaultValue={formValues.fathersName}
                   />
                   <BasicInput
                     id="mothersName"
@@ -152,6 +153,7 @@ const EditProfile: React.FC = () => {
                     error={errorFields.includes("mothersName")}
                     errorText="Το όνομα μητέρας είναι υποχρεωτικό"
                     required
+                    defaultValue={formValues.mothersName}
                   />
                   <BasicInput
                     id="dateOfBirth"
@@ -160,12 +162,14 @@ const EditProfile: React.FC = () => {
                     error={errorFields.includes("dateOfBirth")}
                     errorText="Η ημερομηνία γέννησης είναι υποχρεωτική"
                     required
+                    defaultValue={formValues.dateOfBirth}
                   />
                   <DropdownInput
                     id="maritalStatus"
                     items={maritalStatuses}
                     placeholder="Οικογενειακή κατάσταση"
                     onChange={handleChange}
+                    defaultValue={formValues.maritalStatus}
                   />
                   <BasicInput
                     id="placeOfBirth"
@@ -174,6 +178,7 @@ const EditProfile: React.FC = () => {
                     error={errorFields.includes("placeOfBirth")}
                     errorText="Ο τόπος γέννησης είναι υποχρεωτικός"
                     required
+                    defaultValue={formValues.placeOfBirth}
                   />
                 </Box>
                 <Box className="editFormSectionColumn">
@@ -184,11 +189,13 @@ const EditProfile: React.FC = () => {
                     error={errorFields.includes("idNumber")}
                     errorText="Ο αριθμός δελτίου ταυτότητας είναι υποχρεωτικός"
                     required
+                    defaultValue={formValues.idNumber}
                   />
                   <BasicInput
                     id="issuingAuthority"
                     placeholder="Εκδούσα αρχή"
                     onChange={handleChange}
+                    defaultValue={formValues.issuingAuthority}
                   />
                   <BasicInput
                     id="dateOfPublish"
@@ -197,6 +204,7 @@ const EditProfile: React.FC = () => {
                     error={errorFields.includes("dateOfPublish")}
                     errorText="Η ημερομηνία έκδοσης είναι υποχρεωτική"
                     required
+                    defaultValue={formValues.dateOfPublish}
                   />
                   <BasicInput
                     id="socialSecurityNumber"
@@ -205,6 +213,7 @@ const EditProfile: React.FC = () => {
                     error={errorFields.includes("socialSecurityNumber")}
                     errorText="Ο ΑΜΚΑ είναι υποχρεωτικός"
                     required
+                    defaultValue={formValues.socialSecurityNumber}
                   />
                   <BasicInput
                     id="phoneNumber"
@@ -213,6 +222,7 @@ const EditProfile: React.FC = () => {
                     error={errorFields.includes("phoneNumber")}
                     errorText="Το κινητό τηλέφωνο είναι υποχρεωτικό"
                     required
+                    defaultValue={formValues.phoneNumber}
                   />
                 </Box>
               </Box>
@@ -230,6 +240,7 @@ const EditProfile: React.FC = () => {
                     error={errorFields.includes("address")}
                     errorText="Η μόνιμη διεύθυνση κατοικίας είναι υποχρεωτική"
                     required
+                    defaultValue={formValues.address}
                   />
                   <BasicInput
                     id="city"
@@ -238,11 +249,13 @@ const EditProfile: React.FC = () => {
                     error={errorFields.includes("city")}
                     errorText="Η μόνιμη πόλη κατοικίας είναι υποχρεωτική"
                     required
+                    defaultValue={formValues.city}
                   />
                   <BasicInput
                     id="telephone"
                     placeholder="Τηλέφωνο μόνιμης κατοικίας"
                     onChange={handleChange}
+                    defaultValue={formValues.telephone}
                   />
                   <BasicInput
                     id="postalCode"
@@ -251,6 +264,7 @@ const EditProfile: React.FC = () => {
                     error={errorFields.includes("postalCode")}
                     errorText="Ο ταχυδρομικός κώδικας είναι ιυποχρεωτικός"
                     required
+                    defaultValue={formValues.postalCode}
                   />
                 </Box>
                 <Box className="editFormSectionColumn">
@@ -258,21 +272,25 @@ const EditProfile: React.FC = () => {
                     id="temporaryAddress"
                     placeholder="Προσωρινή διεύθυνση κατοικίας"
                     onChange={handleChange}
+                    defaultValue={formValues.temporaryAddress}
                   />
                   <BasicInput
                     id="temporaryCity"
                     placeholder="Προσωρινή πόλη κατοικίας"
                     onChange={handleChange}
+                    defaultValue={formValues.temporaryCity}
                   />
                   <BasicInput
                     id="temporaryTelephone"
                     placeholder="Τηλέφωνο προσωρινής κατοικίας"
                     onChange={handleChange}
+                    defaultValue={formValues.temporaryTelephone}
                   />
                   <BasicInput
                     id="temporaryPostalCode"
                     placeholder="ΤΚ προσωρινής κατοικίας"
                     onChange={handleChange}
+                    defaultValue={formValues.temporaryPostalCode}
                   />
                 </Box>
               </Box>
@@ -290,6 +308,7 @@ const EditProfile: React.FC = () => {
                   error={errorFields.includes("myCourses")}
                   errorText="Το μάθημα είναι υποχρεωτικό"
                   required
+                  defaultValues={formValues.myCourses}
                 />
               </Box>
             ) : (

@@ -20,8 +20,9 @@ export default function DropdownInput({
   required = false,
   size = "medium",
   onChange,
+  defaultValue = "",
 }: DropdownInputProps) {
-  const [selected, setSelected] = React.useState("");
+  const [selected, setSelected] = React.useState(defaultValue);
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelected(event.target.value as string);
@@ -42,6 +43,7 @@ export default function DropdownInput({
           labelId="dropdown-label"
           id="dropdown"
           value={selected}
+          displayEmpty
           label={placeholder}
           onChange={(e) => {
             onChange(id, e.target.value);

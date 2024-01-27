@@ -48,7 +48,7 @@ export default function PasswordInput({
             </IconButton>
           </InputAdornment>
         }
-        label="Password"
+        label={placeholder}
         onChange={(e) => onChange(id, e.target.value)}
         sx={{ backgroundColor: "white" }}
       />

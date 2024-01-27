@@ -14,6 +14,7 @@ const MultipleAutocompleteInput: React.FC<MultipleAutocompleteInputProps> = ({
   required = false,
   items,
   onChange,
+  defaultValues = [],
 }) => {
   return (
     <Stack spacing={3} sx={{ width: "100%" }}>
@@ -26,6 +27,7 @@ const MultipleAutocompleteInput: React.FC<MultipleAutocompleteInputProps> = ({
         onChange={(e, newValue) => {
           onChange(id, newValue);
         }}
+        defaultValue={defaultValues}
         renderInput={(params) => (
           <TextField
             {...params}

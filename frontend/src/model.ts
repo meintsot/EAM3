@@ -20,7 +20,7 @@ export interface SidebarProps {
 export interface InputProps {
   id: string;
   placeholder?: string;
-  value?: string;
+  defaultValue?: string;
   error?: boolean;
   errorText?: string;
   required?: boolean;
@@ -41,7 +41,9 @@ export interface DropdownInputProps extends InputProps {
 export interface DateInputProps extends InputProps {}
 
 export interface AutocompleteInputProps extends DropdownInputProps {}
-export interface MultipleAutocompleteInputProps extends DropdownInputProps {}
+export interface MultipleAutocompleteInputProps extends DropdownInputProps {
+  defaultValues?: string[];
+}
 
 export interface ImageUploaderProps extends InputProps {}
 

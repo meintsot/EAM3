@@ -99,7 +99,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
               onChange={() => {}}
               size="small"
               disabled
-              value="4"
+              defaultValue="4"
             />
           </Box>
         );

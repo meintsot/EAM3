@@ -10,6 +10,7 @@ export default function AutocompleteInput({
   errorText = "",
   required = false,
   onChange,
+  defaultValue = "",
 }: AutocompleteInputProps) {
   return (
     <Autocomplete
@@ -21,6 +22,7 @@ export default function AutocompleteInput({
       onChange={(e, newValue) => {
         onChange(id, newValue);
       }}
+      defaultValue={defaultValue}
       renderInput={(params) => (
         <TextField
           {...params}
