@@ -20,6 +20,7 @@ export interface SidebarProps {
 export interface InputProps {
   id: string;
   placeholder?: string;
+  value?: string;
   error?: boolean;
   errorText?: string;
   required?: boolean;
@@ -27,7 +28,9 @@ export interface InputProps {
   onChange: (arg0: string, arg1: any) => void;
 }
 
-export interface BasicInputProps extends InputProps {}
+export interface BasicInputProps extends InputProps {
+  disabled?: boolean;
+}
 
 export interface PasswordInputProps extends InputProps {}
 
@@ -193,4 +196,11 @@ export interface ConfirmationModalProps {
   open: boolean;
   onOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onConfirm: () => void;
+}
+
+export interface SliderListModalProps {
+  courses: Array<CoursesRow>;
+  onClick: (arg: string) => void;
+  open: boolean;
+  onOpen: (arg: boolean) => void;
 }

@@ -2,42 +2,56 @@ import { useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import SearchTable from "../../components/Table/SearchTable";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
-import SwapVertIcon from "@mui/icons-material/SwapVert";
 import DropdownInput from "../../components/Input/DropdownInput";
 
-import { GradesRow, Column } from "../../model";
+import { Column } from "../../model";
 import { useAuth } from "../../providers/AuthProvider";
 import getLastThreeExamPeriods from "../../helpers/findExamPeriod";
 import ConfirmationModal from "../../components/Modal/ConfirmationModal";
 
+const defaultData = [
+  {
+    registrationNumber: "123",
+    firstName: "Harry",
+    lastName: "Potter",
+    grade: "",
+  },
+  {
+    registrationNumber: "123",
+    firstName: "Harry",
+    lastName: "Potter",
+    grade: "",
+  },
+  {
+    registrationNumber: "123",
+    firstName: "Harry",
+    lastName: "Potter",
+    grade: "",
+  },
+];
+
 const titles: Array<Column> = [
   {
-    key: "_id",
+    key: "registrationNumber",
     label: "Αριθμός μητρώου",
     searchInputType: "text",
     options: [],
   },
   {
-    key: "courseName",
+    key: "firstName",
     label: "Όνομα",
     searchInputType: "text",
     options: [],
   },
   {
-    key: "courseId",
+    key: "lastName",
     label: "Επίθετο",
     searchInputType: "text",
     options: ["1", "2", "3", "4", "5"],
   },
   {
-    key: "state",
-    label: "Βαθμός",
-    searchInputType: "none",
-    options: [],
-  },
-  {
     key: "actions",
-    label: "",
+    label: "Βαθμός",
     searchInputType: "none",
     options: [],
   },
@@ -46,9 +60,14 @@ const titles: Array<Column> = [
 const GradeBook = () => {
   const { userData } = useAuth();
   const { userType } = userData;
-  const [gradebooks, setGradebooks] = useState([]);
+  const [gradebooks, setGradebooks] = useState(defaultData);
   const [disabled, setDisabled] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [examsPeriod, setExamsPeriod] = useState("");
+
+  const handleSelect = (id: string, value: string) => {
+    setExamsPeriod(value);
+  };
 
   const handleSubmit = () => {
     setOpenModal(true);
@@ -74,14 +93,14 @@ const GradeBook = () => {
           <DropdownInput
             items={getLastThreeExamPeriods()}
             id="examsPeriod"
-            onChange={() => {}}
+            onChange={handleSelect}
             size="small"
             placeholder="Εξεταστική περίοδος"
           />
         </Box>
         <Box className="header">
           <Typography variant="body1">
-            Συμπηρώστε τον βαθμό κάθε φοιτητή ξεχωριστά ή αναφορτώστε αρχείο
+            Συμπηρώστε τον βαθμό κάθε φοιτητή ξεχωριστά ή μεταφορτώστε αρχείο
             csv.
           </Typography>
           <Button
@@ -90,7 +109,7 @@ const GradeBook = () => {
             onClick={() => {}}
             sx={{ fontWeight: "bold" }}
           >
-            αναφορτωση αρχειου
+            μεταφορτωση αρχειου
             <FileUploadOutlinedIcon fontSize="small" />
           </Button>
         </Box>
@@ -98,7 +117,7 @@ const GradeBook = () => {
           columns={titles}
           rows={gradebooks}
           setRows={setGradebooks}
-          actions={["view", "checkbox"]}
+          actions={["input"]}
         />
         <Button
           variant="contained"

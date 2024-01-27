@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import { Box, ButtonBase, MenuItem, IconButton, Menu } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import cloudUpload from "../../assets/img/CloudUpload.png";
@@ -14,7 +15,8 @@ import "./UserButton.css";
 const UserButton: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { userData } = useAuth();
-  const { userType } = userData;
+  const { userType, userProfile } = userData;
+  const navigate = useNavigate();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -50,11 +52,23 @@ const UserButton: React.FC = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose} className="menuItem">
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            navigate("/register");
+          }}
+          className="menuItem"
+        >
           <PersonAddIcon />
           Εγγραφή
         </MenuItem>
-        <MenuItem onClick={handleClose} className="menuItem">
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            navigate("/login");
+          }}
+          className="menuItem"
+        >
           <LoginIcon />
           Σύνδεση
         </MenuItem>
@@ -86,9 +100,16 @@ const UserButton: React.FC = () => {
         onClose={handleClose}
       >
         <MenuItem sx={{ fontWeight: "bold" }} className="fullName">
-          Μαρία Παρασκευοπούλου
+          {userProfile.generalInformation.firstName}
+          {userProfile.generalInformation.lastName}
         </MenuItem>
-        <MenuItem onClick={handleClose} className="menuItem">
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            navigate("/profile");
+          }}
+          className="menuItem"
+        >
           <PersonOutlinedIcon />
           Προφίλ
         </MenuItem>

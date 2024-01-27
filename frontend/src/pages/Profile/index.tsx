@@ -1,3 +1,4 @@
+import { Box, Typography } from "@mui/material";
 import Accordions from "../../components/Accordions";
 import SimpleTable from "../../components/Table/SimpleTable";
 import HistoryTable from "../../components/Table/HistoryTable";
@@ -8,7 +9,7 @@ import { RetrieveUserHistoryResponse } from "../../../../backend/models/types/us
 
 const Profile = () => {
   const { userData } = useAuth();
-  const { userProfile } = userData;
+  const { userType, userProfile } = userData;
   const [historyData, setHistoryData] = useState<RetrieveUserHistoryResponse>({
     userHistory: [],
     total: 0,
@@ -106,24 +107,35 @@ const Profile = () => {
   ];
 
   return (
-    <Accordions
-      sections={sections}
-      children={[
-        <SimpleTable
-          titleRows={personalInfoTitles}
-          valueRows={userProfile.personalInformation}
-        />,
-        <SimpleTable
-          titleRows={communicationDetailsTitles}
-          valueRows={userProfile.communicationDetails}
-        />,
-        <HistoryTable
-          totalResults={historyData.total}
-          rows={historyData.userHistory}
-          onPageChange={handleHistoryPageChange}
-        />,
-      ]}
-    />
+    <Box className="wrapper">
+      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+        {userProfile.generalInformation.firstName}
+        {userProfile.generalInformation.lastName}
+      </Typography>
+      {userType === "student" && (
+        <Box className="header">
+          <Typography variant="body1">A.Μ.: {userProfile.studentId}</Typography>
+        </Box>
+      )}
+      <Accordions
+        sections={sections}
+        children={[
+          <SimpleTable
+            titleRows={personalInfoTitles}
+            valueRows={userProfile.personalInformation}
+          />,
+          <SimpleTable
+            titleRows={communicationDetailsTitles}
+            valueRows={userProfile.communicationDetails}
+          />,
+          <HistoryTable
+            totalResults={historyData.total}
+            rows={historyData.userHistory}
+            onPageChange={handleHistoryPageChange}
+          />,
+        ]}
+      />
+    </Box>
   );
 };
 

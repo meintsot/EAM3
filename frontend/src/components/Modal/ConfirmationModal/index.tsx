@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Button, Typography, Modal } from "@mui/material";
 import { ConfirmationModalProps } from "../../../model";
 
