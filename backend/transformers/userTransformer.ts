@@ -1,4 +1,9 @@
-import { type User, type RegisterUserDTO, type LoginUserResponseDTO } from '../models/types/user'
+import {
+  type User,
+  type RegisterUserDTO,
+  type LoginUserResponseDTO,
+  type UpdateUserProfileResponse
+} from '../models/types/user'
 import { type UserProfileDTO } from '../models/types/userProfile'
 import { type RetrieveUserHistoryResponse, type UserHistory, type UserHistoryDTO } from '../models/types/userHistory'
 
@@ -20,6 +25,15 @@ class UserTransformer {
       userProfile: (user.userProfile as UserProfileDTO),
       myCourses: courseIds,
       authToken: token
+    }
+  }
+
+  static toUpdateUserProfileResponse (user: User, courseIds?: string[]): UpdateUserProfileResponse {
+    return {
+      userName: user.userName,
+      userType: user.userType,
+      userProfile: (user.userProfile as UserProfileDTO),
+      myCourses: courseIds
     }
   }
 

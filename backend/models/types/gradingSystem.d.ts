@@ -28,6 +28,11 @@ interface RetrieveGradingSystemRequest extends PaginationRequest {
   examPeriod?: string
 }
 
+interface RetrieveGradingSystemResponse {
+  gradingSystems: GradingSystemDTO[]
+  total: number
+}
+
 type SubmitGradingSystemRequest = Omit<GradingSystem, '_id' | 'teacherId'>
 
 interface RetrieveStudentGradesRequest extends PaginationRequest {

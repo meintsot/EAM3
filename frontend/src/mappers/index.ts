@@ -1,5 +1,35 @@
 import {RegisterUserDTO} from "../../../backend/models/types/user";
-import {RegisterForm} from "../model";
+import {CoursesResults, CoursesRow, RegisterForm} from "../model";
+import {CourseDTO, MyCourseDTO, MyCoursesResponse, RetrieveCoursesResponse} from "../../../backend/models/types/course";
+
+
+const toCoursesRow = (course: CourseDTO): CoursesRow => {
+    return {
+        courseId: course.courseId,
+        courseName: course.courseName,
+        semester: course.semester[0],
+        category: course.category,
+        professor: course.teacher,
+        ects: course.ects
+    } as CoursesRow
+}
+
+const toMyCoursesRow = (course: MyCourseDTO): CoursesRow => {
+    return {
+        courseId: course.courseId,
+        courseName: course.courseName,
+        semester: course.semester[0],
+        category: course.category,
+    } as CoursesRow
+}
+
+const toCoursesRows = (courses: CourseDTO[]): CoursesRow[] => {
+    return courses.map(toCoursesRow)
+}
+
+const toMyCoursesRows = (courses: MyCourseDTO[]): CoursesRow[] => {
+    return courses.map(toMyCoursesRow)
+}
 
 export const buildRegisterPayload = (formValues: RegisterForm): RegisterUserDTO => {
     return {
@@ -39,4 +69,18 @@ export const buildRegisterPayload = (formValues: RegisterForm): RegisterUserDTO 
         },
         myCourses: formValues.myCourses as string[]
     } as RegisterUserDTO
+}
+
+export const buildCoursesResults = (res: RetrieveCoursesResponse): CoursesResults => {
+    return {
+        courses: toCoursesRows(res.courses),
+        total: res.total
+    } as CoursesResults
+}
+
+export const buildMyCoursesResults = (res: MyCoursesResponse): CoursesResults => {
+    return {
+        courses: toMyCoursesRows(res.myCourses),
+        total: res.total
+    } as CoursesResults
 }

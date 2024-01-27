@@ -1,21 +1,17 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
 import SearchTable from "../../components/Table/SearchTable";
 import { Add } from "@mui/icons-material";
 
-import { Column, CoursesRow } from "../../model";
+import {Column, CoursesRow, Filters} from "../../model";
 import SliderListModal from "../../components/Modal/SliderListModal";
-
-const defaultData = [
-  {
-    _id: "123",
-    courseName: "mathima",
-    courseId: "123",
-    state: "Προσωρινή αποθήκευση",
-    examPeriod: "january",
-  },
-];
+import {
+  RetrieveGradingSystemRequest,
+  RetrieveGradingSystemResponse
+} from "../../../../backend/models/types/gradingSystem";
+import {useAuth} from "../../providers/AuthProvider";
+import API from "../../api";
 
 const titles: Array<Column> = [
   {
@@ -57,29 +53,22 @@ const titles: Array<Column> = [
 ];
 
 const GradeBooks = () => {
-  const [courses, setCourses] = useState<Array<CoursesRow>>([
-    {
-      courseName: "Mathima1",
-      courseId: "123",
-      semester: 3,
-      category: "string; ",
-    },
-    {
-      courseName: "Mathima2",
-      courseId: "124",
-      semester: 3,
-      category: " string; ",
-    },
-    {
-      courseName: "Mathima3",
-      courseId: "125",
-      semester: 3,
-      category: "string;",
-    },
-  ]);
+  const [courses, setCourses] = useState<Array<CoursesRow>>([]);
   const navigate = useNavigate();
-  const [gradebooks, setGradebooks] = useState(defaultData);
+  const [gradebookResults, setGradebookResults] = useState<RetrieveGradingSystemResponse>({ gradingSystems: [], total: 0 });
   const [openModal, setOpenModal] = useState(false);
+
+  const { userData } = useAuth();
+
+  useEffect(() => {
+    API.retrieveGradingSystems({ page: 1, pageSize: 10 }).then(res => setGradebookResults(res));
+    API.myCourses({ page: 1, pageSize: 100 }).then(res => setCourses(res.courses))
+  }, [userData.authToken]);
+
+  const handleFilterChange = (filters: Filters) => {
+    const request = filters as RetrieveGradingSystemRequest;
+    API.retrieveGradingSystems(request).then(res => setGradebookResults(res));
+  }
 
   const handleClick = () => {
     setOpenModal(true);
@@ -115,8 +104,9 @@ const GradeBooks = () => {
         </Box>
         <SearchTable
           columns={titles}
-          rows={gradebooks}
-          setRows={setGradebooks}
+          rows={gradebookResults.gradingSystems ?? []}
+          totalResults={gradebookResults.total ?? 0}
+          onFilterChange={handleFilterChange}
           actions={["view"]}
         />
       </Box>

@@ -28,6 +28,10 @@ class GradingSystemService {
     return await GradingSystemRepository.findByCriteria({ ...request, teacherId: user._id }, request as PaginationRequest)
   }
 
+  static async countGradingSystems ({ page, pageSize, ...criteria }: RetrieveGradingSystemRequest, user: User): Promise<number> {
+    return await GradingSystemRepository.countByCriteria({ ...criteria, teacherId: user._id })
+  }
+
   static async retrieveGradingSystemDetails (gradingSystemId: string, user: User): Promise<GradingSystem> {
     return await GradingSystemRepository.findOneByCriteria({ _id: gradingSystemId, teacherId: user._id })
   }

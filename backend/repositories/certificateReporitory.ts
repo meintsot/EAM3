@@ -14,7 +14,6 @@ class CertificateRepository {
         }
         if (typeof value === 'string') {
           // Use a regular expression for partial matching
-          // Assuming you want case-insensitive matching
           adjustedCriteria[key] = new RegExp(value, 'i')
         } else {
           // For non-string fields, use the original criteria
@@ -23,10 +22,29 @@ class CertificateRepository {
       }
     }
 
-    console.log(adjustedCriteria)
-
     const skip = (paginationRequest.page - 1) * paginationRequest.pageSize
     return await CertificateModel.find(adjustedCriteria).skip(skip).limit(paginationRequest.pageSize)
+  }
+
+  static async countByCriteria (criteria: FilterQuery<Certificate>): Promise<number> {
+    const adjustedCriteria: FilterQuery<Certificate> = {}
+    for (const key in criteria) {
+      if (Object.prototype.hasOwnProperty.call(criteria, key)) {
+        const value = criteria[key]
+        if (key === 'pageSize' || key === 'page') {
+          continue
+        }
+        if (typeof value === 'string') {
+          // Use a regular expression for partial matching
+          adjustedCriteria[key] = new RegExp(value, 'i')
+        } else {
+          // For non-string fields, use the original criteria
+          adjustedCriteria[key] = value
+        }
+      }
+    }
+
+    return await CertificateModel.countDocuments(adjustedCriteria).exec()
   }
 
   static async findOneByCriteria (criteria: FilterQuery<Certificate>): Promise<Certificate> {

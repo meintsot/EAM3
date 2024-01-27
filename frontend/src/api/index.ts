@@ -1,8 +1,36 @@
 import axios from "axios";
-import {LoginUserRequestDTO, LoginUserResponseDTO, RegisterUserDTO} from "../../../backend/models/types/user";
-import {RetrieveUserHistoryResponse, UserHistoryDTO} from "../../../backend/models/types/userHistory";
-import {UserData} from "../model";
-import {CourseDTO} from "../../../backend/models/types/course";
+import {
+    LoginUserRequestDTO,
+    LoginUserResponseDTO,
+    RegisterUserDTO,
+    UpdateUserProfileResponse
+} from "../../../backend/models/types/user";
+import {RetrieveUserHistoryResponse} from "../../../backend/models/types/userHistory";
+import {CoursesResults, UserData} from "../model";
+import {
+    CourseDetailsDTO,
+    CourseDTO, MyCoursesRequest, MyCoursesResponse,
+    RetrieveCoursesRequest,
+    RetrieveCoursesResponse
+} from "../../../backend/models/types/course";
+import {buildCoursesResults, buildMyCoursesResults} from "../mappers";
+import {
+    type DeclarationDetailsDTO,
+    type RetrieveDeclarationsRequest, RetrieveDeclarationsResponse,
+    SubmitDeclarationRequest
+} from "../../../backend/models/types/declaration";
+import type {
+    GradingSystemDetailsDTO,
+    RetrieveGradingSystemRequest,
+    RetrieveGradingSystemResponse, SubmitGradingSystemRequest
+} from "../../../backend/models/types/gradingSystem";
+import type {RetrieveStudentGrades, RetrieveStudentGradesRequest} from "../../../backend/models/types/studentGrade";
+import {
+    CertificateDetailsDTO,
+    RetrieveCertificatesRequest,
+    RetrieveCertificatesResponse, SubmitCertificateRequest
+} from "../../../backend/models/types/certificate";
+import {UpdateUserProfileRequest} from "../../../backend/models/types/userProfile";
 
 const api = axios.create({
     baseURL: 'http://localhost:8888/api',
@@ -48,15 +76,24 @@ const autoLogin = async (authToken: string): Promise<UserData> => {
     } as UserData
 }
 
+const updateUserProfile = async (payload: UpdateUserProfileRequest): Promise<UpdateUserProfileResponse> => {
+    const res = await api.post<UpdateUserProfileResponse>('/user/profile', payload)
+    return res.data
+}
+
+const getJWTHeader = () => {
+    return `Bearer ${localStorage.getItem("JWT")}`
+}
+
 const retrieveUserHistory = async (payload: PaginationRequest): Promise<RetrieveUserHistoryResponse> => {
   const res = await api.get<RetrieveUserHistoryResponse>("/user/history",
-      { params: payload, headers: { Authorization: `Bearer ${localStorage.getItem("JWT")}` }})
+      { params: payload, headers: { Authorization: getJWTHeader() }})
   return res.data
 };
 
 const getAvailableCourses = async (): Promise<CourseDTO[]> => {
-  const res = await api.get<CourseDTO[]>("/availableCourses")
-  return res.data
+  const res = await api.get<CourseDTO[]>("/availableCourses");
+  return res.data;
 };
 
 const uploadProfileImage = async (formData: FormData): Promise<string> => {
@@ -68,13 +105,99 @@ const uploadProfileImage = async (formData: FormData): Promise<string> => {
     return res.data.fileURL;
 };
 
+const retrieveStudentCourses = async (payload: RetrieveCoursesRequest): Promise<CoursesResults> => {
+    const res = await api.get<RetrieveCoursesResponse>("/courses", {params: payload});
+    return buildCoursesResults(res.data);
+}
+
+const retrieveCourse = async (courseId: string): Promise<CourseDetailsDTO> => {
+    const res = await api.get<CourseDetailsDTO>(`/courses/${courseId}`)
+    return res.data
+}
+
+const myCourses = async (payload: MyCoursesRequest): Promise<CoursesResults> => {
+    const res = await api.get<MyCoursesResponse>("/myCourses", {headers: { Authorization: getJWTHeader() }, params: payload });
+    return buildMyCoursesResults(res.data)
+}
+
+const submitDeclaration = async (payload: SubmitDeclarationRequest): Promise<void> => {
+    await api.post('/declarations', payload, {headers: {Authorization: getJWTHeader()}});
+}
+
+const retrieveDeclaration = async (declarationId: string): Promise<DeclarationDetailsDTO> => {
+    const res = await api.get<DeclarationDetailsDTO>(`/declarations/${declarationId}`, { headers: { Authorization: getJWTHeader() } })
+    return res.data
+}
+
+const retrieveDeclarations = async (payload: RetrieveDeclarationsRequest): Promise<RetrieveDeclarationsResponse> => {
+    const res = await api.get<RetrieveDeclarationsResponse>('/declarations', { headers: { Authorization: getJWTHeader() }, params: payload })
+    return res.data
+}
+
+const confirmDeclaration = async (declarationId: string): Promise<void> => {
+    await api.post(`/declarations/${declarationId}/confirm`, null, { headers: { Authorization: getJWTHeader() } })
+}
+
+const retrieveGradingSystems = async (payload: RetrieveGradingSystemRequest): Promise<RetrieveGradingSystemResponse> => {
+    const res = await api.get<RetrieveGradingSystemResponse>('/gradingSystems', { headers: { Authorization: getJWTHeader() }, params: payload })
+    return res.data
+}
+
+const retrieveGradingSystem = async (gradingSystemId: string): Promise<GradingSystemDetailsDTO> => {
+    const res = await api.get<GradingSystemDetailsDTO>(`/gradingSystems/${gradingSystemId}`, { headers: { Authorization: getJWTHeader() } })
+    return res.data
+}
+
+const submitGradingSystem = async (payload: SubmitGradingSystemRequest): Promise<void> => {
+    await api.post('/gradingSystems', payload, { headers: { Authorization: getJWTHeader() } })
+}
+
+const confirmGradingSystem = async (gradingSystemId: string): Promise<void> => {
+    await api.post(`/gradingSystems/${gradingSystemId}/confirm`, null, { headers: { Authorization: getJWTHeader() } })
+}
+
+const retrieveStudentGrades = async (payload: RetrieveStudentGradesRequest): Promise<RetrieveStudentGrades> => {
+    const res = await api.get<RetrieveStudentGrades>('/studentGrades', { headers: { Authorization: getJWTHeader() }, params: payload })
+    return res.data
+}
+
+const retrieveCertificates = async (payload: RetrieveCertificatesRequest): Promise<RetrieveCertificatesResponse> => {
+    const res = await api.get<RetrieveCertificatesResponse>('/certificates', { headers: { Authorization: getJWTHeader() }, params: payload })
+    return res.data
+}
+
+const retrieveCertificate = async (certificateId: string): Promise<CertificateDetailsDTO> => {
+    const res = await api.get<CertificateDetailsDTO>(`certificates/${certificateId}`, { headers: { Authorization: getJWTHeader() } })
+    return res.data
+}
+
+const submitCertificate = async (payload: SubmitCertificateRequest): Promise<void> => {
+    await api.post('/certificates', payload, { headers: { Authorization: getJWTHeader() } })
+}
+
 const API = {
     register,
     login,
     autoLogin,
+    updateUserProfile,
     uploadProfileImage,
     getAvailableCourses,
-    retrieveUserHistory
+    retrieveUserHistory,
+    retrieveStudentCourses,
+    myCourses,
+    submitDeclaration,
+    retrieveCourse,
+    retrieveDeclaration,
+    retrieveDeclarations,
+    confirmDeclaration,
+    retrieveGradingSystems,
+    retrieveGradingSystem,
+    submitGradingSystem,
+    confirmGradingSystem,
+    retrieveStudentGrades,
+    retrieveCertificates,
+    retrieveCertificate,
+    submitCertificate
 }
 
 export default API

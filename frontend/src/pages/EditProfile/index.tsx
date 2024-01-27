@@ -1,62 +1,51 @@
 import { useState, useEffect } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import BasicInput from "../../components/Input/BasicInput";
-import PasswordInput from "../../components/Input/PasswordInput";
 import DropdownInput from "../../components/Input/DropdownInput";
-import AutocompleteInput from "../../components/Input/AutocompleteInput";
 import MultipleAutocompleteInput from "../../components/Input/MultipleAutocompleteInput";
 import ImageUploader from "../../components/Input/ImageUploader";
 import { useAuth } from "../../providers/AuthProvider";
-import { buildRegisterPayload } from "../../mappers";
-import DispatchAlert from "../../components/AlertBox/dispatchAlert";
 
 import "./EditProfile.css";
 import API from "../../api";
 import { CourseDTO } from "../../../../backend/models/types/course";
 import AlertBox from "../../components/AlertBox";
+import {UpdateUserProfileRequest} from "../../../../backend/models/types/userProfile";
 
 const EditProfile: React.FC = () => {
-  const [formValues, setFormValues] = useState({
-    userName: "",
-    password: "",
-    confirmPassword: "",
-    userType: "",
-    firstName: "",
-    lastName: "",
-    department: "",
+
+  const [formValues, setFormValues] = useState<UpdateUserProfileRequest>({
     phoneNumber: "",
     profilePicture: "",
-    fathersName: "",
-    mothersName: "",
-    dateOfBirth: "",
-    maritalStatus: "",
-    placeOfBirth: "",
-    idNumber: "",
-    issuingAuthority: "",
-    dateOfPublish: "",
-    socialSecurityNumber: "",
-    address: "",
-    city: "",
-    telephone: "",
-    postalCode: "",
-    temporaryAddress: "",
-    temporaryCity: "",
-    temporaryTelephone: "",
-    temporaryPostalCode: "",
+    personalInformation: {
+      fathersName: "",
+      mothersName: "",
+      dateOfBirth: "",
+      maritalStatus: "",
+      placeOfBirth: "",
+      idNumber: "",
+      issuingAuthority: "",
+      dateOfPublish: "",
+      socialSecurityNumber: "",
+    },
+    communicationDetails: {
+      address: "",
+      city: "",
+      telephone: "",
+      postalCode: "",
+      temporaryAddress: "",
+      temporaryCity: "",
+      temporaryTelephone: "",
+      temporaryPostalCode: "",
+    },
     myCourses: [],
-    email: "",
   });
   const { userData } = useAuth();
-  const { userType } = userData;
+  const { userType, userProfile } = userData;
   const [file, setFile] = useState<File | null>(null);
-  const [user, setUser] = useState<string>("student");
   const [errorFields, setErrorFields] = useState<Array<string>>([]);
   const maritalStatuses = ["Παντρεμένος/η", "Άγαμος/η"];
   const [availableCourses, setAvailableCourses] = useState([] as CourseDTO[]);
-
-  useEffect(() => {
-    setUser(formValues.userType);
-  }, [formValues.userType]);
 
   useEffect(() => {
     API.getAvailableCourses().then((courses) => setAvailableCourses(courses));
@@ -77,8 +66,6 @@ const EditProfile: React.FC = () => {
     setFile(value);
   };
 
-  const { register } = useAuth();
-
   const handleSubmit = () => {
     console.log(formValues);
     setErrorFields(
@@ -86,19 +73,16 @@ const EditProfile: React.FC = () => {
         (key: string) => formValues[key as keyof typeof formValues] === ""
       )
     );
-    if (1) {
-      const payload = buildRegisterPayload(formValues);
-      if (file !== null) {
-        // Upload the file
-        const formData = new FormData();
-        formData.append("image", file, file.name);
-        API.uploadProfileImage(formData).then((fileURL: string) => {
-          formValues.profilePicture = fileURL;
-          register(payload);
-        });
-      } else {
-        register(payload);
-      }
+    if (file !== null) {
+      // Upload the file
+      const formData = new FormData();
+      formData.append("image", file, file.name);
+      API.uploadProfileImage(formData).then((fileURL: string) => {
+        formValues.profilePicture = fileURL;
+        API.updateUserProfile(formValues);
+      });
+    } else {
+      API.updateUserProfile(formValues);
     }
   };
 
@@ -120,14 +104,14 @@ const EditProfile: React.FC = () => {
                 variant="body1"
                 sx={{ fontWeight: "bold", textAlign: "center" }}
               >
-                {formValues.userName}
+                {userData.userName}
               </Typography>
               <div></div>
               <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                {formValues.firstName} {formValues.lastName}
+                {userProfile.generalInformation.firstName} {userProfile.generalInformation.lastName}
               </Typography>
-              <Typography variant="body1">{formValues.department}</Typography>
-              <Typography variant="body1">{formValues.email}</Typography>
+              <Typography variant="body1">{userProfile.generalInformation.department}</Typography>
+              <Typography variant="body1">{userData.userName + '@di.uoa.gr'}</Typography>
             </Box>
           </Box>
           <Box className="editFormColumn2">
@@ -138,7 +122,7 @@ const EditProfile: React.FC = () => {
               <Box className="editFormSectionTwoColumns">
                 <Box className="editFormSectionColumn">
                   <BasicInput
-                    id="fathersName"
+                    id="personalInformation.fathersName"
                     placeholder="Όνομα πατέρα"
                     onChange={handleChange}
                     error={errorFields.includes("fathersName")}
@@ -147,7 +131,7 @@ const EditProfile: React.FC = () => {
                     defaultValue={formValues.fathersName}
                   />
                   <BasicInput
-                    id="mothersName"
+                    id="personalInformation.mothersName"
                     placeholder="Όνομα μητέρας"
                     onChange={handleChange}
                     error={errorFields.includes("mothersName")}
@@ -156,7 +140,7 @@ const EditProfile: React.FC = () => {
                     defaultValue={formValues.mothersName}
                   />
                   <BasicInput
-                    id="dateOfBirth"
+                    id="personalInformation.dateOfBirth"
                     placeholder="Ημερομηνία γέννησης"
                     onChange={handleChange}
                     error={errorFields.includes("dateOfBirth")}
@@ -165,14 +149,14 @@ const EditProfile: React.FC = () => {
                     defaultValue={formValues.dateOfBirth}
                   />
                   <DropdownInput
-                    id="maritalStatus"
+                    id="personalInformation.maritalStatus"
                     items={maritalStatuses}
                     placeholder="Οικογενειακή κατάσταση"
                     onChange={handleChange}
                     defaultValue={formValues.maritalStatus}
                   />
                   <BasicInput
-                    id="placeOfBirth"
+                    id="personalInformation.placeOfBirth"
                     placeholder="Τόπος γέννησης"
                     onChange={handleChange}
                     error={errorFields.includes("placeOfBirth")}
@@ -183,7 +167,7 @@ const EditProfile: React.FC = () => {
                 </Box>
                 <Box className="editFormSectionColumn">
                   <BasicInput
-                    id="idNumber"
+                    id="personalInformation.idNumber"
                     placeholder="ΑΔΤ"
                     onChange={handleChange}
                     error={errorFields.includes("idNumber")}
@@ -192,13 +176,13 @@ const EditProfile: React.FC = () => {
                     defaultValue={formValues.idNumber}
                   />
                   <BasicInput
-                    id="issuingAuthority"
+                    id="personalInformation.issuingAuthority"
                     placeholder="Εκδούσα αρχή"
                     onChange={handleChange}
                     defaultValue={formValues.issuingAuthority}
                   />
                   <BasicInput
-                    id="dateOfPublish"
+                    id="personalInformation.dateOfPublish"
                     placeholder="Ημερομηνία έκδοσης"
                     onChange={handleChange}
                     error={errorFields.includes("dateOfPublish")}
@@ -207,7 +191,7 @@ const EditProfile: React.FC = () => {
                     defaultValue={formValues.dateOfPublish}
                   />
                   <BasicInput
-                    id="socialSecurityNumber"
+                    id="personalInformation.socialSecurityNumber"
                     placeholder="ΑΜΚΑ"
                     onChange={handleChange}
                     error={errorFields.includes("socialSecurityNumber")}
@@ -216,7 +200,7 @@ const EditProfile: React.FC = () => {
                     defaultValue={formValues.socialSecurityNumber}
                   />
                   <BasicInput
-                    id="phoneNumber"
+                    id="personalInformation.phoneNumber"
                     placeholder="Κινητό τηλέφωνο"
                     onChange={handleChange}
                     error={errorFields.includes("phoneNumber")}
@@ -234,7 +218,7 @@ const EditProfile: React.FC = () => {
               <Box className="editFormSectionTwoColumns">
                 <Box className="editFormSectionColumn">
                   <BasicInput
-                    id="address"
+                    id="communicationDetails.address"
                     placeholder="Μόνιμη διεύθυνση κατοικίας"
                     onChange={handleChange}
                     error={errorFields.includes("address")}
@@ -243,7 +227,7 @@ const EditProfile: React.FC = () => {
                     defaultValue={formValues.address}
                   />
                   <BasicInput
-                    id="city"
+                    id="communicationDetails.city"
                     placeholder="Μόνιμη πόλη κατοικίας"
                     onChange={handleChange}
                     error={errorFields.includes("city")}
@@ -252,13 +236,13 @@ const EditProfile: React.FC = () => {
                     defaultValue={formValues.city}
                   />
                   <BasicInput
-                    id="telephone"
+                    id="communicationDetails.telephone"
                     placeholder="Τηλέφωνο μόνιμης κατοικίας"
                     onChange={handleChange}
                     defaultValue={formValues.telephone}
                   />
                   <BasicInput
-                    id="postalCode"
+                    id="communicationDetails.postalCode"
                     placeholder="ΤΚ μόνιμης κατοικίας"
                     onChange={handleChange}
                     error={errorFields.includes("postalCode")}
@@ -269,25 +253,25 @@ const EditProfile: React.FC = () => {
                 </Box>
                 <Box className="editFormSectionColumn">
                   <BasicInput
-                    id="temporaryAddress"
+                    id="communicationDetails.temporaryAddress"
                     placeholder="Προσωρινή διεύθυνση κατοικίας"
                     onChange={handleChange}
                     defaultValue={formValues.temporaryAddress}
                   />
                   <BasicInput
-                    id="temporaryCity"
+                    id="communicationDetails.temporaryCity"
                     placeholder="Προσωρινή πόλη κατοικίας"
                     onChange={handleChange}
                     defaultValue={formValues.temporaryCity}
                   />
                   <BasicInput
-                    id="temporaryTelephone"
+                    id="communicationDetails.temporaryTelephone"
                     placeholder="Τηλέφωνο προσωρινής κατοικίας"
                     onChange={handleChange}
                     defaultValue={formValues.temporaryTelephone}
                   />
                   <BasicInput
-                    id="temporaryPostalCode"
+                    id="communicationDetails.temporaryPostalCode"
                     placeholder="ΤΚ προσωρινής κατοικίας"
                     onChange={handleChange}
                     defaultValue={formValues.temporaryPostalCode}

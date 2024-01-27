@@ -7,9 +7,9 @@ import CertificateTransformer from '../transformers/certificateTransformer'
 class CertificateController {
   static async retrieveCertificates (req: AuthenticatedRequestWithQueryParams<RetrieveCertificatesRequest>, res: Response) {
     const request = req.queryParams!
-    console.log(request)
     const certificates = await CertificateService.retrieveCertificates(request, req.user!)
-    res.status(200).json(CertificateTransformer.toCertificatesDTO(certificates))
+    const total = await CertificateService.countCertificates(request, req.user!)
+    res.status(200).json(CertificateTransformer.toRetrieveCertificatesResponse(certificates, total))
   }
 
   static async retrieveCertificate (req: AuthenticatedRequest, res: Response) {

@@ -21,6 +21,23 @@ class StudentGradeRepository {
     return await StudentGradeModel.find(adjustedCriteria).skip(skip).limit(pagination.pageSize)
   }
 
+  static async countByCriteria (criteria: FilterQuery<StudentGrade>): Promise<number> {
+    const adjustedCriteria: FilterQuery<StudentGrade> = {}
+
+    for (const key in criteria) {
+      if (Object.prototype.hasOwnProperty.call(criteria, key)) {
+        const value = criteria[key]
+        if (typeof value === 'string') {
+          adjustedCriteria[key] = new RegExp(value, 'i')
+        } else {
+          adjustedCriteria[key] = value
+        }
+      }
+    }
+
+    return await StudentGradeModel.countDocuments(adjustedCriteria).exec()
+  }
+
   static async saveStudentGrade (studentGrade: StudentGrade): Promise<StudentGrade> {
     return await StudentGradeModel.create(studentGrade)
   }

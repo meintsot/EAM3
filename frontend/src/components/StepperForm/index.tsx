@@ -11,13 +11,30 @@ import {
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import BasicInput from "../Input/BasicInput";
 import DropdownInput from "../Input/DropdownInput";
+import {useState} from "react";
+import {StepperFormProps} from "../../model";
+import {certificateType} from "../../../../backend/models/types/certificate";
 
-const StepperForm: React.FC = () => {
+const StepperForm: React.FC<StepperFormProps> = ({ onSubmit }) => {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [certificateType, setCertificateType] = useState<string>("");
+  const [numberOfReplicas, setNumberOfReplicas] = useState<number>(0);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
+
+  const handleCertificateType = (certificateType: string) => {
+    setCertificateType(certificateType)
+  }
+
+  const handleNumberOfReplicas = (numberOfReplicas: string) => {
+      setNumberOfReplicas(parseInt(numberOfReplicas));
+  }
+
+  const handleSubmit = () => {
+      onSubmit({ type: certificateType as certificateType, numberOfReplicas })
+  }
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -48,8 +65,16 @@ const StepperForm: React.FC = () => {
             <Box sx={{ width: 450 }}>
               <DropdownInput
                 id="certificate-type"
-                onChange={() => {}}
-                items={["πιστοποιητικό", "πιστοποιητικό", "πιστοποιητικό"]}
+                onChange={handleCertificateType}
+                items={
+                  [
+                      'Φοιτητικής Ιδιότητας',
+                      'Φορολογικής Χρήσης' ,
+                      'Αναλυτική βαθμολογία με προβιβάσιμους βαθμούς',
+                      'Στρατολογική Χρήση (Συνοπτικό)',
+                      'Στρατολογική Χρήση (Aναλυτικό)'
+                  ]
+                }
                 size="small"
               />
             </Box>
@@ -94,8 +119,8 @@ const StepperForm: React.FC = () => {
             </Typography>
             <Box sx={{ width: 450 }}>
               <BasicInput
-                id="certificate-type"
-                onChange={() => {}}
+                id="number-of-replicas"
+                onChange={handleNumberOfReplicas}
                 size="small"
               />
             </Box>
@@ -153,7 +178,7 @@ const StepperForm: React.FC = () => {
               >
                 προηγουμενο
               </Button>
-              <Button onClick={handleNext} variant="contained">
+              <Button onClick={() => handleSubmit()} variant="contained">
                 υποβολη
               </Button>
             </Box>

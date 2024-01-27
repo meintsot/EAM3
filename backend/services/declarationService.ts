@@ -9,6 +9,10 @@ class DeclarationService {
     return await DeclarationRepository.findByCriteria({ ...request, studentId: user._id }, request as PaginationRequest)
   }
 
+  static async countDeclarations ({ page, pageSize, ...criteria }: RetrieveDeclarationsRequest, user: User): Promise<number> {
+    return await DeclarationRepository.countByCriteria({ ...criteria, studentId: user._id })
+  }
+
   static async retrieveDeclarationDetails (declarationId: string, user: User): Promise<Declaration> {
     return await DeclarationRepository.findOneByCriteria({ _id: declarationId, studentId: user._id })
   }

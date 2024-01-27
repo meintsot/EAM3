@@ -13,7 +13,6 @@ class CourseRepository {
         }
         if (typeof value === 'string') {
           // Use a regular expression for partial matching
-          // Assuming you want case-insensitive matching
           adjustedCriteria[key] = new RegExp(value, 'i')
         } else {
           // For non-string fields, use the original criteria
@@ -39,6 +38,26 @@ class CourseRepository {
 
   static async updateManyByCriteria (filterCriteria: FilterQuery<Course>, update: Partial<Course>) {
     return await CourseModel.updateMany(filterCriteria, update)
+  }
+
+  static async countByCriteria (criteria: FilterQuery<Course>): Promise<number> {
+    const adjustedCriteria: FilterQuery<Course> = {}
+    for (const key in criteria) {
+      if (Object.prototype.hasOwnProperty.call(criteria, key)) {
+        const value = criteria[key]
+        if (key === 'pageSize' || key === 'page') {
+          continue
+        }
+        if (typeof value === 'string') {
+          // Use a regular expression for partial matching
+          adjustedCriteria[key] = new RegExp(value, 'i')
+        } else {
+          // For non-string fields, use the original criteria
+          adjustedCriteria[key] = value
+        }
+      }
+    }
+    return await CourseModel.countDocuments(adjustedCriteria).exec()
   }
 }
 

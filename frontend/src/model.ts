@@ -7,6 +7,8 @@ import {
 } from "../../backend/models/types/user";
 import { UserHistoryDTO } from "../../backend/models/types/userHistory";
 import { AlertColor } from "@mui/material";
+import {CoursesForDeclaration} from "../../backend/models/types/declaration";
+import {SubmitCertificateRequest} from "../../backend/models/types/certificate";
 
 export interface Route {
   label: string;
@@ -66,7 +68,6 @@ export type ProtectedRouteProps = RouteProps & {
 
 interface Accordion {
   title: string;
-  rows: Array<{ col1: string; col2: string }>;
 }
 
 export interface AccordionsProps {
@@ -81,20 +82,18 @@ export interface Column {
   options: Array<string>;
 }
 
+export interface CoursesResults {
+  courses: CoursesRow[]
+  total: number
+}
+
 export interface CoursesRow {
   courseId: string;
   courseName: string;
   semester: number;
   category: string;
-}
-
-export interface CoursesRowStudent extends CoursesRow {
-  professor: string;
-  ects: number;
-}
-
-export interface CoursesRowProfessor extends CoursesRow {
-  gradeBookExists: "Ναι" | "Όχι" | string;
+  professor?: string;
+  ects?: number;
 }
 
 export interface TableProps {}
@@ -110,12 +109,21 @@ export interface HistoryTableProps extends TableProps {
   onPageChange?: (page: number, pageSize: number) => void;
 }
 
+export interface Filters {
+  [key: string]: any;
+}
+
 export interface SearchTableProps extends TableProps {
-  rows: Array<CoursesRowStudent | CoursesRowProfessor | any>;
-  setRows: (arg: any) => void;
+  rows: Array<CoursesRow | any>;
   columns: Array<Column>;
   actions: Array<string>;
-  onCheckedCourses?: React.Dispatch<React.SetStateAction<string[]>>;
+  totalResults: number
+  onCheckedCourses?: React.Dispatch<React.SetStateAction<CoursesForDeclaration[]>>;
+  onFilterChange?: React.Dispatch<React.SetStateAction<Filters>>;
+}
+
+export interface StepperFormProps {
+  onSubmit: React.Dispatch<SubmitCertificateRequest>;
 }
 
 export interface ActionButtonProps {

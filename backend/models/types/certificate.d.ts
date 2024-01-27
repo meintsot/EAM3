@@ -8,19 +8,25 @@ interface Certificate {
   type: certificateType
   state: string
   dateRequested: string
-  dateRegistered: string
+  dateRegistered?: string
+  numberOfReplicas: number
   studentId: mongoose.ObjectId | string
 }
 
-type CertificateDTO = Omit<Certificate, 'studentId'>
+type CertificateDTO = Omit<Certificate, 'studentId' | 'numberOfReplicas'>
 
 type CertificateDetailsDTO = Omit<Certificate, 'studentId'>
 
-type SubmitCertificateRequest = Omit<Certificate, '_id' | 'studentId'>
+type SubmitCertificateRequest = Omit<Certificate, '_id' | 'studentId' | 'state' | 'dateRequested' | 'dateRegistered'>
 
 interface RetrieveCertificatesRequest extends PaginationRequest {
   type?: string
   state?: string
   dateRequested?: string
   dateRegistered?: string
+}
+
+interface RetrieveCertificatesResponse {
+  certificates: CertificateDTO[]
+  total: number
 }

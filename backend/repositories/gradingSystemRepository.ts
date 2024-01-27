@@ -14,7 +14,6 @@ class GradingSystemRepository {
         }
         if (typeof value === 'string') {
           // Use a regular expression for partial matching
-          // Assuming you want case-insensitive matching
           adjustedCriteria[key] = new RegExp(value, 'i')
         } else {
           // For non-string fields, use the original criteria
@@ -25,6 +24,27 @@ class GradingSystemRepository {
 
     const skip = (paginationRequest.page - 1) * paginationRequest.pageSize
     return await GradingSystemModel.find(adjustedCriteria).skip(skip).limit(paginationRequest.pageSize)
+  }
+
+  static async countByCriteria (criteria: FilterQuery<GradingSystem>): Promise<number> {
+    const adjustedCriteria: FilterQuery<GradingSystem> = {}
+    for (const key in criteria) {
+      if (Object.prototype.hasOwnProperty.call(criteria, key)) {
+        const value = criteria[key]
+        if (key === 'pageSize' || key === 'page') {
+          continue
+        }
+        if (typeof value === 'string') {
+          // Use a regular expression for partial matching
+          adjustedCriteria[key] = new RegExp(value, 'i')
+        } else {
+          // For non-string fields, use the original criteria
+          adjustedCriteria[key] = value
+        }
+      }
+    }
+
+    return await GradingSystemModel.countDocuments(adjustedCriteria).exec()
   }
 
   static async findOneByCriteria (criteria: FilterQuery<GradingSystem>): Promise<GradingSystem> {

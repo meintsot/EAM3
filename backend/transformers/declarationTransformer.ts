@@ -1,4 +1,9 @@
-import { type Declaration, type DeclarationDetailsDTO, type DeclarationDTO } from '../models/types/declaration'
+import {
+  type Declaration,
+  type DeclarationDetailsDTO,
+  type DeclarationDTO,
+  type RetrieveDeclarationsResponse
+} from '../models/types/declaration'
 
 class DeclarationTransformer {
   static toDeclarationsDTO (declarations: Declaration[]): DeclarationDTO[] {
@@ -19,6 +24,13 @@ class DeclarationTransformer {
       examPeriod: declaration.examPeriod,
       state: declaration.state,
       courses: declaration.courses
+    }
+  }
+
+  static toRetrieveDeclarationsResponse (declarations: Declaration[], total: number): RetrieveDeclarationsResponse {
+    return {
+      declarations: this.toDeclarationsDTO(declarations),
+      total
     }
   }
 }

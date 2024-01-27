@@ -1,30 +1,13 @@
-import { Column } from "../../model";
+import {Column, Filters} from "../../model";
 import SearchTable from "../../components/Table/SearchTable";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Box, Typography } from "@mui/material";
-
-const defaultData = [
-  {
-    declarationId: "6532a02cb97059bf3be476d5",
-    examPeriod: "Χειμερινό 23-24",
-    state: "Προσωρινή αποθήκευση",
-  },
-  {
-    declarationId: "6532a02cb97059bf3be476d5",
-    examPeriod: "Χειμερινό 23-24",
-    state: "hgjfjkd",
-  },
-  {
-    declarationId: "6532a02cb97059bf3be476d5",
-    examPeriod: "Χειμερινό 23-24",
-    state: "hgjfjkd",
-  },
-  {
-    declarationId: "6532a02cb97059bf3be476d5",
-    examPeriod: "Χειμερινό 23-24",
-    state: "hgjfjkd",
-  },
-];
+import {useAuth} from "../../providers/AuthProvider";
+import {
+  RetrieveDeclarationsRequest,
+  RetrieveDeclarationsResponse
+} from "../../../../backend/models/types/declaration";
+import API from "../../api";
 
 const titles: Array<Column> = [
   {
@@ -48,7 +31,18 @@ const titles: Array<Column> = [
 ];
 
 const Declarations = () => {
-  const [declarations, setDeclarations] = useState(defaultData);
+  const { userData } = useAuth();
+
+  const [declarationResults, setDeclarationResults] = useState<RetrieveDeclarationsResponse>({ declarations: [], total: 0 })
+
+  useEffect(() => {
+    API.retrieveDeclarations({ page: 1, pageSize: 10 }).then(res => setDeclarationResults(res));
+  }, [userData.authToken]);
+
+  const handleFilterChange = (filters: Filters) => {
+    const request = filters as RetrieveDeclarationsRequest;
+    API.retrieveDeclarations(request).then((res) => setDeclarationResults(res));
+  }
 
   return (
     <Box className="wrapper">
@@ -59,8 +53,9 @@ const Declarations = () => {
       </Box>
       <SearchTable
         columns={titles}
-        rows={declarations}
-        setRows={setDeclarations}
+        rows={declarationResults.declarations ?? []}
+        onFilterChange={handleFilterChange}
+        totalResults={declarationResults.total}
         actions={["view"]}
       />
     </Box>

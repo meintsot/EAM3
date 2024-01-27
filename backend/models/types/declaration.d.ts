@@ -31,4 +31,9 @@ interface RetrieveDeclarationsRequest extends PaginationRequest {
   state?: string
 }
 
-type SubmitDeclarationRequest = Omit<Declaration, '_id' | 'state'>
+interface RetrieveDeclarationsResponse {
+  declarations: DeclarationDTO[]
+  total: number
+}
+
+type SubmitDeclarationRequest = Omit<Declaration, '_id' | 'state' | 'studentId'>
