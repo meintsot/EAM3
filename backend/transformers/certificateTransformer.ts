@@ -1,4 +1,9 @@
-import { type Certificate, type CertificateDetailsDTO, type CertificateDTO } from '../models/types/certificate'
+import {
+  type Certificate,
+  type CertificateDetailsDTO,
+  type CertificateDTO,
+  type RetrieveCertificatesResponse
+} from '../models/types/certificate'
 
 class CertificateTransformer {
   static toCertificatesDTO (certificates: Certificate[]): CertificateDTO[] {
@@ -22,6 +27,13 @@ class CertificateTransformer {
       state: certificate.state,
       dateRequested: certificate.dateRequested,
       dateRegistered: certificate.dateRegistered
+    }
+  }
+
+  static toRetrieveCertificatesResponse (certificates: Certificate[], total: number): RetrieveCertificatesResponse {
+    return {
+      certificates: this.toCertificatesDTO(certificates),
+      total
     }
   }
 }

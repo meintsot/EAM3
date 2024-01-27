@@ -7,9 +7,9 @@ import { type RequestWithQueryParams } from '../middleware/middleware'
 class CourseController {
   static async retrieveCourses (req: RequestWithQueryParams<RetrieveCoursesRequest>, res: Response) {
     const request = req.queryParams!
-    console.log(request)
     const courses = await CourseService.retrieveCourses(request)
-    res.status(200).json(CourseTransformer.toCoursesDTO(courses))
+    const total = await CourseService.countCourses(request)
+    res.status(200).json(CourseTransformer.toRetrieveCoursesResponse(courses, total))
   }
 
   static async retrieveCourse (req: Request, res: Response) {

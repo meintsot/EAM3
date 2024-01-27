@@ -8,7 +8,8 @@ class StudentGradeController {
   static async retrieveStudentGrades (req: AuthenticatedRequestWithQueryParams<RetrieveStudentGradesRequest>, res: Response) {
     const request = req.queryParams!
     const studentGrades = await StudentGradeService.retrieveStudentGrades(request, req.user!)
-    res.status(200).json(StudentGradeTransformer.toStudentGradesDTO(studentGrades))
+    const total = await StudentGradeService.countStudentGrades(request, req.user!)
+    res.status(200).json(StudentGradeTransformer.toRetrieveStudentGrades(studentGrades, total))
   }
 }
 

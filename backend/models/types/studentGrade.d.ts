@@ -17,3 +17,8 @@ interface RetrieveStudentGradesRequest extends PaginationRequest {
   ects?: string
   grade?: number
 }
+
+interface RetrieveStudentGrades {
+  studentGrades: StudentGradeDTO[]
+  total: number
+}

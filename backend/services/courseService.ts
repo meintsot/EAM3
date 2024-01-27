@@ -7,6 +7,11 @@ class CourseService {
     return await CourseRepository.findByCriteria(request, request as PaginationRequest)
   }
 
+  static async countCourses (request: RetrieveCoursesRequest): Promise<number> {
+    const { page, pageSize, ...criteria } = request
+    return await CourseRepository.countByCriteria(criteria)
+  }
+
   static async retrieveCourseDetails (courseId: string): Promise<Course> {
     return await CourseRepository.findOneByCriteria({ courseId })
   }

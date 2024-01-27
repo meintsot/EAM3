@@ -24,3 +24,8 @@ interface RetrieveCertificatesRequest extends PaginationRequest {
   dateRequested?: string
   dateRegistered?: string
 }
+
+interface RetrieveCertificatesResponse {
+  certificates: CertificateDTO[]
+  total: number
+}

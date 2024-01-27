@@ -11,22 +11,25 @@ import {
   TableContainer,
   TableFooter,
 } from "@mui/material";
-import { SearchTableProps } from "../../../model";
+import {Filters, SearchTableProps} from "../../../model";
 import BasicInput from "../../Input/BasicInput";
 import DropdownInput from "../../Input/DropdownInput";
 import ActionButton from "../../ActionButton";
 import CheckBox from "../../CheckBox";
+import {RetrieveCoursesRequest} from "../../../../../backend/models/types/course";
+import {CoursesForDeclaration} from "../../../../../backend/models/types/declaration";
 
 const SearchTable: React.FC<SearchTableProps> = ({
   columns,
   rows,
-  setRows,
   actions,
   onCheckedCourses,
+  onFilterChange,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [checkedCourses, setCheckedCourses] = useState<Array<string>>([]);
+  const [checkedCourses, setCheckedCourses] = useState<Array<CoursesForDeclaration>>([]);
+  const [filters, setFilters] = useState<Filters>({ page: 1, pageSize: 10 })
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -35,6 +38,17 @@ const SearchTable: React.FC<SearchTableProps> = ({
     setPage(newPage);
   };
 
+  const handleFilterChange = (
+      event: string,
+      columnKey: string
+  ) => {
+    filters[columnKey] = event
+    if (onFilterChange) {
+      onFilterChange(filters);
+    }
+    setFilters(filters)
+  }
+
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -42,15 +56,15 @@ const SearchTable: React.FC<SearchTableProps> = ({
     setPage(0);
   };
 
-  const handleCheck = (event: boolean, courseId: string) => {
+  const handleCheck = (event: boolean, courseId: string, courseName: string) => {
     let newCheckedCourses = [];
-    if (event) newCheckedCourses = [...checkedCourses, courseId];
-    else newCheckedCourses = checkedCourses.filter((id) => id !== courseId);
+    if (event) newCheckedCourses = [...checkedCourses, {courseId, courseName} as CoursesForDeclaration];
+    else newCheckedCourses = checkedCourses.filter((course) => course.courseId !== courseId);
     if (onCheckedCourses) onCheckedCourses(newCheckedCourses);
     setCheckedCourses(newCheckedCourses);
   };
 
-  const returnAction = (action: string, courseId: string) => {
+  const returnAction = (action: string, courseId: string, courseName?: string) => {
     switch (action) {
       case "view":
         return (
@@ -87,7 +101,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
       case "checkbox":
         return (
           <CheckBox
-            onChange={(e) => handleCheck(e, courseId)}
+            onChange={(e) => handleCheck(e, courseId, courseName!)}
             tooltip="Δήλωση μαθήματος"
           />
         );
@@ -143,7 +157,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
                         <BasicInput
                           id={column.key}
                           placeholder="Πληκτρολόγησε..."
-                          onChange={() => {}}
+                          onChange={(e) => handleFilterChange(e, column.key)}
                           size="small"
                         />
                       ) : column.searchInputType === "dropdown" ? (
@@ -151,7 +165,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
                           id={column.key}
                           placeholder=""
                           items={column.options}
-                          onChange={() => {}}
+                          onChange={(e) => handleFilterChange(e, column.key)}
                           size="small"
                         />
                       ) : (
@@ -195,7 +209,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
                             scope="row"
                             sx={{ p: 0 }}
                           >
-                            {returnAction(action, row.courseId)}
+                            {returnAction(action, row.courseId, row.courseName)}
                           </TableCell>
                         );
                     });

@@ -78,4 +78,9 @@ interface RetrieveCoursesRequest extends PaginationRequest {
   ects?: number
 }
 
+interface RetrieveCoursesResponse {
+  courses: CourseDTO[]
+  total: number
+}
+
 type RetrieveMyCoursesRequest = Omit<RetrieveCoursesRequest, 'teacher'>

@@ -1,43 +1,15 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
 
 import SearchTable from "../../components/Table/SearchTable";
 import SendIcon from "@mui/icons-material/Send";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-
-import { CoursesRowStudent, CoursesRowProfessor, Column } from "../../model";
 import { useAuth } from "../../providers/AuthProvider";
-
-const defaultData: Array<CoursesRowStudent> = [
-  {
-    courseId: "15100122",
-    courseName:
-      "ΤΕΧΝΟΛΟΓΙΕΣ ΤΗΣ ΠΛΗΡΟΦΟΡΙΑΣ ΚΑΙ ΤΩΝ ΕΠΙΚΟΙΝΩΝΙΩΝ (ΤΠΕ) ΣΤΗ ΜΑΘΗΣΗ",
-    semester: 5,
-    category: "Προαιρετικό",
-    professor: "Γρηγοριάδου",
-    ects: 6,
-  },
-  {
-    courseId: "15100123",
-    courseName:
-      "ΤΕΧΝΟΛΟΓΙΕΣ ΤΗΣ ΠΛΗΡΟΦΟΡΙΑΣ ΚΑΙ ΤΩΝ ΕΠΙΚΟΙΝΩΝΙΩΝ (ΤΠΕ) ΣΤΗ ΜΑΘΗΣΗ",
-    semester: 5,
-    category: "Προαιρετικό",
-    professor: "Γρηγοριάδου",
-    ects: 6,
-  },
-  {
-    courseId: "15100124",
-    courseName:
-      "ΤΕΧΝΟΛΟΓΙΕΣ ΤΗΣ ΠΛΗΡΟΦΟΡΙΑΣ ΚΑΙ ΤΩΝ ΕΠΙΚΟΙΝΩΝΙΩΝ (ΤΠΕ) ΣΤΗ ΜΑΘΗΣΗ",
-    semester: 5,
-    category: "Προαιρετικό",
-    professor: "Γρηγοριάδου",
-    ects: 6,
-  },
-];
+import {Column, CoursesResults, CoursesRow, Filters} from "../../model";
+import API from "../../api";
+import {RetrieveCoursesRequest} from "../../../../backend/models/types/course";
+import {CoursesForDeclaration, SubmitDeclarationRequest} from "../../../../backend/models/types/declaration";
 
 const titlesStudent: Array<Column> = [
   { key: "courseId", label: "Κωδικός", searchInputType: "text", options: [] },
@@ -104,12 +76,36 @@ const titlesProfessor: Array<Column> = [
 
 const Courses = () => {
   const { userData } = useAuth();
+
+  const [coursesResults, setCoursesResults] = useState<CoursesResults>()
+
+  useEffect(() => {
+    const authToken = userData.authToken;
+    if (authToken) {
+      API.retrieveStudentCourses({ page: 1, pageSize: 5 }).then((res) => {
+        setCoursesResults(res);
+      });
+    }
+  }, [userData]);
+
   const { userType } = userData;
-  const [courses, setCourses] =
-    useState<Array<CoursesRowStudent | CoursesRowProfessor>>(defaultData);
-  const [coursesToBeDeclared, setCoursesToBeDeclared] = useState<Array<string>>(
+  const [coursesToBeDeclared, setCoursesToBeDeclared] = useState<Array<CoursesForDeclaration>>(
     []
   );
+
+  const handleFilterChange = (filters: Filters) => {
+    const request = filters as RetrieveCoursesRequest;
+    API.retrieveStudentCourses(request).then((res) => {
+      setCoursesResults(res);
+    });
+  }
+ 
+  const submitDeclaration = () => {
+    API.submitDeclaration({
+      examPeriod: '',
+      courses: coursesToBeDeclared
+    } as SubmitDeclarationRequest);
+  }
 
   return (
     <Box className="wrapper">
@@ -121,8 +117,8 @@ const Courses = () => {
         <>
           <SearchTable
             columns={titlesStudent}
-            rows={courses}
-            setRows={setCourses}
+            rows={coursesResults?.courses!}
+            onFilterChange={handleFilterChange}
             actions={["view"]}
           />
         </>
@@ -136,7 +132,7 @@ const Courses = () => {
             <Button
               variant="contained"
               className="main-action-button"
-              onClick={() => {}}
+              onClick={() => submitDeclaration()}
               disabled={coursesToBeDeclared.length <= 0}
               sx={{ fontWeight: "bold" }}
             >
@@ -146,9 +142,9 @@ const Courses = () => {
           </Box>
           <SearchTable
             columns={titlesStudent}
-            rows={courses}
-            setRows={setCourses}
+            rows={coursesResults?.courses!}
             actions={["view", "checkbox"]}
+            onFilterChange={handleFilterChange}
             onCheckedCourses={setCoursesToBeDeclared}
           />
         </>
@@ -170,8 +166,8 @@ const Courses = () => {
           </Box>
           <SearchTable
             columns={titlesProfessor}
-            rows={courses}
-            setRows={setCourses}
+            rows={coursesResults?.courses!}
+            onFilterChange={handleFilterChange}
             actions={["add"]}
           />
         </>

@@ -1,4 +1,9 @@
-import { type GradingSystem, type GradingSystemDetailsDTO, type GradingSystemDTO } from '../models/types/gradingSystem'
+import {
+  type GradingSystem,
+  type GradingSystemDetailsDTO,
+  type GradingSystemDTO,
+  RetrieveGradingSystemRequest, type RetrieveGradingSystemResponse
+} from '../models/types/gradingSystem'
 
 class GradingSystemTransformer {
   static toGradingSystemsDTO (gradingSystems: GradingSystem[]): GradingSystemDTO[] {
@@ -12,6 +17,13 @@ class GradingSystemTransformer {
       state: gradingSystem.state,
       courseName: gradingSystem.courseName,
       courseId: gradingSystem.courseId
+    }
+  }
+
+  static toRetrieveGradingSystemResponse (gradingSystems: GradingSystem[], total: number): RetrieveGradingSystemResponse {
+    return {
+      gradingSystems: this.toGradingSystemsDTO(gradingSystems),
+      total
     }
   }
 

@@ -9,6 +9,10 @@ class CertificateService {
     return await CertificateRepository.findByCriteria({ ...request, studentId: user._id }, request as PaginationRequest)
   }
 
+  static async countCertificates ({ page, pageSize, ...criteria }: RetrieveCertificatesRequest, user: User): Promise<number> {
+    return await CertificateRepository.countByCriteria({ ...criteria, studentId: user._id })
+  }
+
   static async retrieveCertificateDetails (certificateId: string, user: User): Promise<Certificate> {
     return await CertificateRepository.findOneByCriteria({ _id: certificateId, studentId: user._id })
   }

@@ -7,9 +7,9 @@ import DeclarationTransformer from '../transformers/declarationTransformer'
 class DeclarationController {
   static async retrieveDeclarations (req: AuthenticatedRequestWithQueryParams<RetrieveDeclarationsRequest>, res: Response) {
     const request = req.queryParams!
-    console.log(request)
     const declarations = await DeclarationService.retrieveDeclarations(request, req.user!)
-    res.status(200).json(DeclarationTransformer.toDeclarationsDTO(declarations))
+    const total = await DeclarationService.countDeclarations(request, req.user!)
+    res.status(200).json(DeclarationTransformer.toRetrieveDeclarationsResponse(declarations, total))
   }
 
   static async retrieveDeclaration (req: AuthenticatedRequest, res: Response) {

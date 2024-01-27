@@ -1,4 +1,4 @@
-import { type Course, type CourseDTO, type CourseDetailsDTO } from '../models/types/course'
+import { type Course, type CourseDTO, type CourseDetailsDTO, type RetrieveCoursesResponse } from '../models/types/course'
 
 class CourseTransformer {
   static toCoursesDTO (courses: Course[]): CourseDTO[] {
@@ -13,6 +13,14 @@ class CourseTransformer {
       category: course.category,
       teacher: course.teacherName,
       ects: course.ects
+    }
+  }
+
+  static toRetrieveCoursesResponse (courses: Course[], total: number): RetrieveCoursesResponse {
+    const coursesDTO = CourseTransformer.toCoursesDTO(courses)
+    return {
+      courses: coursesDTO,
+      total
     }
   }
 
