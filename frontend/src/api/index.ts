@@ -120,8 +120,9 @@ const myCourses = async (payload: MyCoursesRequest): Promise<CoursesResults> => 
     return buildMyCoursesResults(res.data)
 }
 
-const submitDeclaration = async (payload: SubmitDeclarationRequest): Promise<void> => {
-    await api.post('/declarations', payload, {headers: {Authorization: getJWTHeader()}});
+const submitDeclaration = async (payload: SubmitDeclarationRequest): Promise<DeclarationDetailsDTO> => {
+    const res = await api.post<DeclarationDetailsDTO>('/declarations', payload, {headers: {Authorization: getJWTHeader()}});
+    return res.data;
 }
 
 const retrieveDeclaration = async (declarationId: string): Promise<DeclarationDetailsDTO> => {
@@ -134,8 +135,8 @@ const retrieveDeclarations = async (payload: RetrieveDeclarationsRequest): Promi
     return res.data
 }
 
-const confirmDeclaration = async (declarationId: string): Promise<void> => {
-    await api.post(`/declarations/${declarationId}/confirm`, null, { headers: { Authorization: getJWTHeader() } })
+const confirmDeclaration = async (declarationId: string, declaration: DeclarationDetailsDTO): Promise<void> => {
+    await api.put(`/declarations/${declarationId}/confirm`, declaration, { headers: { Authorization: getJWTHeader() } })
 }
 
 const retrieveGradingSystems = async (payload: RetrieveGradingSystemRequest): Promise<RetrieveGradingSystemResponse> => {

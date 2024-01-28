@@ -1,6 +1,10 @@
 import { type NextFunction, type Response } from 'express'
 import { type AuthenticatedRequestWithQueryParams, type AuthenticatedRequest } from '../middleware/middleware'
-import { type RetrieveDeclarationsRequest, type SubmitDeclarationRequest } from '../models/types/declaration'
+import {
+  DeclarationDetailsDTO,
+  type RetrieveDeclarationsRequest,
+  type SubmitDeclarationRequest
+} from '../models/types/declaration'
 import DeclarationService from '../services/declarationService'
 import DeclarationTransformer from '../transformers/declarationTransformer'
 
@@ -39,9 +43,10 @@ class DeclarationController {
   static async confirmDeclaration (req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const declarationId = req.params.declarationId
+      const declaration = req.body as DeclarationDetailsDTO
       const user = req.user!
-      const declaration = await DeclarationService.confirmDeclaration(declarationId, user)
-      res.status(201).json(DeclarationTransformer.toDeclarationDetailsDTO(declaration))
+      const newDeclaration = await DeclarationService.confirmDeclaration(declarationId, declaration, user)
+      res.status(201).json(DeclarationTransformer.toDeclarationDetailsDTO(newDeclaration))
     } catch (err) {
       next(err)
     }

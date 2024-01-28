@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import { Box, Button, Typography } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 import SearchTable from "../../components/Table/SearchTable";
 import SendIcon from "@mui/icons-material/Send";
@@ -10,6 +10,7 @@ import {Column, CoursesResults, Filters} from "../../model";
 import API from "../../api";
 import {MyCoursesRequest, RetrieveCoursesRequest} from "../../../../backend/models/types/course";
 import {CoursesForDeclaration, SubmitDeclarationRequest} from "../../../../backend/models/types/declaration";
+import {getCurrentExamPeriod} from "../../helpers/findExamPeriod";
 
 const titlesStudent: Array<Column> = [
   { key: "courseId", label: "Κωδικός", searchInputType: "text", options: [] },
@@ -75,6 +76,7 @@ const titlesProfessor: Array<Column> = [
 ];
 
 const Courses = () => {
+  const navigate = useNavigate();
   const { userData } = useAuth();
 
   const [coursesResults, setCoursesResults] = useState<CoursesResults>()
@@ -110,9 +112,10 @@ const Courses = () => {
 
   const submitDeclaration = () => {
     API.submitDeclaration({
-      examPeriod: '',
+      examPeriod: getCurrentExamPeriod(),
       courses: coursesToBeDeclared
-    } as SubmitDeclarationRequest);
+    }).then((declaration) => {navigate(`/declarations/${declaration._id}`)})
+        .catch(err => console.log(err));
   }
 
   return (

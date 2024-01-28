@@ -5,9 +5,11 @@ import { useAuth } from "../../providers/AuthProvider";
 import "./Login.css";
 import { LoginUserRequestDTO } from "../../../../backend/models/types/user";
 import { useState } from "react";
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const [userForm, setUserForm] = useState({
     userName: "",
@@ -15,7 +17,7 @@ const Login = () => {
   } as LoginUserRequestDTO);
 
   const handleLogin = () => {
-    login(userForm);
+    login(userForm).then(() => navigate('/'));
   };
 
   return (

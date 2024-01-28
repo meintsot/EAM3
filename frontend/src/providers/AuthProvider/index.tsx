@@ -58,26 +58,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         API.autoLogin(authToken).then((userData) => {
           console.log('autologin', userData);
           setUserData(userData);
-        })
+        }).catch(err => console.log(err))
     }
   }, []);
 
-  const login = (loginForm: LoginUserRequestDTO) => {
-    API.login(loginForm).then((userData) => {
+  const login = async (loginForm: LoginUserRequestDTO) => {
+    try {
+      const userData = await API.login(loginForm);
       localStorage.setItem('JWT', userData.authToken!);
       setUserData(userData);
-    });
+    } catch (err) {
+      console.log(err)
+    }
   };
 
-  const register = (registerForm: RegisterUserDTO) => {
-    API.register(registerForm)
-      .then((userData) => {
-        localStorage.setItem('JWT', userData.authToken!);
-        setUserData(userData);
-      })
-      .catch((err) => {
-        throw err;
-      });
+  const register = async (registerForm: RegisterUserDTO) => {
+    try {
+      const userData = await API.register(registerForm);
+      localStorage.setItem('JWT', userData.authToken!);
+      setUserData(userData);
+    } catch (err) {
+      console.log(err)
+    }
   };
 
   const logout = () => {

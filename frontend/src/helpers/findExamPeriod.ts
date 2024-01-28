@@ -1,29 +1,13 @@
-const getGreekMonth = (currentMonth: number): string => {
-  const greekMonths: string[] = [
-    "Ιανουάριος",
-    "Φεβρουάριος",
-    "Μάρτιος",
-    "Απρίλιος",
-    "Μάιος",
-    "Ιούνιος",
-    "Ιούλιος",
-    "Αύγουστος",
-    "Σεπτέμβριος",
-    "Οκτώβριος",
-    "Νοέμβριος",
-    "Δεκέμβριος",
-  ];
-
-  return currentMonth >= 1 && currentMonth <= 12
-    ? greekMonths[currentMonth - 1]
-    : "";
-};
-
 const getCurrentMonth = () => new Date().getMonth() + 1;
 
-const getLastThreeExamPeriods = (): Array<string> => {
+export const getCurrentExamPeriod = (): string => {
+    const currentMonth = getCurrentMonth();
+    const currentYearLastTwoDigits: number = new Date().getFullYear() % 100;
+    return currentMonth >= 9 || currentMonth <= 2 ? `Χειμερινό-${currentYearLastTwoDigits}` : `Εαρινό-${currentYearLastTwoDigits}`
+};
+
+export const getLastThreeExamPeriods = (): Array<string> => {
   const currentMonth = getCurrentMonth();
-  const greekMonth: string = getGreekMonth(currentMonth);
   const currentYearLastTwoDigits: number = new Date().getFullYear() % 100;
 
   return currentMonth >= 1 && currentMonth <= 6
@@ -60,5 +44,3 @@ const getLastThreeExamPeriods = (): Array<string> => {
       ]
     : [];
 };
-
-export default getLastThreeExamPeriods;

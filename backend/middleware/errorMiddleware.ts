@@ -9,6 +9,7 @@ const errorHandlingMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(err.message)
   if (err instanceof BackendError) {
     res.status(err.details.status).json(err.details)
   } else {
