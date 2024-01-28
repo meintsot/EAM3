@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import SearchTable from "../../components/Table/SearchTable";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
@@ -16,6 +16,8 @@ import {
 import API from "../../api";
 import DispatchAlert from "../../components/AlertBox/dispatchAlert";
 import { useNavigate } from "react-router-dom";
+
+import "./CreateGradeBook.css";
 
 const titles: Array<Column> = [
   {
@@ -43,6 +45,40 @@ const titles: Array<Column> = [
     options: [],
   },
 ];
+
+const mockGradebook: GradingSystemDetailsDTO = {
+  _id: "12345",
+  courseName: "Μαθηματικά Πληροφορικής",
+  courseId: "878787",
+  state: "Προσωρινή αποθήκευση",
+  examPeriod: "Ιανουάριος 23-24",
+  students: [
+    {
+      registrationNumber: "1115201700166",
+      firstName: "Μάκης",
+      lastName: "Ζωγράφος",
+      grade: 7,
+    },
+    {
+      registrationNumber: "1115201700156",
+      firstName: "Κατερίνα",
+      lastName: "Ζέλου",
+      grade: 6,
+    },
+    {
+      registrationNumber: "1115201700156",
+      firstName: "Κατερίνα",
+      lastName: "Χαϊμαντά",
+      grade: 3,
+    },
+    {
+      registrationNumber: "1115201900222",
+      firstName: "Ζίνα",
+      lastName: "Ελευθερίου",
+      grade: 10,
+    },
+  ],
+};
 
 const CreateGradeBook = () => {
   const { gradeBookId } = useParams();
@@ -121,10 +157,23 @@ const CreateGradeBook = () => {
         <Button
           variant="contained"
           className="main-action-button"
-          onClick={() => {}}
+          onClick={() =>
+            (document?.querySelector("#upload") as HTMLElement)?.click()
+          }
           sx={{ fontWeight: "bold" }}
         >
           μεταφορτωση αρχειου
+          <input
+            id="upload"
+            name="upload"
+            type="file"
+            hidden
+            onChange={() => {
+              setGradebook(mockGradebook);
+              setDisabled(false);
+            }}
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+          />
           <FileUploadOutlinedIcon fontSize="small" />
         </Button>
       </Box>

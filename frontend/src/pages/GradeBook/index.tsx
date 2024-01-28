@@ -44,16 +44,49 @@ const titles: Array<Column> = [
   },
 ];
 
+const mockGradebook: GradingSystemDetailsDTO = {
+  _id: "12345",
+  courseName: "Μαθηματικά Πληροφορικής",
+  courseId: "878787",
+  state: "Προσωρινή αποθήκευση",
+  examPeriod: "Ιανουάριος 23-24",
+  students: [
+    {
+      registrationNumber: "1115201700166",
+      firstName: "Μάκης",
+      lastName: "Ζωγράφος",
+      grade: 7,
+    },
+    {
+      registrationNumber: "1115201700156",
+      firstName: "Κατερίνα",
+      lastName: "Ζέλου",
+      grade: 6,
+    },
+    {
+      registrationNumber: "1115201700156",
+      firstName: "Κατερίνα",
+      lastName: "Χαϊμαντά",
+      grade: 3,
+    },
+    {
+      registrationNumber: "1115201900222",
+      firstName: "Ζίνα",
+      lastName: "Ελευθερίου",
+      grade: 10,
+    },
+  ],
+};
+
 const GradeBook = () => {
   const { gradeBookId } = useParams();
   const { userData } = useAuth();
   const [gradebook, setGradebook] = useState<GradingSystemDetailsDTO | null>(
-    null
+    mockGradebook
   );
   const [studentGrades, setStudentGrades] = useState<StudentGradingDetails[]>(
     []
   );
-  const [disabled, setDisabled] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [examsPeriod, setExamsPeriod] = useState("");
   const navigate = useNavigate();
@@ -62,7 +95,6 @@ const GradeBook = () => {
     if (gradeBookId) {
       API.retrieveGradingSystem(gradeBookId).then((res) => {
         setGradebook(res);
-        setDisabled(res.state !== "Προσωρινή αποθήκευση");
         setStudentGrades(res.students);
       });
     }
@@ -128,7 +160,6 @@ const GradeBook = () => {
             className="main-action-button"
             onClick={handleSubmit}
             sx={{ fontWeight: "bold", mt: "16px", alignSelf: "end" }}
-            disabled={disabled}
           >
             οριστικη υποβολη
           </Button>

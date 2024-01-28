@@ -17,6 +17,10 @@ const UserButton: React.FC = () => {
   const { userType, userProfile } = userData;
   const navigate = useNavigate();
 
+  const image = `http://localhost:8888/${
+    userProfile.generalInformation.profilePicture?.split("/")[1]
+  }`;
+
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -75,17 +79,17 @@ const UserButton: React.FC = () => {
     </Box>
   ) : (
     <Box className="userButtonContainer">
-      {!userProfile.generalInformation.profilePicture ? (
+      {userProfile?.generalInformation?.profilePicture &&
+      userProfile?.generalInformation?.profilePicture
+        ?.split("/")
+        .indexOf("uploads") > -1 ? (
         <ButtonBase
           focusRipple
-          key={userProfile.generalInformation.profilePicture}
+          key={image}
           className="userButton"
           onClick={handleMenu}
         >
-          <img
-            src={userProfile.generalInformation.profilePicture}
-            className="userImage"
-          />
+          <img src={image} className="userImage" />
         </ButtonBase>
       ) : (
         <IconButton
