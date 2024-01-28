@@ -58,7 +58,19 @@ const Declaration = () => {
       );
   };
 
-  return (
+  const handleRemoveCourse = (courseId: string) => {
+    const newCourses = declarationDetails?.courses.filter(
+      (course) => course.courseId !== courseId
+    );
+    declarationDetails &&
+      setDeclarationDetails({
+        ...declarationDetails,
+        courses: newCourses ?? [],
+      });
+  };
+
+  return declarationDetails &&
+    declarationDetails.state === "Προσωρινή αποθήκευση" ? (
     <>
       <ConfirmationModal
         text="Είστε σίγουροι ότι θέλετε να υποβάλετε τη δήλωση;"
@@ -68,11 +80,11 @@ const Declaration = () => {
       />
       <Box className="wrapper">
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          Δήλωση:
+          Δήλωση: {declarationDetails && declarationDetails.examPeriod}
         </Typography>
         <Box className="header">
           <Typography variant="body1">
-            Για να προσθέσετε ένα μάθημα επιστρέψτε στη λίστα μαθημάτων.{" "}
+            Για να προσθέσετε ένα μάθημα επιστρέψτε στη λίστα μαθημάτων.
           </Typography>
         </Box>
         <SearchTable
@@ -80,6 +92,7 @@ const Declaration = () => {
           rows={declarationDetails?.courses ?? []}
           totalResults={declarationDetails?.courses.length ?? 0}
           actions={["delete"]}
+          onRemoveCourse={(courseId) => handleRemoveCourse(courseId)}
         />
         <Button
           variant="contained"
@@ -90,6 +103,20 @@ const Declaration = () => {
         >
           οριστικη υποβολη
         </Button>
+      </Box>
+    </>
+  ) : (
+    <>
+      <Box className="wrapper">
+        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+          Δήλωση: {declarationDetails && declarationDetails.examPeriod}
+        </Typography>
+        <SearchTable
+          columns={titles}
+          rows={declarationDetails?.courses ?? []}
+          totalResults={declarationDetails?.courses.length ?? 0}
+          actions={[]}
+        />
       </Box>
     </>
   );

@@ -17,7 +17,7 @@ import DropdownInput from "../../Input/DropdownInput";
 import ActionButton from "../../ActionButton";
 import CheckBox from "../../CheckBox";
 import { CoursesForDeclaration } from "../../../../../backend/models/types/declaration";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SearchTable: React.FC<SearchTableProps> = ({
   columns,
@@ -26,6 +26,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
   totalResults,
   onCheckedCourses,
   onFilterChange,
+  onRemoveCourse,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -34,6 +35,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
   >([]);
   const [filters, setFilters] = useState<Filters>({ page: 1, pageSize: 10 });
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -42,10 +44,6 @@ const SearchTable: React.FC<SearchTableProps> = ({
     filters["page"] = newPage + 1;
     if (onFilterChange) onFilterChange(filters);
     setPage(newPage);
-  };
-
-  const navigateToCoursePage = (courseId: string) => {
-    navigate(`/courses/${courseId}`);
   };
 
   const handleFilterChange = (id: string, value: string) => {
@@ -86,7 +84,9 @@ const SearchTable: React.FC<SearchTableProps> = ({
   const returnAction = (
     action: string,
     courseId?: string,
-    courseName?: string
+    courseName?: string,
+    declarationId?: string,
+    gradebookId?: string
   ) => {
     switch (action) {
       case "view":
@@ -94,7 +94,11 @@ const SearchTable: React.FC<SearchTableProps> = ({
           <ActionButton
             type={action}
             onClick={() => {
-              navigateToCoursePage(courseId!);
+              pathname.split("/").indexOf("declarations") > -1
+                ? navigate(`/declarations/${declarationId}`)
+                : pathname.split("/").indexOf("declarations") > -1
+                ? navigate(`/gradebooks/${gradebookId}`)
+                : navigate(`/courses/${courseId}`);
             }}
             tooltip="Λεπτομέρειες"
           />
@@ -113,7 +117,11 @@ const SearchTable: React.FC<SearchTableProps> = ({
         return (
           <ActionButton
             type={action}
-            onClick={() => {}}
+            onClick={() => {
+              pathname.split("/").indexOf("declarations") > -1
+                ? navigate(`/declarations/${declarationId}`)
+                : navigate(`/gradebooks/${gradebookId}`);
+            }}
             tooltip="Συνέχεια επεξεργασίας"
           />
         );
@@ -121,7 +129,9 @@ const SearchTable: React.FC<SearchTableProps> = ({
         return (
           <ActionButton
             type={action}
-            onClick={() => {}}
+            onClick={() => {
+              onRemoveCourse && onRemoveCourse(courseId!);
+            }}
             tooltip="Αφαίρεση μαθήματος"
           />
         );
@@ -228,7 +238,13 @@ const SearchTable: React.FC<SearchTableProps> = ({
                             scope="row"
                             sx={{ p: 0 }}
                           >
-                            {returnAction("edit", row.courseId)}
+                            {returnAction(
+                              "edit",
+                              row.courseId,
+                              "",
+                              row._id,
+                              row._id
+                            )}
                           </TableCell>
                         );
                       } else {
@@ -239,7 +255,13 @@ const SearchTable: React.FC<SearchTableProps> = ({
                             scope="row"
                             sx={{ p: 0 }}
                           >
-                            {returnAction(action, row.courseId, row.courseName)}
+                            {returnAction(
+                              action,
+                              row.courseId,
+                              row.courseName,
+                              row._id,
+                              row._id
+                            )}
                           </TableCell>
                         );
                       }
