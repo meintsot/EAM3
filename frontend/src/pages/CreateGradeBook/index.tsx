@@ -3,21 +3,19 @@ import { Box, Typography, Button } from "@mui/material";
 import SearchTable from "../../components/Table/SearchTable";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import DropdownInput from "../../components/Input/DropdownInput";
+import { useSearchParams } from "react-router-dom";
 
 import { Column, Filters } from "../../model";
-import { useAuth } from "../../providers/AuthProvider";
 import { getLastThreeExamPeriods } from "../../helpers/findExamPeriod";
-import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-import { useParams } from "react-router-dom";
 import {
   GradingSystemDetailsDTO,
   StudentGradingDetails,
 } from "../../../../backend/models/types/gradingSystem";
-import API from "../../api";
-import DispatchAlert from "../../components/AlertBox/dispatchAlert";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 import "./CreateGradeBook.css";
+import API from "../../api";
+import {CourseDetailsDTO} from "../../../../backend/models/types/course";
 
 const titles: Array<Column> = [
   {
@@ -81,8 +79,21 @@ const mockGradebook: GradingSystemDetailsDTO = {
 };
 
 const CreateGradeBook = () => {
-  const { gradeBookId } = useParams();
-  const { userData } = useAuth();
+  const location = useLocation();
+  const [course, setCourse] = useState<CourseDetailsDTO | null>(null);
+
+  // Parse query parameters
+  const searchParams = new URLSearchParams(location.search);
+  const courseId = searchParams.get('courseId');
+  console.log(courseId, 'here');
+
+  useEffect(() => {
+    if (courseId) {
+      console.log('courseId here: ', courseId);
+      API.retrieveCourse(courseId!).then(course => setCourse(course)).catch(err => console.log(err));
+    }
+  }, [courseId]);
+
   const [gradebook, setGradebook] = useState<GradingSystemDetailsDTO | null>(
     null
   );
@@ -93,22 +104,18 @@ const CreateGradeBook = () => {
   const [examsPeriod, setExamsPeriod] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (gradeBookId) {
-      API.retrieveGradingSystem(gradeBookId).then((res) => {
-        setGradebook(res);
-        setDisabled(res.state !== "Προσωρινή αποθήκευση");
-        setStudentGrades(res.students);
-      });
-    }
-  }, [userData.authToken, gradeBookId]);
-
   const handleSelect = (id: string, value: string) => {
     setExamsPeriod(value);
   };
 
   const handleSubmit = () => {
-    navigate(`/gradebooks/${gradeBookId}`);
+    API.submitGradingSystem({
+      courseId: courseId!,
+      courseName: course?.generalInformation?.courseName ?? '',
+      examPeriod: examsPeriod,
+      state: '',
+      students: gradebook?.students ?? []
+    }).then(res => navigate(`/gradebooks/${res._id}?courseId=${courseId}`)).catch(err => console.log(err));
   };
 
   const handleFilterChange = (filters: Filters) => {
@@ -121,21 +128,6 @@ const CreateGradeBook = () => {
           studentRow.registrationNumber.includes(filters["registrationNumber"])
       )
     );
-  };
-
-  const handleConfirm = () => {
-    API.confirmGradingSystem(gradeBookId!)
-      .then(() => {
-        DispatchAlert("Το βαθμολόγιο υποβλήθηκε επιτυχώς!", "", "success");
-        navigate("/gradebooks");
-      })
-      .catch((err) =>
-        DispatchAlert(
-          "Το βαθμολόγιο δεν έχει υποβληθεί!",
-          "Προέκυψε σφάλμα κατά την υποβολή του βαθμολογίου. Προσπαθήστε ξανά.",
-          "error"
-        )
-      );
   };
 
   return (

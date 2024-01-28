@@ -80,7 +80,8 @@ const GradeBooks = () => {
   };
 
   const handleChoice = (courseId: string) => {
-    navigate(`/create-gradebook`);
+    console.log(courseId);
+    navigate(`create-gradebook?courseId=${courseId!}`);
   };
 
   return (

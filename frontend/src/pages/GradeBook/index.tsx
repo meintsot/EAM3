@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import SearchTable from "../../components/Table/SearchTable";
-import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
-import DropdownInput from "../../components/Input/DropdownInput";
 
 import { Column, Filters } from "../../model";
 import { useAuth } from "../../providers/AuthProvider";
-import { getLastThreeExamPeriods } from "../../helpers/findExamPeriod";
 import ConfirmationModal from "../../components/Modal/ConfirmationModal";
 import { useParams } from "react-router-dom";
 import {
-  GradingSystemDetailsDTO,
-  StudentGradingDetails,
+  StudentGradingDetails, SubmitGradingSystemRequest,
 } from "../../../../backend/models/types/gradingSystem";
 import API from "../../api";
 import DispatchAlert from "../../components/AlertBox/dispatchAlert";
@@ -44,65 +40,25 @@ const titles: Array<Column> = [
   },
 ];
 
-const mockGradebook: GradingSystemDetailsDTO = {
-  _id: "12345",
-  courseName: "Μαθηματικά Πληροφορικής",
-  courseId: "878787",
-  state: "Προσωρινή αποθήκευση",
-  examPeriod: "Ιανουάριος 23-24",
-  students: [
-    {
-      registrationNumber: "1115201700166",
-      firstName: "Μάκης",
-      lastName: "Ζωγράφος",
-      grade: 7,
-    },
-    {
-      registrationNumber: "1115201700156",
-      firstName: "Κατερίνα",
-      lastName: "Ζέλου",
-      grade: 6,
-    },
-    {
-      registrationNumber: "1115201700156",
-      firstName: "Κατερίνα",
-      lastName: "Χαϊμαντά",
-      grade: 3,
-    },
-    {
-      registrationNumber: "1115201900222",
-      firstName: "Ζίνα",
-      lastName: "Ελευθερίου",
-      grade: 10,
-    },
-  ],
-};
-
 const GradeBook = () => {
-  const { gradeBookId } = useParams();
+  const { gradebookId } = useParams();
   const { userData } = useAuth();
-  const [gradebook, setGradebook] = useState<GradingSystemDetailsDTO | null>(
-    mockGradebook
-  );
+  const [gradebook, setGradebook] = useState<SubmitGradingSystemRequest | null>(null);
   const [studentGrades, setStudentGrades] = useState<StudentGradingDetails[]>(
     []
   );
   const [openModal, setOpenModal] = useState(false);
-  const [examsPeriod, setExamsPeriod] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (gradeBookId) {
-      API.retrieveGradingSystem(gradeBookId).then((res) => {
+    if (gradebookId) {
+      API.retrieveGradingSystem(gradebookId).then((res) => {
+        console.log(res);
         setGradebook(res);
         setStudentGrades(res.students);
       });
     }
-  }, [userData.authToken, gradeBookId]);
-
-  const handleSelect = (id: string, value: string) => {
-    setExamsPeriod(value);
-  };
+  }, [userData.authToken, gradebookId]);
 
   const handleSubmit = () => {
     setOpenModal(true);
@@ -121,7 +77,8 @@ const GradeBook = () => {
   };
 
   const handleConfirm = () => {
-    API.confirmGradingSystem(gradeBookId!)
+    console.log(gradebook);
+    API.confirmGradingSystem(gradebookId!, gradebook!)
       .then(() => {
         DispatchAlert("Το βαθμολόγιο υποβλήθηκε επιτυχώς!", "", "success");
         navigate("/gradebooks");
