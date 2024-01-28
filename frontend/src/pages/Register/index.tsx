@@ -8,12 +8,11 @@ import MultipleAutocompleteInput from "../../components/Input/MultipleAutocomple
 import ImageUploader from "../../components/Input/ImageUploader";
 import { useAuth } from "../../providers/AuthProvider";
 import { buildRegisterPayload } from "../../mappers";
-import AlertBox from "../../components/AlertBox";
 
 import "./Register.css";
 import API from "../../api";
 import { CourseDTO } from "../../../../backend/models/types/course";
-import {useNavigate} from "react-router";
+import { useNavigate } from "react-router";
 
 const Register: React.FC = () => {
   const [formValues, setFormValues] = useState({
@@ -119,16 +118,15 @@ const Register: React.FC = () => {
       formData.append("image", file, file.name);
       API.uploadProfileImage(formData).then((fileURL: string) => {
         formValues.profilePicture = fileURL;
-        register(payload).then(() => navigate('/'));
+        register(payload).then(() => navigate("/"));
       });
     } else {
-      register(payload).then(() => navigate('/'));
+      register(payload).then(() => navigate("/"));
     }
   };
 
   return (
     <div className="container">
-      <AlertBox />
       <Paper className="registerFormContainer">
         <Box className="registerForm">
           <Box className="profilePicUploader">

@@ -5,6 +5,7 @@ import NavBar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 
 import "./Shell.css";
+import AlertBox from "../../components/AlertBox";
 
 const guestItems = [{ label: "Μαθήματα", pathname: "/courses" }];
 const studentItems = [
@@ -32,6 +33,7 @@ function Shell() {
       <NavBar />
       <Sidebar sidebarItems={sidebarItems} />
       <Box sx={{ pt: "116px", pl: "12px", width: "100%", height: "100%" }}>
+        <AlertBox />
         <Outlet />
       </Box>
     </Box>

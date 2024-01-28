@@ -93,7 +93,7 @@ const Certificates = () => {
         rows={certificateResults.certificates ?? []}
         totalResults={certificateResults.total ?? 0}
         onFilterChange={handleFilterChange}
-        actions={["view", "checkbox"]}
+        actions={[]}
       />
     </Box>
   );

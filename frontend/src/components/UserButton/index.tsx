@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { Box, ButtonBase, MenuItem, IconButton, Menu } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import cloudUpload from "../../assets/img/CloudUpload.png";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import LoginIcon from "@mui/icons-material/Login";
@@ -18,6 +17,10 @@ const UserButton: React.FC = () => {
   const { userType, userProfile } = userData;
   const navigate = useNavigate();
 
+  const image = `http://localhost:8888/${
+    userProfile.generalInformation.profilePicture?.split("/")[1]
+  }`;
+
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -26,8 +29,7 @@ const UserButton: React.FC = () => {
     setAnchorEl(null);
   };
 
-  return userType === "guest" ||
-    !userProfile.generalInformation.profilePicture ? (
+  return userType === "guest" ? (
     <Box>
       <IconButton
         size="small"
@@ -77,14 +79,29 @@ const UserButton: React.FC = () => {
     </Box>
   ) : (
     <Box className="userButtonContainer">
-      <ButtonBase
-        focusRipple
-        key={cloudUpload}
-        className="userButton"
-        onClick={handleMenu}
-      >
-        <img src={cloudUpload} className="userImage" />
-      </ButtonBase>
+      {userProfile?.generalInformation?.profilePicture &&
+      userProfile?.generalInformation?.profilePicture
+        ?.split("/")
+        .indexOf("uploads") > -1 ? (
+        <ButtonBase
+          focusRipple
+          key={image}
+          className="userButton"
+          onClick={handleMenu}
+        >
+          <img src={image} className="userImage" />
+        </ButtonBase>
+      ) : (
+        <IconButton
+          size="small"
+          aria-label="account of current user"
+          aria-controls="menu-appbar"
+          aria-haspopup="true"
+          onClick={handleMenu}
+        >
+          <AccountCircle fontSize="large" />
+        </IconButton>
+      )}
       <Menu
         id="menu-appbar"
         anchorEl={anchorEl}
@@ -101,7 +118,7 @@ const UserButton: React.FC = () => {
         onClose={handleClose}
       >
         <MenuItem sx={{ fontWeight: "bold" }} className="fullName">
-          {userProfile.generalInformation.firstName}
+          {userProfile.generalInformation.firstName}{" "}
           {userProfile.generalInformation.lastName}
         </MenuItem>
         <MenuItem

@@ -8,7 +8,6 @@ import API from "../../api";
 import { useAuth } from "../../providers/AuthProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import DispatchAlert from "../../components/AlertBox/dispatchAlert";
-import AlertBox from "../../components/AlertBox";
 
 const titles: Array<Column> = [
   {
@@ -61,7 +60,6 @@ const Declaration = () => {
 
   return (
     <>
-      <AlertBox />
       <ConfirmationModal
         text="Είστε σίγουροι ότι θέλετε να υποβάλετε τη δήλωση;"
         open={openModal}
