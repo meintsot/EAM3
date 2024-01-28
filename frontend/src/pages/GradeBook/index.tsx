@@ -122,15 +122,19 @@ const GradeBook = () => {
           onFilterChange={handleFilterChange}
           actions={["input"]}
         />
-        <Button
-          variant="contained"
-          className="main-action-button"
-          onClick={handleSubmit}
-          sx={{ fontWeight: "bold", mt: "16px", alignSelf: "end" }}
-          disabled={disabled}
-        >
-          οριστικη υποβολη
-        </Button>
+        {gradebook?.state === "Προσωρινή αποθήκευση" ? (
+          <Button
+            variant="contained"
+            className="main-action-button"
+            onClick={handleSubmit}
+            sx={{ fontWeight: "bold", mt: "16px", alignSelf: "end" }}
+            disabled={disabled}
+          >
+            οριστικη υποβολη
+          </Button>
+        ) : (
+          <></>
+        )}
       </Box>
     </>
   );

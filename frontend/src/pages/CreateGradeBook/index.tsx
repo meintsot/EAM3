@@ -6,7 +6,7 @@ import DropdownInput from "../../components/Input/DropdownInput";
 
 import { Column, Filters } from "../../model";
 import { useAuth } from "../../providers/AuthProvider";
-import getLastThreeExamPeriods from "../../helpers/findExamPeriod";
+import { getLastThreeExamPeriods } from "../../helpers/findExamPeriod";
 import ConfirmationModal from "../../components/Modal/ConfirmationModal";
 import { useParams } from "react-router-dom";
 import {
@@ -44,7 +44,7 @@ const titles: Array<Column> = [
   },
 ];
 
-const GradeBook = () => {
+const CreateGradeBook = () => {
   const { gradeBookId } = useParams();
   const { userData } = useAuth();
   const [gradebook, setGradebook] = useState<GradingSystemDetailsDTO | null>(
@@ -72,7 +72,7 @@ const GradeBook = () => {
   };
 
   const handleSubmit = () => {
-    // redirect to gradebook page
+    navigate(`/gradebooks/${gradeBookId}`);
   };
 
   const handleFilterChange = (filters: Filters) => {
@@ -148,4 +148,4 @@ const GradeBook = () => {
   );
 };
 
-export default GradeBook;
+export default CreateGradeBook;
