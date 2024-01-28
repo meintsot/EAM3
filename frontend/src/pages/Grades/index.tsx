@@ -1,12 +1,15 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import SearchTable from "../../components/Table/SearchTable";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 
-import {Column, Filters} from "../../model";
+import { Column, Filters } from "../../model";
 import { useAuth } from "../../providers/AuthProvider";
 import API from "../../api";
-import {RetrieveStudentGrades, RetrieveStudentGradesRequest} from "../../../../backend/models/types/studentGrade";
+import {
+  RetrieveStudentGrades,
+  RetrieveStudentGradesRequest,
+} from "../../../../backend/models/types/studentGrade";
 
 const titles: Array<Column> = [
   {
@@ -25,13 +28,13 @@ const titles: Array<Column> = [
     key: "semester",
     label: "Εξάμηνο",
     searchInputType: "dropdown",
-    options: ["Υποχρεωτικό", "Βασικό"],
+    options: ["1", "2", "3", "4", "5", "6", "7", "8"],
   },
   {
     key: "ects",
     label: "ECTS",
     searchInputType: "text",
-    options: ["Ιανουάριος 23-24", "Ιούνιος 22-23", "Σεπτεμβριος 23-24"],
+    options: [],
   },
   {
     key: "grade",
@@ -42,18 +45,23 @@ const titles: Array<Column> = [
 ];
 
 const Grades = () => {
-  const [gradingResults, setGradingResults] = useState<RetrieveStudentGrades>({ studentGrades: [], total: 0 });
+  const [gradingResults, setGradingResults] = useState<RetrieveStudentGrades>({
+    studentGrades: [],
+    total: 0,
+  });
 
   const { userData } = useAuth();
 
   useEffect(() => {
-    API.retrieveStudentGrades({ page: 1, pageSize: 10 }).then(res => setGradingResults(res));
+    API.retrieveStudentGrades({ page: 1, pageSize: 10 }).then((res) =>
+      setGradingResults(res)
+    );
   }, [userData.authToken]);
 
   const handleFilterChange = (filters: Filters) => {
     const request = filters as RetrieveStudentGradesRequest;
-    API.retrieveStudentGrades(request).then(res => setGradingResults(res));
-  }
+    API.retrieveStudentGrades(request).then((res) => setGradingResults(res));
+  };
 
   return (
     <Box className="wrapper">

@@ -11,9 +11,9 @@ import {
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import BasicInput from "../Input/BasicInput";
 import DropdownInput from "../Input/DropdownInput";
-import {useState} from "react";
-import {StepperFormProps} from "../../model";
-import {certificateType} from "../../../../backend/models/types/certificate";
+import { useState } from "react";
+import { StepperFormProps } from "../../model";
+import { certificateType } from "../../../../backend/models/types/certificate";
 
 const StepperForm: React.FC<StepperFormProps> = ({ onSubmit }) => {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -25,16 +25,17 @@ const StepperForm: React.FC<StepperFormProps> = ({ onSubmit }) => {
   };
 
   const handleCertificateType = (certificateType: string) => {
-    setCertificateType(certificateType)
-  }
+    setCertificateType(certificateType);
+  };
 
   const handleNumberOfReplicas = (numberOfReplicas: string) => {
-      setNumberOfReplicas(parseInt(numberOfReplicas));
-  }
+    setNumberOfReplicas(parseInt(numberOfReplicas));
+  };
 
   const handleSubmit = () => {
-      onSubmit({ type: certificateType as certificateType, numberOfReplicas })
-  }
+    onSubmit({ type: certificateType as certificateType, numberOfReplicas });
+    handleNext();
+  };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -66,15 +67,13 @@ const StepperForm: React.FC<StepperFormProps> = ({ onSubmit }) => {
               <DropdownInput
                 id="certificate-type"
                 onChange={handleCertificateType}
-                items={
-                  [
-                      'Φοιτητικής Ιδιότητας',
-                      'Φορολογικής Χρήσης' ,
-                      'Αναλυτική βαθμολογία με προβιβάσιμους βαθμούς',
-                      'Στρατολογική Χρήση (Συνοπτικό)',
-                      'Στρατολογική Χρήση (Aναλυτικό)'
-                  ]
-                }
+                items={[
+                  "Φοιτητικής Ιδιότητας",
+                  "Φορολογικής Χρήσης",
+                  "Αναλυτική βαθμολογία με προβιβάσιμους βαθμούς",
+                  "Στρατολογική Χρήση (Συνοπτικό)",
+                  "Στρατολογική Χρήση (Aναλυτικό)",
+                ]}
                 size="small"
               />
             </Box>

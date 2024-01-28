@@ -1,12 +1,14 @@
 import { Column } from "../../model";
 import SearchTable from "../../components/Table/SearchTable";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import ConfirmationModal from "../../components/Modal/ConfirmationModal";
-import {DeclarationDetailsDTO} from "../../../../backend/models/types/declaration";
+import { DeclarationDetailsDTO } from "../../../../backend/models/types/declaration";
 import API from "../../api";
-import {useAuth} from "../../providers/AuthProvider";
-import {useParams} from "react-router-dom";
+import { useAuth } from "../../providers/AuthProvider";
+import { useNavigate, useParams } from "react-router-dom";
+import DispatchAlert from "../../components/AlertBox/dispatchAlert";
+import AlertBox from "../../components/AlertBox";
 
 const titles: Array<Column> = [
   {
@@ -25,28 +27,41 @@ const titles: Array<Column> = [
 
 const Declaration = () => {
   const { userData } = useAuth();
-  const [declarationDetails, setDeclarationDetails] = useState<DeclarationDetailsDTO | null>(null);
+  const [declarationDetails, setDeclarationDetails] =
+    useState<DeclarationDetailsDTO | null>(null);
   const { declarationId } = useParams();
   const [disabled, setDisabled] = useState(false);
   useEffect(() => {
-    API.retrieveDeclaration(declarationId!).then(res => {
+    API.retrieveDeclaration(declarationId!).then((res) => {
       setDeclarationDetails(res);
-      setDisabled(res.state !== 'pending');
+      setDisabled(res.state !== "pending");
     });
   }, [declarationId, userData.authToken]);
-
   const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = () => {
     setOpenModal(true);
   };
 
   const handleConfirm = () => {
-    API.confirmDeclaration(declarationId!, declarationDetails!).then().catch(err => console.log(err));
+    API.confirmDeclaration(declarationId!, declarationDetails!)
+      .then(() => {
+        DispatchAlert("Η δήλωση υποβλήθηκε επιτυχώς!", "", "success");
+        navigate("/declarations");
+      })
+      .catch((err) =>
+        DispatchAlert(
+          "Η δήλωση δεν έχει υποβληθεί!",
+          "Προέκυψε σφάλμα κατά την υποβολή της δήλωσης. Προσπαθήστε ξανά.",
+          "error"
+        )
+      );
   };
 
   return (
     <>
+      <AlertBox />
       <ConfirmationModal
         text="Είστε σίγουροι ότι θέλετε να υποβάλετε τη δήλωση;"
         open={openModal}

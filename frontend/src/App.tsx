@@ -19,6 +19,7 @@ import EditProfile from "./pages/EditProfile";
 import "./App.css";
 import { AuthProvider } from "./providers/AuthProvider";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CreateGradeBook from "./pages/CreateGradeBook";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
             <Route path="gradebooks" element={<GradeBooks />} />
             <Route path="gradebooks/:gradebookId" element={<GradeBook />} />
             <Route path="certificates" element={<Certificates />} />
+            <Route path="create-gradebook" element={<CreateGradeBook />} />
             <Route
               path="certificate-request"
               element={<CertificateRequest />}

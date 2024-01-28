@@ -1,11 +1,11 @@
-import {Column, Filters} from "../../model";
+import { Column, Filters } from "../../model";
 import SearchTable from "../../components/Table/SearchTable";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
-import {useAuth} from "../../providers/AuthProvider";
+import { useAuth } from "../../providers/AuthProvider";
 import {
   RetrieveDeclarationsRequest,
-  RetrieveDeclarationsResponse
+  RetrieveDeclarationsResponse,
 } from "../../../../backend/models/types/declaration";
 import API from "../../api";
 
@@ -13,14 +13,14 @@ const titles: Array<Column> = [
   {
     key: "examPeriod",
     label: "Εξεταστική περίοδος",
-    searchInputType: "dropdown",
-    options: ["Χειμερινό 23-24"],
+    searchInputType: "text",
+    options: [],
   },
   {
     key: "state",
     label: "Κατάσταση δήλωσης",
     searchInputType: "dropdown",
-    options: ["Προσωρινή αποθήκευση"],
+    options: ["Προσωρινή αποθήκευση", "Οριστική υποβολή"],
   },
   {
     key: "actions",
@@ -33,16 +33,19 @@ const titles: Array<Column> = [
 const Declarations = () => {
   const { userData } = useAuth();
 
-  const [declarationResults, setDeclarationResults] = useState<RetrieveDeclarationsResponse>({ declarations: [], total: 0 })
+  const [declarationResults, setDeclarationResults] =
+    useState<RetrieveDeclarationsResponse>({ declarations: [], total: 0 });
 
   useEffect(() => {
-    API.retrieveDeclarations({ page: 1, pageSize: 10 }).then(res => setDeclarationResults(res));
+    API.retrieveDeclarations({ page: 1, pageSize: 10 }).then((res) =>
+      setDeclarationResults(res)
+    );
   }, [userData.authToken]);
 
   const handleFilterChange = (filters: Filters) => {
     const request = filters as RetrieveDeclarationsRequest;
     API.retrieveDeclarations(request).then((res) => setDeclarationResults(res));
-  }
+  };
 
   return (
     <Box className="wrapper">

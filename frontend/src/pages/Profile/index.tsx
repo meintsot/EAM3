@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, IconButton } from "@mui/material";
 import Accordions from "../../components/Accordions";
 import SimpleTable from "../../components/Table/SimpleTable";
 import HistoryTable from "../../components/Table/HistoryTable";
@@ -6,6 +6,8 @@ import { useAuth } from "../../providers/AuthProvider";
 import API from "../../api/index";
 import { useEffect, useState } from "react";
 import { RetrieveUserHistoryResponse } from "../../../../backend/models/types/userHistory";
+import Edit from "@mui/icons-material/Edit";
+import { useNavigate } from "react-router";
 
 const Profile = () => {
   const { userData } = useAuth();
@@ -14,6 +16,7 @@ const Profile = () => {
     userHistory: [],
     total: 0,
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const authToken = userData.authToken;
@@ -72,9 +75,12 @@ const Profile = () => {
     <Box className="wrapper">
       <Typography variant="h5" sx={{ fontWeight: "bold" }}>
         {userProfile.generalInformation.firstName}
-        {userProfile.generalInformation.lastName}
+        {userProfile.generalInformation.lastName}heyyyy
+        <IconButton onClick={(e) => navigate("/edit-profile")}>
+          <Edit />
+        </IconButton>
       </Typography>
-      {userType === "student" && (
+      {userType === "guest" && (
         <Box className="header">
           <Typography variant="body1">A.Μ.: {userProfile.studentId}</Typography>
         </Box>

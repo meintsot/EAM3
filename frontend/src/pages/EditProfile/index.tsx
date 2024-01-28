@@ -10,18 +10,23 @@ import "./EditProfile.css";
 import API from "../../api";
 import { CourseDTO } from "../../../../backend/models/types/course";
 import AlertBox from "../../components/AlertBox";
-import {UpdateUserProfileRequest} from "../../../../backend/models/types/userProfile";
+import { UpdateUserProfileRequest } from "../../../../backend/models/types/userProfile";
+import { useNavigate } from "react-router";
 
 const EditProfile: React.FC = () => {
-
   const { userData } = useAuth();
   const { userType, userProfile } = userData;
-  const [formValues, setFormValues] = useState<UpdateUserProfileRequest>({ ...userProfile, phoneNumber: userProfile.generalInformation.phoneNumber, profilePicture: userProfile.generalInformation.profilePicture });
+  const [formValues, setFormValues] = useState<UpdateUserProfileRequest>({
+    ...userProfile,
+    phoneNumber: userProfile.generalInformation.phoneNumber,
+    profilePicture: userProfile.generalInformation.profilePicture,
+  });
   console.log(formValues);
   const [file, setFile] = useState<File | null>(null);
   const [errorFields, setErrorFields] = useState<Array<string>>([]);
   const maritalStatuses = ["Παντρεμένος/η", "Άγαμος/η"];
   const [availableCourses, setAvailableCourses] = useState([] as CourseDTO[]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     API.getAvailableCourses().then((courses) => setAvailableCourses(courses));
@@ -43,7 +48,6 @@ const EditProfile: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    console.log(formValues);
     setErrorFields(
       Object.keys(formValues).filter(
         (key: string) => formValues[key as keyof typeof formValues] === ""
@@ -84,10 +88,15 @@ const EditProfile: React.FC = () => {
               </Typography>
               <div></div>
               <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                {userProfile.generalInformation.firstName} {userProfile.generalInformation.lastName}
+                {userProfile.generalInformation.firstName}{" "}
+                {userProfile.generalInformation.lastName}
               </Typography>
-              <Typography variant="body1">{userProfile.generalInformation.department}</Typography>
-              <Typography variant="body1">{userData.userName + '@di.uoa.gr'}</Typography>
+              <Typography variant="body1">
+                {userProfile.generalInformation.department}
+              </Typography>
+              <Typography variant="body1">
+                {userData.userName + "@di.uoa.gr"}
+              </Typography>
             </Box>
           </Box>
           <Box className="editFormColumn2">
@@ -155,7 +164,9 @@ const EditProfile: React.FC = () => {
                     id="personalInformation.issuingAuthority"
                     placeholder="Εκδούσα αρχή"
                     onChange={handleChange}
-                    defaultValue={formValues.personalInformation.issuingAuthority}
+                    defaultValue={
+                      formValues.personalInformation.issuingAuthority
+                    }
                   />
                   <BasicInput
                     id="personalInformation.dateOfPublish"
@@ -173,7 +184,9 @@ const EditProfile: React.FC = () => {
                     error={errorFields.includes("socialSecurityNumber")}
                     errorText="Ο ΑΜΚΑ είναι υποχρεωτικός"
                     required
-                    defaultValue={formValues.personalInformation.socialSecurityNumber}
+                    defaultValue={
+                      formValues.personalInformation.socialSecurityNumber
+                    }
                   />
                   <BasicInput
                     id="personalInformation.phoneNumber"
@@ -232,7 +245,9 @@ const EditProfile: React.FC = () => {
                     id="communicationDetails.temporaryAddress"
                     placeholder="Προσωρινή διεύθυνση κατοικίας"
                     onChange={handleChange}
-                    defaultValue={formValues.communicationDetails.temporaryAddress}
+                    defaultValue={
+                      formValues.communicationDetails.temporaryAddress
+                    }
                   />
                   <BasicInput
                     id="communicationDetails.temporaryCity"
@@ -244,13 +259,17 @@ const EditProfile: React.FC = () => {
                     id="communicationDetails.temporaryTelephone"
                     placeholder="Τηλέφωνο προσωρινής κατοικίας"
                     onChange={handleChange}
-                    defaultValue={formValues.communicationDetails.temporaryTelephone}
+                    defaultValue={
+                      formValues.communicationDetails.temporaryTelephone
+                    }
                   />
                   <BasicInput
                     id="communicationDetails.temporaryPostalCode"
                     placeholder="ΤΚ προσωρινής κατοικίας"
                     onChange={handleChange}
-                    defaultValue={formValues.communicationDetails.temporaryPostalCode}
+                    defaultValue={
+                      formValues.communicationDetails.temporaryPostalCode
+                    }
                   />
                 </Box>
               </Box>
