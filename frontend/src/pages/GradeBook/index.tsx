@@ -62,7 +62,7 @@ const GradeBook = () => {
     if (gradeBookId) {
       API.retrieveGradingSystem(gradeBookId).then((res) => {
         setGradebook(res);
-        setDisabled(res.state !== "pending");
+        setDisabled(res.state !== "Προσωρινή αποθήκευση");
         setStudentGrades(res.students);
       });
     }

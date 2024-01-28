@@ -37,14 +37,14 @@ class GradingSystemService {
   }
 
   static async submitGradingSystemRequest (request: SubmitGradingSystemRequest, user: User): Promise<GradingSystem> {
-    const res = await GradingSystemRepository.saveGradingSystem({ ...request, teacherId: user._id!, state: 'pending' })
+    const res = await GradingSystemRepository.saveGradingSystem({ ...request, teacherId: user._id!, state: 'Προσωρινή αποθήκευση' })
     await HistoryRepository.saveHistory({ userId: user._id!, action: HistoryActions.SUBMIT_GRADING_SYSTEM, date: new Date() })
     return res
   }
 
   static async confirmGradingSystem (gradingSystemId: string, user: User): Promise<GradingSystem> {
     const gradingSystem = await GradingSystemRepository.findOneByCriteria({ _id: gradingSystemId, teacherId: user._id })
-    gradingSystem.state = 'confirmed'
+    gradingSystem.state = 'Οριστική υποβολή'
     const res = await GradingSystemRepository.updateGradingSystem(gradingSystemId, gradingSystem)
     const course = await CourseRepository.findOneByCriteria({ courseId: res.courseId })
     const studentGrades = GradingSystemService.buildStudentGrades(res, course.ects.toString())
