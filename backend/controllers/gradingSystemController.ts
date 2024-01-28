@@ -42,8 +42,9 @@ class GradingSystemController {
   static async confirmGradingSystem (req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const gradingSystemId = req.params.gradingSystemId
+      const request = req.body as SubmitGradingSystemRequest
       const user = req.user!
-      const gradingSystem = await GradingSystemService.confirmGradingSystem(gradingSystemId, user)
+      const gradingSystem = await GradingSystemService.confirmGradingSystem(gradingSystemId, request, user)
       res.status(201).json(GradingSystemTransformer.toGradingSystemDetailsDTO(gradingSystem))
     } catch (err) {
       next(err)

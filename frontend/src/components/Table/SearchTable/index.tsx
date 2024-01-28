@@ -108,7 +108,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
           <ActionButton
             type={action}
             onClick={() => {
-              navigate("create-gradebook");
+              navigate(`create-gradebook?courseId=${courseId!}`);
             }}
             tooltip="Δημιουργία βαθμολογίου"
           />

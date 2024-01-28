@@ -149,12 +149,13 @@ const retrieveGradingSystem = async (gradingSystemId: string): Promise<GradingSy
     return res.data
 }
 
-const submitGradingSystem = async (payload: SubmitGradingSystemRequest): Promise<void> => {
-    await api.post('/gradingSystems', payload, { headers: { Authorization: getJWTHeader() } })
+const submitGradingSystem = async (payload: SubmitGradingSystemRequest): Promise<GradingSystemDetailsDTO> => {
+    const res = await api.post<GradingSystemDetailsDTO>('/gradingSystems', payload, { headers: { Authorization: getJWTHeader() } })
+    return res.data
 }
 
-const confirmGradingSystem = async (gradingSystemId: string): Promise<void> => {
-    await api.post(`/gradingSystems/${gradingSystemId}/confirm`, null, { headers: { Authorization: getJWTHeader() } })
+const confirmGradingSystem = async (gradingSystemId: string, gradingSystem: SubmitGradingSystemRequest): Promise<void> => {
+    await api.post(`/gradingSystems/${gradingSystemId}/confirm`, gradingSystem, { headers: { Authorization: getJWTHeader() } })
 }
 
 const retrieveStudentGrades = async (payload: RetrieveStudentGradesRequest): Promise<RetrieveStudentGrades> => {

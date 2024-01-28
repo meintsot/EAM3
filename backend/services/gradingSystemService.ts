@@ -42,8 +42,7 @@ class GradingSystemService {
     return res
   }
 
-  static async confirmGradingSystem (gradingSystemId: string, user: User): Promise<GradingSystem> {
-    const gradingSystem = await GradingSystemRepository.findOneByCriteria({ _id: gradingSystemId, teacherId: user._id })
+  static async confirmGradingSystem (gradingSystemId: string, gradingSystem: SubmitGradingSystemRequest, user: User): Promise<GradingSystem> {
     gradingSystem.state = 'Οριστική υποβολή'
     const res = await GradingSystemRepository.updateGradingSystem(gradingSystemId, gradingSystem)
     const course = await CourseRepository.findOneByCriteria({ courseId: res.courseId })
