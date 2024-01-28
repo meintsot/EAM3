@@ -12,7 +12,7 @@ import AlertBox from "../../components/AlertBox";
 
 const titles: Array<Column> = [
   {
-    key: "examPeriod",
+    key: "courseName",
     label: "",
     searchInputType: "none",
     options: [""],
@@ -34,7 +34,7 @@ const Declaration = () => {
   useEffect(() => {
     API.retrieveDeclaration(declarationId!).then((res) => {
       setDeclarationDetails(res);
-      setDisabled(res.state !== "pending");
+      setDisabled(res.state !== "Προσωρινή αποθήκευση");
     });
   }, [declarationId, userData.authToken]);
   const [openModal, setOpenModal] = useState(false);

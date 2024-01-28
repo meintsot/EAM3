@@ -119,7 +119,7 @@ const StepperForm: React.FC<StepperFormProps> = ({ onSubmit }) => {
             <Box sx={{ width: 450 }}>
               <BasicInput
                 id="number-of-replicas"
-                onChange={handleNumberOfReplicas}
+                onChange={(id, value) => handleNumberOfReplicas(value)}
                 size="small"
               />
             </Box>

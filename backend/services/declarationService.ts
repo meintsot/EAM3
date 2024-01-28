@@ -23,13 +23,13 @@ class DeclarationService {
   }
 
   static async submitDeclarationRequest (request: SubmitDeclarationRequest, user: User): Promise<Declaration> {
-    const res = await DeclarationRepository.saveDeclaration({ ...request, studentId: user._id!, state: 'pending' })
+    const res = await DeclarationRepository.saveDeclaration({ ...request, studentId: user._id!, state: 'Προσωρινή αποθήκευση' })
     await HistoryRepository.saveHistory({ userId: user._id!, action: HistoryActions.SUBMIT_DECLARATION, date: new Date() })
     return res
   }
 
   static async confirmDeclaration (declarationId: string, declaration: DeclarationDetailsDTO, user: User): Promise<Declaration> {
-    declaration.state = 'confirmed'
+    declaration.state = 'Οριστική υποβολή'
     const res = await DeclarationRepository.updateDeclaration(declarationId, declaration)
     await HistoryRepository.saveHistory({ userId: user._id!, action: HistoryActions.CONFIRM_DECLARATION, date: new Date() })
     return res
