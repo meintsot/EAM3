@@ -17,7 +17,7 @@ interface Props {
 const BreadcrumbTrail = ({ crumbs }: Props) => {
   return (
     <div role="presentation" onClick={handleClick}>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ pt: "120px", pl: "250px" }}>
+      <Breadcrumbs aria-label="breadcrumb">
         {crumbs.map((crumb, index) =>
           index === crumbs.length - 1 ? (
             <Typography color="text.primary">{crumb.label}</Typography>

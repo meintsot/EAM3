@@ -11,13 +11,13 @@ import {
   TableContainer,
   TableFooter,
 } from "@mui/material";
-import {Filters, SearchTableProps} from "../../../model";
+import { Filters, SearchTableProps } from "../../../model";
 import BasicInput from "../../Input/BasicInput";
 import DropdownInput from "../../Input/DropdownInput";
 import ActionButton from "../../ActionButton";
 import CheckBox from "../../CheckBox";
-import {CoursesForDeclaration} from "../../../../../backend/models/types/declaration";
-import {useNavigate} from "react-router-dom";
+import { CoursesForDeclaration } from "../../../../../backend/models/types/declaration";
+import { useNavigate } from "react-router-dom";
 
 const SearchTable: React.FC<SearchTableProps> = ({
   columns,
@@ -29,34 +29,34 @@ const SearchTable: React.FC<SearchTableProps> = ({
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [checkedCourses, setCheckedCourses] = useState<Array<CoursesForDeclaration>>([]);
-  const [filters, setFilters] = useState<Filters>({ page: 1, pageSize: 10 })
+  const [checkedCourses, setCheckedCourses] = useState<
+    Array<CoursesForDeclaration>
+  >([]);
+  const [filters, setFilters] = useState<Filters>({ page: 1, pageSize: 10 });
   const navigate = useNavigate();
+  const [disableGradeInput, setDisableGradeInput] = useState<boolean>(false);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
-    filters['page'] = newPage;
+    filters["page"] = newPage + 1;
     if (onFilterChange) onFilterChange(filters);
     setPage(newPage);
   };
 
   const navigateToCoursePage = (courseId: string) => {
     navigate(`/courses/${courseId}`);
-  }
+  };
 
-  const handleFilterChange = (
-      id: string,
-      value: string
-  ) => {
+  const handleFilterChange = (id: string, value: string) => {
     console.log(id, value);
-    filters[id] = value
+    filters[id] = value;
     if (onFilterChange) {
       onFilterChange(filters);
     }
-    setFilters(filters)
-  }
+    setFilters(filters);
+  };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -65,21 +65,38 @@ const SearchTable: React.FC<SearchTableProps> = ({
     setPage(0);
   };
 
-  const handleCheck = (event: boolean, courseId: string, courseName: string) => {
+  const handleCheck = (
+    event: boolean,
+    courseId: string,
+    courseName: string
+  ) => {
     let newCheckedCourses = [];
-    if (event) newCheckedCourses = [...checkedCourses, {courseId, courseName} as CoursesForDeclaration];
-    else newCheckedCourses = checkedCourses.filter((course) => course.courseId !== courseId);
+    if (event)
+      newCheckedCourses = [
+        ...checkedCourses,
+        { courseId, courseName } as CoursesForDeclaration,
+      ];
+    else
+      newCheckedCourses = checkedCourses.filter(
+        (course) => course.courseId !== courseId
+      );
     if (onCheckedCourses) onCheckedCourses(newCheckedCourses);
     setCheckedCourses(newCheckedCourses);
   };
 
-  const returnAction = (action: string, courseId: string, courseName?: string) => {
+  const returnAction = (
+    action: string,
+    courseId?: string,
+    courseName?: string
+  ) => {
     switch (action) {
       case "view":
         return (
           <ActionButton
             type={action}
-            onClick={() => {navigateToCoursePage(courseId)}}
+            onClick={() => {
+              navigateToCoursePage(courseId!);
+            }}
             tooltip="Λεπτομέρειες"
           />
         );
@@ -87,7 +104,9 @@ const SearchTable: React.FC<SearchTableProps> = ({
         return (
           <ActionButton
             type={action}
-            onClick={() => {}}
+            onClick={() => {
+              navigate("create-gradebook");
+            }}
             tooltip="Δημιουργία βαθμολογίου"
           />
         );
@@ -110,7 +129,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
       case "checkbox":
         return (
           <CheckBox
-            onChange={(e) => handleCheck(e, courseId, courseName!)}
+            onChange={(e) => handleCheck(e, courseId!, courseName!)}
             tooltip="Δήλωση μαθήματος"
           />
         );
@@ -121,7 +140,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
               id="grade"
               onChange={() => {}}
               size="small"
-              disabled
+              disabled={disableGradeInput}
               defaultValue="4"
             />
           </Box>
@@ -166,7 +185,9 @@ const SearchTable: React.FC<SearchTableProps> = ({
                         <BasicInput
                           id={column.key}
                           placeholder="Πληκτρολόγησε..."
-                          onChange={(id, value) => handleFilterChange(id, value)}
+                          onChange={(id, value) =>
+                            handleFilterChange(id, value)
+                          }
                           size="small"
                         />
                       ) : column.searchInputType === "dropdown" ? (
@@ -174,7 +195,9 @@ const SearchTable: React.FC<SearchTableProps> = ({
                           id={column.key}
                           placeholder=""
                           items={column.options}
-                          onChange={(id, value) => handleFilterChange(id, value)}
+                          onChange={(id, value) =>
+                            handleFilterChange(id, value)
+                          }
                           size="small"
                         />
                       ) : (
@@ -200,6 +223,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
                   if (column.key === "actions")
                     return actions.map((action: any) => {
                       if (row["state"] === "Προσωρινή αποθήκευση") {
+                        setDisableGradeInput(true);
                         return (
                           <TableCell
                             key={"edit"}
@@ -210,7 +234,8 @@ const SearchTable: React.FC<SearchTableProps> = ({
                             {returnAction("edit", row.courseId)}
                           </TableCell>
                         );
-                      } else
+                      } else {
+                        setDisableGradeInput(false);
                         return (
                           <TableCell
                             key={action}
@@ -221,6 +246,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
                             {returnAction(action, row.courseId, row.courseName)}
                           </TableCell>
                         );
+                      }
                     });
                   else
                     return (

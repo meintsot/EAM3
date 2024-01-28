@@ -1,16 +1,22 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import SearchTable from "../../components/Table/SearchTable";
 import SendIcon from "@mui/icons-material/Send";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useAuth } from "../../providers/AuthProvider";
-import {Column, CoursesResults, Filters} from "../../model";
+import { Column, CoursesResults, Filters } from "../../model";
 import API from "../../api";
-import {MyCoursesRequest, RetrieveCoursesRequest} from "../../../../backend/models/types/course";
-import {CoursesForDeclaration, SubmitDeclarationRequest} from "../../../../backend/models/types/declaration";
-import {getCurrentExamPeriod} from "../../helpers/findExamPeriod";
+import {
+  MyCoursesRequest,
+  RetrieveCoursesRequest,
+} from "../../../../backend/models/types/course";
+import {
+  CoursesForDeclaration,
+  SubmitDeclarationRequest,
+} from "../../../../backend/models/types/declaration";
+import { getCurrentExamPeriod } from "../../helpers/findExamPeriod";
 
 const titlesStudent: Array<Column> = [
   { key: "courseId", label: "Κωδικός", searchInputType: "text", options: [] },
@@ -24,13 +30,13 @@ const titlesStudent: Array<Column> = [
     key: "semester",
     label: "Εξάμηνο",
     searchInputType: "dropdown",
-    options: ["1", "2", "3", "4", "5"],
+    options: ["1", "2", "3", "4", "5", "6", "7", "8"],
   },
   {
     key: "category",
     label: "Κατηγορία",
     searchInputType: "dropdown",
-    options: ["Υποχρεωτικό", "Βασικό"],
+    options: ["Προαιρετικό", "Υποχρεωτικό", "Γενικής Παιδείας"],
   },
   {
     key: "professor",
@@ -59,13 +65,13 @@ const titlesProfessor: Array<Column> = [
     key: "semester",
     label: "Εξάμηνο",
     searchInputType: "dropdown",
-    options: ["1", "2", "3", "4", "5"],
+    options: ["1", "2", "3", "4", "5", "6", "7", "8"],
   },
   {
     key: "category",
     label: "Κατηγορία",
     searchInputType: "dropdown",
-    options: ["Υποχρεωτικό", "Βασικό"],
+    options: ["Προαιρετικό", "Υποχρεωτικό", "Γενικής Παιδείας"],
   },
   {
     key: "actions",
@@ -78,8 +84,7 @@ const titlesProfessor: Array<Column> = [
 const Courses = () => {
   const navigate = useNavigate();
   const { userData } = useAuth();
-
-  const [coursesResults, setCoursesResults] = useState<CoursesResults>()
+  const [coursesResults, setCoursesResults] = useState<CoursesResults>();
 
   useEffect(() => {
     const authToken = userData.authToken;
@@ -91,13 +96,13 @@ const Courses = () => {
   }, [userData]);
 
   const { userType } = userData;
-  const [coursesToBeDeclared, setCoursesToBeDeclared] = useState<Array<CoursesForDeclaration>>(
-    []
-  );
+  const [coursesToBeDeclared, setCoursesToBeDeclared] = useState<
+    Array<CoursesForDeclaration>
+  >([]);
 
   const handleFilterChange = (filters: Filters) => {
     console.log(filters);
-    if (userType === 'student') {
+    if (userType === "student") {
       const request = filters as RetrieveCoursesRequest;
       API.retrieveStudentCourses(request).then((res) => {
         setCoursesResults(res);
@@ -108,15 +113,18 @@ const Courses = () => {
         setCoursesResults(res);
       });
     }
-  }
+  };
 
   const submitDeclaration = () => {
     API.submitDeclaration({
       examPeriod: getCurrentExamPeriod(),
-      courses: coursesToBeDeclared
-    }).then((declaration) => {navigate(`/declarations/${declaration._id}`)})
-        .catch(err => console.log(err));
-  }
+      courses: coursesToBeDeclared,
+    })
+      .then((declaration) => {
+        navigate(`/declarations/${declaration._id}`);
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <Box className="wrapper">

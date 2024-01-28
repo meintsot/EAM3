@@ -6,7 +6,7 @@ import DropdownInput from "../../components/Input/DropdownInput";
 
 import { Column, Filters } from "../../model";
 import { useAuth } from "../../providers/AuthProvider";
-import { getLastThreeExamPeriods } from "../../helpers/findExamPeriod";
+import getLastThreeExamPeriods from "../../helpers/findExamPeriod";
 import ConfirmationModal from "../../components/Modal/ConfirmationModal";
 import { useParams } from "react-router-dom";
 import {
@@ -54,7 +54,6 @@ const GradeBook = () => {
     []
   );
   const [disabled, setDisabled] = useState(true);
-  const [openModal, setOpenModal] = useState(false);
   const [examsPeriod, setExamsPeriod] = useState("");
   const navigate = useNavigate();
 
@@ -73,7 +72,7 @@ const GradeBook = () => {
   };
 
   const handleSubmit = () => {
-    setOpenModal(true);
+    // redirect to gradebook page
   };
 
   const handleFilterChange = (filters: Filters) => {
@@ -104,35 +103,48 @@ const GradeBook = () => {
   };
 
   return (
-    <>
-      <ConfirmationModal
-        text="Είστε σίγουροι ότι θέλετε να υποβάλετε το βαθμολόγιο;"
-        open={openModal}
-        onOpen={setOpenModal}
-        onConfirm={handleConfirm}
-      />
-      <Box className="wrapper">
-        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          Βαθμολόγιο: {}
-        </Typography>
-        <SearchTable
-          columns={titles}
-          rows={gradebook?.students ?? []}
-          totalResults={gradebook?.students?.length ?? 0}
-          onFilterChange={handleFilterChange}
-          actions={["input"]}
+    <Box className="wrapper">
+      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+        Δημιουργία Βαθμολογίου
+      </Typography>
+      <Box sx={{ width: 300 }}>
+        <DropdownInput
+          items={getLastThreeExamPeriods()}
+          id="examsPeriod"
+          onChange={handleSelect}
+          size="small"
+          placeholder="Εξεταστική περίοδος"
         />
+      </Box>
+      <Box className="header">
+        <Typography variant="body1">Μεταφορτώστε αρχείο csv.</Typography>
         <Button
           variant="contained"
           className="main-action-button"
-          onClick={handleSubmit}
-          sx={{ fontWeight: "bold", mt: "16px", alignSelf: "end" }}
-          disabled={disabled}
+          onClick={() => {}}
+          sx={{ fontWeight: "bold" }}
         >
-          οριστικη υποβολη
+          μεταφορτωση αρχειου
+          <FileUploadOutlinedIcon fontSize="small" />
         </Button>
       </Box>
-    </>
+      <SearchTable
+        columns={titles}
+        rows={gradebook?.students ?? []}
+        totalResults={gradebook?.students?.length ?? 0}
+        onFilterChange={handleFilterChange}
+        actions={["input"]}
+      />
+      <Button
+        variant="contained"
+        className="main-action-button"
+        onClick={handleSubmit}
+        sx={{ fontWeight: "bold", mt: "16px", alignSelf: "end" }}
+        disabled={disabled}
+      >
+        υποβολη
+      </Button>
+    </Box>
   );
 };
 

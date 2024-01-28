@@ -4,7 +4,6 @@ import cloudUpload from "../../../assets/img/CloudUpload.png";
 import cloudUploadWhite from "../../../assets/img/CloudUploadWhite.png";
 import Typography from "@mui/material/Typography";
 import { ImageUploaderProps } from "../../../model";
-import API from "../../../api";
 
 import "./ImageUploader.css";
 

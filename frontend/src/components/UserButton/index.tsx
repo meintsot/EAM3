@@ -26,7 +26,8 @@ const UserButton: React.FC = () => {
     setAnchorEl(null);
   };
 
-  return userType === "guest" ? (
+  return userType === "guest" ||
+    !userProfile.generalInformation.profilePicture ? (
     <Box>
       <IconButton
         size="small"
