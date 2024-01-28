@@ -74,13 +74,13 @@ const Profile = () => {
   return (
     <Box className="wrapper">
       <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-        {userProfile.generalInformation.firstName}
-        {userProfile.generalInformation.lastName}heyyyy
+        {userProfile.generalInformation.firstName}{" "}
+        {userProfile.generalInformation.lastName}
         <IconButton onClick={(e) => navigate("/edit-profile")}>
           <Edit />
         </IconButton>
       </Typography>
-      {userType === "guest" && (
+      {userType === "student" && (
         <Box className="header">
           <Typography variant="body1">A.Μ.: {userProfile.studentId}</Typography>
         </Box>

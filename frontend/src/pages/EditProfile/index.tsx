@@ -9,9 +9,9 @@ import { useAuth } from "../../providers/AuthProvider";
 import "./EditProfile.css";
 import API from "../../api";
 import { CourseDTO } from "../../../../backend/models/types/course";
-import AlertBox from "../../components/AlertBox";
 import { UpdateUserProfileRequest } from "../../../../backend/models/types/userProfile";
 import { useNavigate } from "react-router";
+import DispatchAlert from "../../components/AlertBox/dispatchAlert";
 
 const EditProfile: React.FC = () => {
   const { userData } = useAuth();
@@ -59,16 +59,21 @@ const EditProfile: React.FC = () => {
       formData.append("image", file, file.name);
       API.uploadProfileImage(formData).then((fileURL: string) => {
         formValues.profilePicture = fileURL;
-        API.updateUserProfile(formValues);
+        API.updateUserProfile(formValues).then(() => {
+          DispatchAlert("Το προφίλ ενημερώθηκε επιτυχώς!", "", "success");
+          navigate("/profile");
+        });
       });
     } else {
-      API.updateUserProfile(formValues);
+      API.updateUserProfile(formValues).then(() => {
+        DispatchAlert("Το προφίλ ενημερώθηκε επιτυχώς!", "", "success");
+        navigate("/profile");
+      });
     }
   };
 
   return (
     <div className="container">
-      <AlertBox />
       <Box className="editFormContainer">
         <Box className="editForm">
           <Box className="editFormColumn1">

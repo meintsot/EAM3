@@ -4,7 +4,6 @@ import { Box, Typography } from "@mui/material";
 import API from "../../api";
 import { SubmitCertificateRequest } from "../../../../backend/models/types/certificate";
 import DispatchAlert from "../../components/AlertBox/dispatchAlert";
-import AlertBox from "../../components/AlertBox";
 
 const CertificateRequest: React.FC = () => {
   const handleSubmit = (certificate: SubmitCertificateRequest) => {
@@ -20,15 +19,12 @@ const CertificateRequest: React.FC = () => {
   };
 
   return (
-    <>
-      <AlertBox />
-      <Box className="wrapper">
-        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          Αίτηση Πιστοποιητικού
-        </Typography>
-        <StepperForm onSubmit={handleSubmit} />
-      </Box>
-    </>
+    <Box className="wrapper">
+      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+        Αίτηση Πιστοποιητικού
+      </Typography>
+      <StepperForm onSubmit={handleSubmit} />
+    </Box>
   );
 };
 
