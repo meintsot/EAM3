@@ -7,8 +7,8 @@ import {
 } from "../../backend/models/types/user";
 import { UserHistoryDTO } from "../../backend/models/types/userHistory";
 import { AlertColor } from "@mui/material";
-import {CoursesForDeclaration} from "../../backend/models/types/declaration";
-import {SubmitCertificateRequest} from "../../backend/models/types/certificate";
+import { CoursesForDeclaration } from "../../backend/models/types/declaration";
+import { SubmitCertificateRequest } from "../../backend/models/types/certificate";
 
 export interface Route {
   label: string;
@@ -83,8 +83,8 @@ export interface Column {
 }
 
 export interface CoursesResults {
-  courses: CoursesRow[]
-  total: number
+  courses: CoursesRow[];
+  total: number;
 }
 
 export interface CoursesRow {
@@ -117,9 +117,12 @@ export interface SearchTableProps extends TableProps {
   rows: Array<CoursesRow | any>;
   columns: Array<Column>;
   actions: Array<string>;
-  totalResults: number
-  onCheckedCourses?: React.Dispatch<React.SetStateAction<CoursesForDeclaration[]>>;
+  totalResults: number;
+  onCheckedCourses?: React.Dispatch<
+    React.SetStateAction<CoursesForDeclaration[]>
+  >;
   onFilterChange?: React.Dispatch<React.SetStateAction<Filters>>;
+  onRemoveCourse?: (arg: string) => void;
 }
 
 export interface StepperFormProps {
