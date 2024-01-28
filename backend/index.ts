@@ -10,6 +10,7 @@ import certificateRouter from './routes/certificateRoutes'
 import studentGradeRoutes from './routes/studentGradeRoutes'
 import multer from 'multer'
 import errorMiddleware from './middleware/errorMiddleware'
+import * as path from 'path'
 
 dotenv.config()
 
@@ -30,6 +31,8 @@ void (async () => {
   const app = express()
 
   app.use(cors())
+  console.log(__dirname)
+  app.use(express.static(path.join(__dirname, '../uploads')))
 
   app.use(express.json())
 
