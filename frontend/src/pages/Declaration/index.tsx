@@ -42,7 +42,7 @@ const Declaration = () => {
   };
 
   const handleConfirm = () => {
-    API.confirmDeclaration(declarationId!).catch(err => console.log(err));
+    API.confirmDeclaration(declarationId!, declarationDetails!).then().catch(err => console.log(err));
   };
 
   return (

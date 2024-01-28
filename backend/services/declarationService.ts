@@ -1,4 +1,9 @@
-import { type Declaration, type RetrieveDeclarationsRequest, type SubmitDeclarationRequest } from '../models/types/declaration'
+import {
+  type Declaration,
+  DeclarationDetailsDTO,
+  type RetrieveDeclarationsRequest,
+  type SubmitDeclarationRequest
+} from '../models/types/declaration'
 import DeclarationRepository from '../repositories/declarationReporitory'
 import { type User } from '../models/types/user'
 import HistoryRepository from '../repositories/historyRepository'
@@ -23,8 +28,7 @@ class DeclarationService {
     return res
   }
 
-  static async confirmDeclaration (declarationId: string, user: User): Promise<Declaration> {
-    const declaration = await DeclarationRepository.findOneByCriteria({ _id: declarationId, studentId: user._id })
+  static async confirmDeclaration (declarationId: string, declaration: DeclarationDetailsDTO, user: User): Promise<Declaration> {
     declaration.state = 'confirmed'
     const res = await DeclarationRepository.updateDeclaration(declarationId, declaration)
     await HistoryRepository.saveHistory({ userId: user._id!, action: HistoryActions.CONFIRM_DECLARATION, date: new Date() })

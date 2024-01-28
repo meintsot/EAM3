@@ -55,8 +55,8 @@ export interface AuthProviderProps {
 
 export interface AuthContextType {
   userData: UserData;
-  login: (loginForm: LoginUserRequestDTO) => void;
-  register: (registerForm: RegisterUserDTO) => void;
+  login: (loginForm: LoginUserRequestDTO) => Promise<void>;
+  register: (registerForm: RegisterUserDTO) => Promise<void>;
   logout: () => void;
 }
 

@@ -13,6 +13,7 @@ import AlertBox from "../../components/AlertBox";
 import "./Register.css";
 import API from "../../api";
 import { CourseDTO } from "../../../../backend/models/types/course";
+import {useNavigate} from "react-router";
 
 const Register: React.FC = () => {
   const [formValues, setFormValues] = useState({
@@ -44,6 +45,8 @@ const Register: React.FC = () => {
     temporaryPostalCode: "",
     myCourses: [],
   });
+  const navigate = useNavigate();
+
   const [file, setFile] = useState<File | null>(null);
   const [user, setUser] = useState<string>("student");
   const [errorFields, setErrorFields] = useState<Array<string>>([]);
@@ -84,19 +87,17 @@ const Register: React.FC = () => {
         (key: string) => formValues[key as keyof typeof formValues] === ""
       )
     );
-    if (1) {
-      const payload = buildRegisterPayload(formValues);
-      if (file !== null) {
-        // Upload the file
-        const formData = new FormData();
-        formData.append("image", file, file.name);
-        API.uploadProfileImage(formData).then((fileURL: string) => {
-          formValues.profilePicture = fileURL;
-          register(payload);
-        });
-      } else {
-        register(payload);
-      }
+    const payload = buildRegisterPayload(formValues);
+    if (file !== null) {
+      // Upload the file
+      const formData = new FormData();
+      formData.append("image", file, file.name);
+      API.uploadProfileImage(formData).then((fileURL: string) => {
+        formValues.profilePicture = fileURL;
+        register(payload).then(() => navigate('/'));
+      });
+    } else {
+      register(payload).then(() => navigate('/'));
     }
   };
 

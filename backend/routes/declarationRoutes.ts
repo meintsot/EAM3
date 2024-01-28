@@ -9,6 +9,6 @@ router.get('/declarations', AuthMiddleware.authenticateJWT, AuthMiddleware.roles
     AuthMiddleware.queryParamsMiddleware<RetrieveDeclarationsRequest>, DeclarationController.retrieveDeclarations)
 router.get('/declarations/:declarationId', AuthMiddleware.authenticateJWT, AuthMiddleware.rolesAllowed(['student']), DeclarationController.retrieveDeclaration)
 router.post('/declarations', AuthMiddleware.authenticateJWT, AuthMiddleware.rolesAllowed(['student']), DeclarationController.submitDeclarationRequest)
-router.post('/declarations/:declarationId/confirm', AuthMiddleware.authenticateJWT, AuthMiddleware.rolesAllowed(['student']), DeclarationController.confirmDeclaration)
+router.put('/declarations/:declarationId/confirm', AuthMiddleware.authenticateJWT, AuthMiddleware.rolesAllowed(['student']), DeclarationController.confirmDeclaration)
 
 export default router

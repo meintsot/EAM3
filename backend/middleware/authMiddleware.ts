@@ -46,21 +46,26 @@ class AuthMiddleware {
 
         req.user = foundUser
         next()
+        return
       } catch (err) {
         next()
+        return
       }
-      next()
     }
     next()
   }
 
   static rolesAllowed = (roles: string[]) => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    console.log(roles)
+    console.log(req.user?.userType)
     if (req.user == null) {
+      throw new BackendError(ReasonType.NO_PERMISSION, 401)
+    }
+    if (roles.find(role => role === req.user?.userType) == null) {
       throw new BackendError(ReasonType.NO_PERMISSION, 403)
     }
-    if (!(req.user.userType in roles)) {
-      throw new BackendError(ReasonType.NO_PERMISSION, 403)
-    }
+
+    next()
   }
 
   private static convertQueryParams<T>(query: any): T {
