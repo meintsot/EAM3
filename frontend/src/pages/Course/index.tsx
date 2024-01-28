@@ -9,7 +9,7 @@ import {useAuth} from "../../providers/AuthProvider";
 
 const Course = () => {
   const { userData } = useAuth();
-  const params = useParams<{ courseId: string }>();
+  const params = useParams<{ courseId?: string }>();
   console.log(params)
 
   const [courseDetails, setCourseDetails] = useState<CourseDetailsDTO | null>(null);
@@ -50,7 +50,7 @@ const Course = () => {
     },
   ];
 
-  return (
+  return courseDetails ? (
     <Box className="wrapper">
       <Typography variant="h5" sx={{ fontWeight: "bold" }}>
         {courseDetails?.generalInformation.courseName}
@@ -72,7 +72,7 @@ const Course = () => {
         ]}
       />
     </Box>
-  );
+  ) : <></>;
 };
 
 export default Course;

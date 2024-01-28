@@ -94,6 +94,7 @@ const Courses = () => {
   );
 
   const handleFilterChange = (filters: Filters) => {
+    console.log(filters);
     if (userType === 'student') {
       const request = filters as RetrieveCoursesRequest;
       API.retrieveStudentCourses(request).then((res) => {

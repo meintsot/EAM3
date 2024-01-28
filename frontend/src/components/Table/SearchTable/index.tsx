@@ -17,6 +17,7 @@ import DropdownInput from "../../Input/DropdownInput";
 import ActionButton from "../../ActionButton";
 import CheckBox from "../../CheckBox";
 import {CoursesForDeclaration} from "../../../../../backend/models/types/declaration";
+import {useNavigate} from "react-router-dom";
 
 const SearchTable: React.FC<SearchTableProps> = ({
   columns,
@@ -30,19 +31,27 @@ const SearchTable: React.FC<SearchTableProps> = ({
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [checkedCourses, setCheckedCourses] = useState<Array<CoursesForDeclaration>>([]);
   const [filters, setFilters] = useState<Filters>({ page: 1, pageSize: 10 })
+  const navigate = useNavigate();
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
+    filters['page'] = newPage;
+    if (onFilterChange) onFilterChange(filters);
     setPage(newPage);
   };
 
+  const navigateToCoursePage = (courseId: string) => {
+    navigate(`/courses/${courseId}`);
+  }
+
   const handleFilterChange = (
-      event: string,
-      columnKey: string
+      id: string,
+      value: string
   ) => {
-    filters[columnKey] = event
+    console.log(id, value);
+    filters[id] = value
     if (onFilterChange) {
       onFilterChange(filters);
     }
@@ -70,7 +79,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
         return (
           <ActionButton
             type={action}
-            onClick={() => {}}
+            onClick={() => {navigateToCoursePage(courseId)}}
             tooltip="Λεπτομέρειες"
           />
         );
@@ -157,7 +166,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
                         <BasicInput
                           id={column.key}
                           placeholder="Πληκτρολόγησε..."
-                          onChange={(e) => handleFilterChange(e, column.key)}
+                          onChange={(id, value) => handleFilterChange(id, value)}
                           size="small"
                         />
                       ) : column.searchInputType === "dropdown" ? (
@@ -165,7 +174,7 @@ const SearchTable: React.FC<SearchTableProps> = ({
                           id={column.key}
                           placeholder=""
                           items={column.options}
-                          onChange={(e) => handleFilterChange(e, column.key)}
+                          onChange={(id, value) => handleFilterChange(id, value)}
                           size="small"
                         />
                       ) : (
