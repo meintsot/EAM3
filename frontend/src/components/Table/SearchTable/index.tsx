@@ -34,7 +34,6 @@ const SearchTable: React.FC<SearchTableProps> = ({
   >([]);
   const [filters, setFilters] = useState<Filters>({ page: 1, pageSize: 10 });
   const navigate = useNavigate();
-  const [disableGradeInput, setDisableGradeInput] = useState<boolean>(false);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -140,7 +139,6 @@ const SearchTable: React.FC<SearchTableProps> = ({
               id="grade"
               onChange={() => {}}
               size="small"
-              disabled={disableGradeInput}
               defaultValue="4"
             />
           </Box>
@@ -223,7 +221,6 @@ const SearchTable: React.FC<SearchTableProps> = ({
                   if (column.key === "actions")
                     return actions.map((action: any) => {
                       if (row["state"] === "Προσωρινή αποθήκευση") {
-                        setDisableGradeInput(true);
                         return (
                           <TableCell
                             key={"edit"}
@@ -235,7 +232,6 @@ const SearchTable: React.FC<SearchTableProps> = ({
                           </TableCell>
                         );
                       } else {
-                        setDisableGradeInput(false);
                         return (
                           <TableCell
                             key={action}
