@@ -7,6 +7,8 @@ import { type UserHistory } from '../models/types/userHistory'
 import HistoryRepository from '../repositories/historyRepository'
 import { HistoryActions } from '../models/historyActions'
 import { type UpdateUserProfileRequest } from '../models/types/userProfile'
+import BackendError from '../fault/backendError'
+import ReasonType from '../fault/types/reason-type.enum'
 
 dotenv.config()
 
@@ -32,10 +34,10 @@ class UserService {
 
   static async register (user: RegisterUserDTO): Promise<{ courseIds?: string[], user: User, token: string }> {
     if ((user.password == null) || user.password.length < 8) {
-      throw new Error('Password must be at least 8 characters')
+      throw new BackendError(ReasonType.PASSWORD_FORMAT, 400)
     }
     if (user.password !== user.confirmPassword) {
-      throw new Error('Passwords do not match')
+      throw new BackendError(ReasonType.PASSWORD_MATCH, 400)
     }
     const userToSave = this.buildUser(user)
     const savedUser = await UserRepository.saveUser(userToSave)
@@ -56,7 +58,7 @@ class UserService {
       const user = await UserRepository.findOneByCriteria({ userName: req.userName })
       const isPasswordValid = await AuthUtils.checkPassword(user, req.password)
       if (!isPasswordValid) {
-        throw new Error('Invalid username or password')
+        throw new BackendError(ReasonType.INVALID_CREDENTIALS, 401)
       }
 
       if (user.userType === 'teacher') {
@@ -70,7 +72,7 @@ class UserService {
       await HistoryRepository.saveHistory({ userId: user._id!, action: HistoryActions.LOGIN, date: new Date() })
       return { user, token }
     } catch (e) {
-      throw new Error('Invalid username or password')
+      throw new BackendError(ReasonType.INVALID_CREDENTIALS, 401)
     }
   }
 

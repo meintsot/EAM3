@@ -2,6 +2,8 @@ import { type FilterQuery, type UpdateQuery } from 'mongoose'
 import { type Certificate } from '../models/types/certificate'
 
 import CertificateModel from '../models/certificateSchema'
+import BackendError from '../fault/backendError'
+import ReasonType from '../fault/types/reason-type.enum'
 
 class CertificateRepository {
   static async findByCriteria (criteria: FilterQuery<Certificate>, paginationRequest: PaginationRequest): Promise<Certificate[]> {
@@ -50,7 +52,7 @@ class CertificateRepository {
   static async findOneByCriteria (criteria: FilterQuery<Certificate>): Promise<Certificate> {
     const certificate = await CertificateModel.findOne(criteria).lean()
     if (certificate == null) {
-      throw new Error('Certificate not found')
+      throw new BackendError(ReasonType.CERTIFICATE_NOT_FOUND, 404)
     }
     return certificate
   }
@@ -62,7 +64,7 @@ class CertificateRepository {
   static async updateCertificate (certificateId: string, certificate: UpdateQuery<Certificate>): Promise<Certificate> {
     const newCertificate = await CertificateModel.findOneAndUpdate({ _id: certificateId }, certificate, { new: true }).lean()
     if (newCertificate == null) {
-      throw new Error('Certificate not found')
+      throw new BackendError(ReasonType.CERTIFICATE_NOT_FOUND, 404)
     }
     return newCertificate
   }

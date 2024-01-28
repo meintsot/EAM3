@@ -1,6 +1,7 @@
 import { type FilterQuery } from 'mongoose'
 import { type UserHistory } from '../models/types/userHistory'
 import UserHistoryModel from '../models/historySchema'
+import ReasonType from '../fault/types/reason-type.enum'
 
 class HistoryRepository {
   static async findByCriteria (criteria: FilterQuery<History>, paginationRequest: PaginationRequest): Promise<UserHistory[]> {

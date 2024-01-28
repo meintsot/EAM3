@@ -3,6 +3,8 @@ import { type Response, type NextFunction } from 'express'
 import UserModel from '../models/userSchema'
 import { type AuthenticatedRequest, type RequestWithQueryParams } from './middleware'
 import QueryParamTypes from './queryParams'
+import BackendError from '../fault/backendError'
+import ReasonType from '../fault/types/reason-type.enum'
 
 class AuthMiddleware {
   static async authenticateJWT (req: AuthenticatedRequest, res: Response, next: NextFunction) {
@@ -11,23 +13,19 @@ class AuthMiddleware {
     if (authHeader != null) {
       const token = authHeader.split(' ')[1]
 
-      try {
-        const { userId } = jwt.verify(token, process.env.JWT_SECRET ?? '') as UserJWT
+      const { userId } = jwt.verify(token, process.env.JWT_SECRET ?? '') as UserJWT
 
-        const foundUser = await UserModel.findById(userId)
+      const foundUser = await UserModel.findById(userId)
 
-        if (foundUser == null) {
-          return res.sendStatus(401)
-        }
-
-        req.user = foundUser
-      } catch (err) {
-        return res.sendStatus(401)
+      if (foundUser == null) {
+        throw new BackendError(ReasonType.UNAUTHORIZED, 401)
       }
+
+      req.user = foundUser
+      next()
     } else {
-      return res.sendStatus(401)
+      throw new BackendError(ReasonType.UNAUTHORIZED, 401)
     }
-    next()
   }
 
   static async loginJWTRequest (req: AuthenticatedRequest, res: Response, next: NextFunction) {
@@ -58,10 +56,10 @@ class AuthMiddleware {
 
   static rolesAllowed = (roles: string[]) => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     if (req.user == null) {
-      return res.status(403)
+      throw new BackendError(ReasonType.NO_PERMISSION, 403)
     }
     if (!(req.user.userType in roles)) {
-      return res.status(403)
+      throw new BackendError(ReasonType.NO_PERMISSION, 403)
     }
   }
 

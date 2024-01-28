@@ -9,6 +9,7 @@ import gradingSystemRouter from './routes/gradingSystemRoutes'
 import certificateRouter from './routes/certificateRoutes'
 import studentGradeRoutes from './routes/studentGradeRoutes'
 import multer from 'multer'
+import errorMiddleware from './middleware/errorMiddleware'
 
 dotenv.config()
 
@@ -52,6 +53,8 @@ void (async () => {
     // Send back the URL or path of the uploaded file
     res.json({ fileURL: `uploads/${req.file.filename}` })
   })
+
+  app.use(errorMiddleware)
 
   app.listen(Number(process.env.PORT ?? 8888), () => {
     console.log(`Server started on port ${process.env.PORT}`)

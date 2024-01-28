@@ -1,6 +1,8 @@
 import { type FilterQuery, type UpdateQuery } from 'mongoose'
 import { type Declaration } from '../models/types/declaration'
 import DeclarationModel from '../models/declarationSchema'
+import BackendError from '../fault/backendError'
+import ReasonType from '../fault/types/reason-type.enum'
 
 class DeclarationRepository {
   static async findByCriteria (criteria: FilterQuery<Declaration>, paginationRequest: PaginationRequest): Promise<Declaration[]> {
@@ -48,7 +50,7 @@ class DeclarationRepository {
   static async findOneByCriteria (criteria: FilterQuery<Declaration>): Promise<Declaration> {
     const declaration = await DeclarationModel.findOne(criteria).lean()
     if (declaration == null) {
-      throw new Error('Declaration not found')
+      throw new BackendError(ReasonType.DECLARATION_NOT_FOUND, 404)
     }
     return declaration
   }
@@ -60,7 +62,7 @@ class DeclarationRepository {
   static async updateDeclaration (declarationId: string, declaration: UpdateQuery<Declaration>): Promise<Declaration> {
     const newDeclaration = await DeclarationModel.findOneAndUpdate({ _id: declarationId }, declaration, { new: true }).lean()
     if (newDeclaration == null) {
-      throw new Error('Declaration not found')
+      throw new BackendError(ReasonType.DECLARATION_NOT_FOUND, 404)
     }
     return newDeclaration
   }
