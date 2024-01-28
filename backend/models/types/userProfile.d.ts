@@ -11,7 +11,7 @@ interface UserProfile {
 
 interface UpdateUserProfileRequest {
   phoneNumber: string
-  profilePicture: string
+  profilePicture?: string
   personalInformation: PersonalInformation
   communicationDetails: CommunicationDetails
   myCourses?: []
@@ -22,7 +22,7 @@ interface GeneralInformation {
   lastName: string
   department: string
   phoneNumber: string
-  profilePicture: string
+  profilePicture?: string
 }
 
 interface PersonalInformation {
