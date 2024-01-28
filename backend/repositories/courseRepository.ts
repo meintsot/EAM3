@@ -1,6 +1,8 @@
 import { type FilterQuery } from 'mongoose'
 import CourseModel from '../models/courseSchema'
 import { type Course } from '../models/types/course'
+import BackendError from '../fault/backendError'
+import ReasonType from '../fault/types/reason-type.enum'
 
 class CourseRepository {
   static async findByCriteria (criteria: FilterQuery<Course>, paginationRequest?: PaginationRequest): Promise<Course[]> {
@@ -31,7 +33,7 @@ class CourseRepository {
   static async findOneByCriteria (criteria: FilterQuery<Course>): Promise<Course> {
     const course = await CourseModel.findOne(criteria).lean()
     if (course == null) {
-      throw new Error('Course not found')
+      throw new BackendError(ReasonType.COURSE_NOT_FOUND, 404)
     }
     return course
   }

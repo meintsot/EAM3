@@ -1,4 +1,4 @@
-import { type Request, type Response } from 'express'
+import { type NextFunction, type Request, type Response } from 'express'
 import UserService from '../services/userService'
 import { type LoginUserRequestDTO, type RegisterUserDTO } from '../models/types/user'
 import UserTransformer from '../transformers/userTransformer'
@@ -8,17 +8,17 @@ import CourseService from '../services/courseService'
 import { type UpdateUserProfileRequest } from '../models/types/userProfile'
 
 class UserController {
-  static async registerUser (req: Request, res: Response) {
-    const request = (req.body as RegisterUserDTO)
+  static async registerUser (req: Request, res: Response, next: NextFunction) {
     try {
+      const request = (req.body as RegisterUserDTO)
       const { user, token, courseIds } = await UserService.register(request)
       res.status(201).json(UserTransformer.toRegisterUserDTO(user, token, courseIds))
-    } catch (error: any) {
-      res.status(500).json({ message: error.message })
+    } catch (err) {
+      next(err)
     }
   }
 
-  static async loginUser (req: AuthenticatedRequest, res: Response) {
+  static async loginUser (req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       if (req.user == null) {
         const request = req.body as LoginUserRequestDTO
@@ -33,28 +33,28 @@ class UserController {
         }
         res.status(200).json(UserTransformer.toLoginUserDTO(req.user, token))
       }
-    } catch (error: any) {
-      res.status(500).json({ message: error.message })
+    } catch (err) {
+      next(err)
     }
   }
 
-  static async retrieveUserHistory (req: AuthenticatedRequestWithQueryParams<PaginationRequest>, res: Response) {
+  static async retrieveUserHistory (req: AuthenticatedRequestWithQueryParams<PaginationRequest>, res: Response, next: NextFunction) {
     try {
       const history = await UserService.retrieveUserHistory(req.queryParams!, req.user!)
       const total = await UserService.countUserHistory(req.user!)
       return res.status(200).json(UserTransformer.toRetrieveUserHistoryResponse(history, total))
-    } catch (error: any) {
-      return res.status(500).json({ message: error.message })
+    } catch (err) {
+      next(err)
     }
   }
 
-  static async updateUserProfile (req: AuthenticatedRequest, res: Response) {
+  static async updateUserProfile (req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const request = req.body as UpdateUserProfileRequest
       const { user, courseIds } = await UserService.updateUserProfile(request, req.user!)
       return res.status(201).json(UserTransformer.toUpdateUserProfileResponse(user, courseIds))
-    } catch (error: any) {
-      return res.status(500).json({ message: error.message })
+    } catch (err) {
+      next(err)
     }
   }
 }

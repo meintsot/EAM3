@@ -2,6 +2,8 @@ import { type FilterQuery, type UpdateQuery } from 'mongoose'
 import { type GradingSystem } from '../models/types/gradingSystem'
 
 import GradingSystemModel from '../models/gradingSystemSchema'
+import BackendError from '../fault/backendError'
+import ReasonType from '../fault/types/reason-type.enum'
 
 class GradingSystemRepository {
   static async findByCriteria (criteria: FilterQuery<GradingSystem>, paginationRequest: PaginationRequest): Promise<GradingSystem[]> {
@@ -50,7 +52,7 @@ class GradingSystemRepository {
   static async findOneByCriteria (criteria: FilterQuery<GradingSystem>): Promise<GradingSystem> {
     const gradingSystem = await GradingSystemModel.findOne(criteria).lean()
     if (gradingSystem == null) {
-      throw new Error('GradingSystem not found')
+      throw new BackendError(ReasonType.GRADING_SYSTEM_NOT_FOUND, 404)
     }
     return gradingSystem
   }
@@ -62,7 +64,7 @@ class GradingSystemRepository {
   static async updateGradingSystem (gradingSystemId: string, gradingSystem: UpdateQuery<GradingSystem>): Promise<GradingSystem> {
     const newGradingSystem = await GradingSystemModel.findOneAndUpdate({ _id: gradingSystemId }, gradingSystem, { new: true }).lean()
     if (newGradingSystem == null) {
-      throw new Error('GradingSystem not found')
+      throw new BackendError(ReasonType.GRADING_SYSTEM_NOT_FOUND, 404)
     }
     return newGradingSystem
   }
