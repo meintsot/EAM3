@@ -10,7 +10,7 @@ const userProfileSchema = new Schema<UserProfile>({
     lastName: { type: String, required: true },
     department: { type: String, required: true },
     phoneNumber: { type: String, required: true },
-    profilePicture: { type: String, required: true }
+    profilePicture: { type: String, required: false }
   },
   personalInformation: {
     fathersName: { type: String, required: true },
