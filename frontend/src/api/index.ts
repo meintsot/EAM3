@@ -77,7 +77,7 @@ const autoLogin = async (authToken: string): Promise<UserData> => {
 }
 
 const updateUserProfile = async (payload: UpdateUserProfileRequest): Promise<UpdateUserProfileResponse> => {
-    const res = await api.post<UpdateUserProfileResponse>('/user/profile', payload)
+    const res = await api.put<UpdateUserProfileResponse>('/user/profile', payload, { headers: { Authorization: getJWTHeader() } })
     return res.data
 }
 

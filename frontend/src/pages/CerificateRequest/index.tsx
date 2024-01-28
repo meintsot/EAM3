@@ -6,7 +6,7 @@ import {SubmitCertificateRequest} from "../../../../backend/models/types/certifi
 
 const CertificateRequest: React.FC = () => {
     const handleSubmit = (certificate: SubmitCertificateRequest) => {
-        API.submitCertificate(certificate).catch(err => console.log(err));
+        API.submitCertificate(certificate).then().catch(err => console.log(err));
     }
 
   return (

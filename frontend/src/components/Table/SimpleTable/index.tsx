@@ -106,7 +106,7 @@ const SimpleTable: React.FC<SimpleTableProps> = ({ titleRows, valueRows }) => {
                 Υποχρεωτικά προαπαιτούμενα:
               </Typography>
               <Typography variant="body2">
-                {value.mandatory.join(", ")}
+                {value.mandatory ? value.mandatory.join(", ") : ""}
               </Typography>
             </Box>
             <Box
@@ -121,7 +121,7 @@ const SimpleTable: React.FC<SimpleTableProps> = ({ titleRows, valueRows }) => {
                 Προαιρετικά προαπαιτούμενα:
               </Typography>
               <Typography variant="body2">
-                {value.optional.join(", ")}
+                {value.optional ? value.optional.join(", ") : ""}
               </Typography>
             </Box>
           </Box>

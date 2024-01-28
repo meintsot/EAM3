@@ -56,6 +56,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const authToken = localStorage.getItem('JWT');
     if (authToken) {
         API.autoLogin(authToken).then((userData) => {
+          console.log('autologin', userData);
           setUserData(userData);
         })
     }
